@@ -65,7 +65,7 @@ export const CategoryCell = ({ rowIndex }: CategoryCellProps) => {
   )
 
   return (
-    <div className="flex items-center justify-start px-2 py-2 text-sm text-text">
+    <div className="flex items-center justify-start px-2 py-3.5 text-sm text-text">
       {category
         ? (
             <Tag

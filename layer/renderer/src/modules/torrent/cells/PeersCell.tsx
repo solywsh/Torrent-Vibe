@@ -25,7 +25,7 @@ export const PeersCell = ({ rowIndex }: PeersCellProps) => {
   )
 
   return (
-    <div className="flex items-center justify-start px-2 py-2 text-sm text-text tabular-nums">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text tabular-nums">
       <span>
         {num_leechs}
         {num_incomplete !== undefined && num_incomplete !== num_leechs && (

@@ -45,7 +45,7 @@ export const PriorityCell = ({ rowIndex }: PriorityCellProps) => {
   }
 
   return (
-    <div className="flex items-center justify-start px-2 py-2 text-sm text-text">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text">
       {getPriorityText(priority)}
     </div>
   )

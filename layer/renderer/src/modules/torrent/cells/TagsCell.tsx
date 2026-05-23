@@ -94,7 +94,7 @@ export const TagsCell = ({ rowIndex }: TagsCellProps) => {
   )
 
   return (
-    <div className="flex items-center justify-start text-sm px-2 py-3">
+    <div className="flex items-center justify-start text-sm px-2 py-3.5">
       {tagList.length > 0
         ? (
             <div className="flex flex-wrap gap-1 max-w-full justify-start">

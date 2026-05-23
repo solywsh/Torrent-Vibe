@@ -16,15 +16,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '~/components/ui/tooltip/Tooltip'
-import { TorrentStateIcon } from '~/components/ui/torrent-state-icon'
 import { getI18n } from '~/i18n'
-import { getAiIntegrationEnabled } from '~/lib/ai-integration'
 import { cn } from '~/lib/cn'
-import {
-  formatBytes,
-  formatBytesSmart,
-  formatSpeedWithStatus,
-} from '~/lib/format'
 import { CategorySelectPrompt } from '~/modules/dialogs/CategorySelectPrompt'
 import { TagsSelectPrompt } from '~/modules/dialogs/TagsSelectPrompt'
 import { ShareRatioLimitModal } from '~/modules/modals/ShareRatioLimitModal'
@@ -34,7 +27,6 @@ import {
   openTorrentSaveLocation,
   revealTorrentContent,
 } from '~/modules/torrent/utils/path-actions'
-import { torrentAiStore } from '~/modules/torrent-ai/store'
 import type { TorrentInfo } from '~/types'
 
 import { NameCell } from '../cells/NameCell'
@@ -48,7 +40,6 @@ import {
   useTorrentTableStore,
 } from '../stores/torrent-table-store'
 import type { TorrentTableConfig } from '../TorrentTableList'
-import { getStatusConfig } from '../utils/status'
 
 interface RowStickyStatus {
   isSticky: boolean
