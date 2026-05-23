@@ -16,14 +16,14 @@ export const SpeedCell = ({ rowIndex, speedType }: SpeedCellProps) => {
   // Use granular selector for just the speed data we need
   const speed = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentSpeed(state, deferredRowIndex, speedType),
+      state => selectTorrentSpeed(state, deferredRowIndex, speedType),
       [deferredRowIndex, speedType],
     ),
   )
   const { text, colorClass } = formatSpeedWithStatus(speed)
 
   return (
-    <div className={'flex items-center justify-end absolute inset-x-2 top-4'}>
+    <div className="flex items-center justify-start absolute inset-x-2 top-4">
       <span className={`text-sm tabular-nums ${colorClass}`}>{text}</span>
     </div>
   )

@@ -14,13 +14,14 @@ function listFilesRecursive(rootDir) {
     let entries
     try {
       entries = readdirSync(dir, { withFileTypes: true })
-    } catch {
+    }
+    catch {
       continue
     }
     for (const ent of entries) {
       const full = join(dir, ent.name)
-      if (ent.isDirectory()) stack.push(full)
-      else files.push(full)
+      if (ent.isDirectory()) { stack.push(full) }
+      else { files.push(full) }
     }
   }
   // Sort for deterministic order
@@ -45,7 +46,7 @@ function computeMainHashFromRoots(roots, baseDir = process.cwd()) {
       all.push(...listFilesRecursive(r))
     }
   }
-  if (all.length === 0) return ''
+  if (all.length === 0) { return '' }
   return computeHashForFiles(all, baseDir)
 }
 

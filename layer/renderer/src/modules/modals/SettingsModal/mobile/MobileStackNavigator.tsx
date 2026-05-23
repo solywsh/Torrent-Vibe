@@ -27,10 +27,10 @@ export const MobileStackNavigator: React.FC<MobileStackNavigatorProps> = ({
 }) => {
   const currentScreen = useMobileNavigationSelectors.useCurrentScreen()
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
-  const navigationDirection =
-    useMobileNavigationSelectors.useNavigationDirection()
+  const navigationDirection
+    = useMobileNavigationSelectors.useNavigationDirection()
   const setIsNavigating = useMobileNavigationStore(
-    (state) => state.setIsNavigating,
+    state => state.setIsNavigating,
   )
 
   // Animation variants for screen transitions
@@ -41,7 +41,8 @@ export const MobileStackNavigator: React.FC<MobileStackNavigatorProps> = ({
         animate: { x: 0, opacity: 1 },
         exit: { x: '-30%', opacity: 0.8 },
       }
-    } else if (direction === 'pop') {
+    }
+    else if (direction === 'pop') {
       return {
         initial: { x: '-30%', opacity: 0.8 },
         animate: { x: 0, opacity: 1 },
@@ -110,7 +111,7 @@ export const MobileStackNavigator: React.FC<MobileStackNavigatorProps> = ({
             transition={Spring.presets.smooth}
             onAnimationComplete={() => {
               // Only call completion handler when entering
-              if (!isNavigating) return
+              if (!isNavigating) { return }
               handleAnimationComplete()
             }}
           >
@@ -141,11 +142,11 @@ const ScreenRenderer: React.FC<ScreenRendererProps> = ({
 
 // Navigation hook for components to use
 export const useStackNavigation = () => {
-  const push = useMobileNavigationStore((state) => state.push)
-  const pop = useMobileNavigationStore((state) => state.pop)
-  const popToRoot = useMobileNavigationStore((state) => state.popToRoot)
-  const replace = useMobileNavigationStore((state) => state.replace)
-  const canGoBack = useMobileNavigationStore((state) => state.canGoBack)
+  const push = useMobileNavigationStore(state => state.push)
+  const pop = useMobileNavigationStore(state => state.pop)
+  const popToRoot = useMobileNavigationStore(state => state.popToRoot)
+  const replace = useMobileNavigationStore(state => state.replace)
+  const canGoBack = useMobileNavigationStore(state => state.canGoBack)
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
   const currentScreen = useMobileNavigationSelectors.useCurrentScreen()
 

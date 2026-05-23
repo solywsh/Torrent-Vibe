@@ -42,7 +42,7 @@ export const BottomSheet = {
     const items = jotaiStore.get(bottomSheetItemsAtom)
     jotaiStore.set(
       bottomSheetItemsAtom,
-      items.filter((item) => item.id !== id),
+      items.filter(item => item.id !== id),
     )
   },
 

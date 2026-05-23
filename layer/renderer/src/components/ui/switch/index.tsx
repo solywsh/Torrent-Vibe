@@ -7,8 +7,8 @@ import * as React from 'react'
 
 import { cn } from '~/lib/cn'
 
-type SwitchProps = React.ComponentProps<typeof SwitchPrimitives.Root> &
-  HTMLMotionProps<'button'> & {
+type SwitchProps = React.ComponentProps<typeof SwitchPrimitives.Root>
+  & HTMLMotionProps<'button'> & {
     leftIcon?: React.ReactNode
     rightIcon?: React.ReactNode
     thumbIcon?: React.ReactNode
@@ -28,7 +28,7 @@ function Switch({
   const [isTapped, setIsTapped] = React.useState(false)
 
   React.useEffect(() => {
-    if (props?.checked !== undefined) setIsChecked(props.checked)
+    if (props?.checked !== undefined) { setIsChecked(props.checked) }
   }, [props?.checked])
 
   const handleCheckedChange = React.useCallback(
@@ -92,9 +92,7 @@ function Switch({
           <motion.div
             data-slot="switch-thumb"
             whileTap="tab"
-            className={
-              'relative z-[1] [&_svg]:size-3 flex items-center justify-center rounded-full bg-background shadow-lg ring-0 text-text-secondary'
-            }
+            className="relative z-[1] [&_svg]:size-3 flex items-center justify-center rounded-full bg-background shadow-lg ring-0 text-text-secondary"
             transition={{
               x: { type: 'spring', stiffness: 300, damping: 25 },
               width: { duration: 0.1 },

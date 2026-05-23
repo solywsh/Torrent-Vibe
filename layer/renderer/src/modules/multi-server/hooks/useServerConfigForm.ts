@@ -33,7 +33,7 @@ export const useServerConfigForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [testResult, setTestResult] = useState<TestResult | null>(null)
 
-  const { servers, order } = useMultiServerStore((s) => ({
+  const { servers, order } = useMultiServerStore(s => ({
     servers: s.servers,
     order: s.order,
   }))
@@ -42,10 +42,10 @@ export const useServerConfigForm = ({
   const getInitialData = useCallback(async (): Promise<
     Partial<ServerFormData> | undefined
   > => {
-    if (mode !== 'edit' || !serverId) return undefined
+    if (mode !== 'edit' || !serverId) { return undefined }
 
     const server = servers[serverId]
-    if (!server) return undefined
+    if (!server) { return undefined }
 
     const remembered = hasServerPassword(serverId)
     const savedPassword = remembered ? await loadServerPassword(serverId) : ''
@@ -88,7 +88,8 @@ export const useServerConfigForm = ({
 
         toast.success(getI18n().t('messages.serverAdded'))
         onSuccess?.(server.id, 'created')
-      } else if (mode === 'edit' && serverId) {
+      }
+      else if (mode === 'edit' && serverId) {
         multiServerStoreSetters.updateServer(serverId, {
           name: formData.name,
           config,
@@ -107,13 +108,15 @@ export const useServerConfigForm = ({
         servers: Object.values(useMultiServerStore.getState().servers),
         activeServerId: useMultiServerStore.getState().activeServerId,
       })
-    } catch (error) {
+    }
+    catch (error) {
       const err = error instanceof Error ? error : new Error('Unknown error')
       const key = mode === 'add' ? 'messages.serverAddFailed' : 'messages.serverUpdateFailed'
       toast.error(`${getI18n().t(key)}: ${err.message}`)
       onError?.(err)
       throw err
-    } finally {
+    }
+    finally {
       setIsSubmitting(false)
     }
   }
@@ -128,7 +131,8 @@ export const useServerConfigForm = ({
       }
       setTestResult(result)
       return result
-    } catch (error) {
+    }
+    catch (error) {
       const result: TestResult = {
         success: false,
         message: error instanceof Error ? error.message : 'Test failed',

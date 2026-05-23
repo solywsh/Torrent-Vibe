@@ -11,11 +11,11 @@ const calculateStats = (torrents: TorrentInfo[]): TorrentStats =>
 
 // Custom hooks for computed values using precise selectors
 export const useTorrentStats = (): TorrentStats => {
-  return useTorrentDataStore((state) => calculateStats(state.torrents))
+  return useTorrentDataStore(state => calculateStats(state.torrents))
 }
 
 export const useHasSelection = (): boolean => {
-  return useTorrentDataStore((state) => state.selectedTorrents.length > 0)
+  return useTorrentDataStore(state => state.selectedTorrents.length > 0)
 }
 
 // Network statistics computation
@@ -46,13 +46,12 @@ const calculateNetworkStats = (
 
 // Network statistics hooks
 export const useNetworkStats = (): NetworkStats => {
-  return useTorrentDataStore((state) =>
-    calculateNetworkStats(state.torrents, state.serverState),
-  )
+  return useTorrentDataStore(state =>
+    calculateNetworkStats(state.torrents, state.serverState))
 }
 
 export const useServerState = () => {
-  return useTorrentDataStore((state) => state.serverState)
+  return useTorrentDataStore(state => state.serverState)
 }
 
 export const useGlobalSpeeds = (): {
@@ -74,10 +73,10 @@ export const useGlobalSpeeds = (): {
 export const useActiveTorrent = (): TorrentInfo | null => {
   const activeTorrentHash = useTorrentTableSelectors.useActiveTorrentHash()
   return useTorrentDataStore((state) => {
-    if (!activeTorrentHash) return null
+    if (!activeTorrentHash) { return null }
     return (
-      state.torrents.find((torrent) => torrent.hash === activeTorrentHash) ??
-      null
+      state.torrents.find(torrent => torrent.hash === activeTorrentHash)
+      ?? null
     )
   })
 }
@@ -85,11 +84,16 @@ export const useActiveTorrent = (): TorrentInfo | null => {
 export const useGlobalTotalData = (): {
   totalDownloaded: number
   totalUploaded: number
-  freeSpaceOnDisk: number
+  totalTorrentsSize: number
 } => {
-  return useTorrentDataStore((state) => ({
-    totalDownloaded: state.serverState?.dl_info_data ?? 0,
-    totalUploaded: state.serverState?.up_info_data ?? 0,
-    freeSpaceOnDisk: state.serverState?.free_space_on_disk ?? 0,
+  return useTorrentDataStore(state => ({
+    // alltime_dl/ul = lifetime totals; dl_info_data/up_info_data is session-only.
+    totalDownloaded: state.serverState?.alltime_dl ?? 0,
+    totalUploaded: state.serverState?.alltime_ul ?? 0,
+    // Disk usage by all torrents (sum of every torrent's total size)
+    totalTorrentsSize: state.torrents.reduce(
+      (sum, t) => sum + (t.size || 0),
+      0,
+    ),
   }))
 }

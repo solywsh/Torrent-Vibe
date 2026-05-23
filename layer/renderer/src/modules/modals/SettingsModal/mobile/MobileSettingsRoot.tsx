@@ -42,7 +42,7 @@ export const MobileSettingsRoot: React.FC<MobileSettingsRootProps> = ({
   }
 
   // Create settings sections
-  const sections = SIDEBAR_GROUPS.map((group) =>
+  const sections = SIDEBAR_GROUPS.map(group =>
     createMobileSettingsSection({
       id: group.id,
       title: t(group.translationKey),
@@ -59,8 +59,7 @@ export const MobileSettingsRoot: React.FC<MobileSettingsRootProps> = ({
           showDisclosure: true,
         })
       }),
-    }),
-  )
+    }))
 
   if (hideHeader) {
     // Content-only mode (when header is managed externally)

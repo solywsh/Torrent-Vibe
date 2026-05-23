@@ -42,7 +42,7 @@ export const SettingSectionCard = ({
         <SettingSwitchField
           label={switchLabel ?? ''}
           checked={!!enabled}
-          onCheckedChange={(v) => onToggleEnabled?.(!!v)}
+          onCheckedChange={v => onToggleEnabled?.(!!v)}
         />
       </div>,
     )
@@ -58,9 +58,11 @@ export const SettingSectionCard = ({
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-base font-medium text-text">{title}</h3>
-          {description ? (
-            <p className="text-xs text-text-secondary mt-1">{description}</p>
-          ) : null}
+          {description
+            ? (
+                <p className="text-xs text-text-secondary mt-1">{description}</p>
+              )
+            : null}
         </div>
         {headerExtras.length > 0 && (
           <div className="ml-4 flex items-center gap-3">{headerExtras}</div>

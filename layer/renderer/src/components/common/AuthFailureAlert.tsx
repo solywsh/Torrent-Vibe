@@ -29,7 +29,8 @@ export const AuthFailureAlert = () => {
     const success = await authManager.refreshAuth()
     if (success) {
       toast.success(getI18n().t('messages.authSuccessful'))
-    } else {
+    }
+    else {
       toast.error(getI18n().t('messages.authRetryFailed'))
     }
   }
@@ -39,7 +40,8 @@ export const AuthFailureAlert = () => {
       setAuthStatus('unauthenticated')
       setLastAuthError(null)
       navigate('/onboarding')
-    } else {
+    }
+    else {
       Modal.present(SettingsModal, { tab: 'servers' })
     }
   }
@@ -67,8 +69,8 @@ export const AuthFailureAlert = () => {
               Authentication Failed
             </h3>
             <p className="mt-1 text-xs text-red-700 dark:text-red-300">
-              {lastAuthError ||
-                'Unable to authenticate with qBittorrent server'}
+              {lastAuthError
+                || 'Unable to authenticate with qBittorrent server'}
             </p>
             <div className="mt-3 flex gap-2">
               <Button

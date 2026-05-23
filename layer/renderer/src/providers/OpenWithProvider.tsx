@@ -9,7 +9,7 @@ export const OpenWithProvider = () => {
     const onOpenTorrents = (
       _: unknown,
       payload: {
-        files: Array<{ name: string; data: Uint8Array; mime?: string }>
+        files: Array<{ name: string, data: Uint8Array, mime?: string }>
       },
     ) => {
       try {
@@ -24,7 +24,8 @@ export const OpenWithProvider = () => {
         if (files.length > 0) {
           Modal.present(AddTorrentModal, { initialFiles: files })
         }
-      } catch (e) {
+      }
+      catch (e) {
         console.error('Failed to open torrent files from main:', e)
       }
     }
@@ -37,12 +38,13 @@ export const OpenWithProvider = () => {
     ) => {
       try {
         const text = (payload?.links || [])
-          .map((s) => s?.trim())
+          .map(s => s?.trim())
           .filter(Boolean)
           .join('\n')
-        if (!text) return
+        if (!text) { return }
         Modal.present(AddTorrentModal, { initialMagnetLinks: text })
-      } catch (e) {
+      }
+      catch (e) {
         console.error('Failed to open magnet links from main:', e)
       }
     }

@@ -26,7 +26,7 @@ export const AppSettingsImportModal: ModalComponent<
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file) { return }
 
     // Validate file type
     if (!file.name.toLowerCase().endsWith('.json')) {
@@ -39,7 +39,8 @@ export const AppSettingsImportModal: ModalComponent<
     try {
       const fileContent = await file.text()
       setText(fileContent)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to read file', error)
       toast.error(t('general.dataManagement.importModal.errors.fileReadFailed'))
     }
@@ -56,10 +57,12 @@ export const AppSettingsImportModal: ModalComponent<
       toast.success(getI18n().t('messages.settingsImported'))
       onImported?.()
       dismiss()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to import settings', error)
       toast.error(getI18n().t('messages.settingsImportFailed'))
-    } finally {
+    }
+    finally {
       setImporting(false)
     }
   }
@@ -78,7 +81,7 @@ export const AppSettingsImportModal: ModalComponent<
         placeholder={t('general.dataManagement.importModal.placeholder')}
         rows={10}
         value={text}
-        onChange={(event) => setText(event.target.value)}
+        onChange={event => setText(event.target.value)}
       />
 
       <p className="text-xs text-text-secondary">

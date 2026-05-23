@@ -20,8 +20,8 @@ type TorrentPreviewDialogOwnProps = TorrentContentPreviewProps & {
   onDismiss?: () => void
 }
 
-type TorrentPreviewDialogProps = TorrentPreviewDialogOwnProps &
-  ModalComponentProps
+type TorrentPreviewDialogProps = TorrentPreviewDialogOwnProps
+  & ModalComponentProps
 
 export const TorrentPreviewDialog: ModalComponent<
   TorrentPreviewDialogOwnProps
@@ -82,6 +82,6 @@ export const TorrentPreviewDialog: ModalComponent<
   )
 }
 
-TorrentPreviewDialog.contentClassName =
-  'w-[min(90vw,900px)] max-w-3xl max-h-[min(80vh,680px)] flex flex-col gap-4 overflow-hidden'
+TorrentPreviewDialog.contentClassName
+  = 'w-[min(90vw,900px)] max-w-3xl max-h-[min(80vh,680px)] flex flex-col gap-4 overflow-hidden'
 TorrentPreviewDialog.showCloseButton = true

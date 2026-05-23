@@ -13,8 +13,8 @@ import { argv } from 'node:process'
 
 function getArg(name, def) {
   const i = argv.indexOf(`--${name}`)
-  if (i === -1) return def
-  if (i + 1 >= argv.length) throw new Error(`Missing --${name} value`)
+  if (i === -1) { return def }
+  if (i + 1 >= argv.length) { throw new Error(`Missing --${name} value`) }
   return argv[i + 1]
 }
 

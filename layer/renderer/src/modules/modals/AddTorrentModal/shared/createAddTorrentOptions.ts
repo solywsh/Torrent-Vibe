@@ -13,9 +13,9 @@ export const createAddTorrentOptions = (
   formData: TorrentFormData,
   overrides: Partial<AddTorrentOptions> = {},
 ): AddTorrentOptions => {
-  const hasMagnets =
-    formData.magnetLinks.trim() !== '' &&
-    formData.magnetLinks.includes('magnet:')
+  const hasMagnets
+    = formData.magnetLinks.trim() !== ''
+      && formData.magnetLinks.includes('magnet:')
   const hasFiles = formData.files.length > 0
 
   const baseOptions: AddTorrentOptions = {

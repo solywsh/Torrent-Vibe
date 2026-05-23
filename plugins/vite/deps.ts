@@ -8,8 +8,8 @@ export function createDependencyChunksPlugin(
     config(config: UserConfig) {
       config.build = config.build || {}
       config.build.rollupOptions = config.build.rollupOptions || {}
-      config.build.rollupOptions.output =
-        config.build.rollupOptions.output || {}
+      config.build.rollupOptions.output
+        = config.build.rollupOptions.output || {}
 
       const { output } = config.build.rollupOptions
       const outputConfig = Array.isArray(output) ? output[0] : output
@@ -23,8 +23,8 @@ export function createDependencyChunksPlugin(
       outputConfig.manualChunks = (id: string, { getModuleInfo }) => {
         const moduleInfo = getModuleInfo(id)
         if (
-          moduleInfo?.dynamicImporters?.length &&
-          moduleInfo?.importers?.length
+          moduleInfo?.dynamicImporters?.length
+          && moduleInfo?.importers?.length
         ) {
           return null
         }

@@ -27,7 +27,7 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
 }) => {
   const canGoBack = useMobileNavigationSelectors.useCanGoBack()
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
-  const pop = useMobileNavigationStore((state) => state.pop)
+  const pop = useMobileNavigationStore(state => state.pop)
 
   const controls = useAnimation()
   const [isDragging, setIsDragging] = useState(false)
@@ -40,7 +40,7 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
   // Handle drag start
   const handleDragStart = useCallback(
     (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (!isGestureEnabled) return
+      if (!isGestureEnabled) { return }
 
       // Only allow swipe from left edge (first 20px of screen)
       const startX = info.point.x
@@ -60,7 +60,7 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
   // Handle drag motion
   const handleDrag = useCallback(
     (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (!isDragging || !isGestureEnabled) return
+      if (!isDragging || !isGestureEnabled) { return }
 
       const deltaX = info.offset.x
       const screenWidth = window.innerWidth
@@ -90,8 +90,8 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
       const velocityX = info.velocity.x
 
       // Determine if swipe should trigger navigation
-      const shouldNavigate =
-        deltaX > swipeThreshold || (deltaX > 50 && velocityX > 300)
+      const shouldNavigate
+        = deltaX > swipeThreshold || (deltaX > 50 && velocityX > 300)
 
       setIsDragging(false)
       setDragProgress(0)
@@ -110,14 +110,16 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
               if (!handled) {
                 pop()
               }
-            } else {
+            }
+            else {
               pop()
             }
 
             // Reset position
             controls.set({ x: 0 })
           })
-      } else {
+      }
+      else {
         // Animate back to original position
         controls.start({
           x: 0,
@@ -131,7 +133,7 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
   // Handle touch events for better mobile support
   const handleTouchStart = useCallback(
     (event: React.TouchEvent) => {
-      if (!isGestureEnabled) return
+      if (!isGestureEnabled) { return }
 
       const touch = event.touches[0]
       const info: PanInfo = {
@@ -205,7 +207,7 @@ export const MobileGestureHandler: React.FC<MobileGestureHandlerProps> = ({
 export const useMobileGesture = () => {
   const canGoBack = useMobileNavigationSelectors.useCanGoBack()
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
-  const pop = useMobileNavigationStore((state) => state.pop)
+  const pop = useMobileNavigationStore(state => state.pop)
 
   const triggerSwipeBack = useCallback(() => {
     if (canGoBack && !isNavigating) {

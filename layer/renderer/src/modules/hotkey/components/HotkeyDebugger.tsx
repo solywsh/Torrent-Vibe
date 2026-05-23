@@ -26,7 +26,7 @@ export function HotkeyDebugger({
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    if (!isVisible) return
+    if (!isVisible) { return }
 
     const updateDebugInfo = () => {
       setDebugInfo(manager.getDebugInfo())
@@ -51,7 +51,7 @@ export function HotkeyDebugger({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isVisible])
 
-  if (!isVisible || !debugInfo) return null
+  if (!isVisible || !debugInfo) { return null }
 
   const positionStyles = {
     'top-right': { top: 10, right: 10 },
@@ -63,13 +63,13 @@ export function HotkeyDebugger({
   const filteredHotkeys = Array.from(
     debugInfo.registeredHotkeys.entries(),
   ).filter(([combo, hotkey]) => {
-    if (!filter) return true
+    if (!filter) { return true }
     const searchText = filter.toLowerCase()
     return (
-      combo.toLowerCase().includes(searchText) ||
-      hotkey.scopeId.toLowerCase().includes(searchText) ||
-      hotkey.description?.toLowerCase().includes(searchText) ||
-      hotkey.category?.toLowerCase().includes(searchText)
+      combo.toLowerCase().includes(searchText)
+      || hotkey.scopeId.toLowerCase().includes(searchText)
+      || hotkey.description?.toLowerCase().includes(searchText)
+      || hotkey.category?.toLowerCase().includes(searchText)
     )
   })
 
@@ -102,7 +102,9 @@ export function HotkeyDebugger({
         }}
       >
         <h3 style={{ margin: 0, fontSize: 14, fontWeight: 'bold' }}>
-          Hotkey Debugger {(!isEnabled && <span>(Disabled)</span>) || null}
+          Hotkey Debugger
+          {' '}
+          {(!isEnabled && <span>(Disabled)</span>) || null}
         </h3>
         <button
           type="button"
@@ -127,7 +129,7 @@ export function HotkeyDebugger({
           backgroundColor: 'rgba(255, 255, 255, 0.05)',
         }}
       >
-        {['hotkeys', 'scopes', 'focus', 'performance'].map((tab) => (
+        {['hotkeys', 'scopes', 'focus', 'performance'].map(tab => (
           <button
             key={tab}
             type="button"
@@ -190,7 +192,10 @@ export function HotkeyDebugger({
           backgroundColor: 'rgba(0, 0, 0, 0.3)',
         }}
       >
-        Press Ctrl+Shift+D to toggle | Updated every {refreshInterval}ms
+        Press Ctrl+Shift+D to toggle | Updated every
+        {' '}
+        {refreshInterval}
+        ms
       </div>
     </div>
   )
@@ -214,7 +219,7 @@ function HotkeyTab({
           type="text"
           placeholder="Filter hotkeys..."
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={e => setFilter(e.target.value)}
           style={{
             width: '100%',
             padding: '6px 8px',
@@ -226,7 +231,15 @@ function HotkeyTab({
           }}
         />
         <div style={{ marginTop: 4, color: '#888', fontSize: 10 }}>
-          Showing {hotkeys.length} of {totalCount} hotkeys
+          Showing
+          {' '}
+          {hotkeys.length}
+          {' '}
+          of
+          {' '}
+          {totalCount}
+          {' '}
+          hotkeys
         </div>
       </div>
 
@@ -281,11 +294,24 @@ function HotkeyTab({
             )}
 
             <div style={{ fontSize: 10, color: '#666' }}>
-              <span>Priority: {hotkey.priority}</span>
-              <span> | Reason: {hotkey.resolutionReason}</span>
-              {hotkey.category ? (
-                <span> | Category: {hotkey.category}</span>
-              ) : null}
+              <span>
+                Priority:
+                {hotkey.priority}
+              </span>
+              <span>
+                {' '}
+                | Reason:
+                {hotkey.resolutionReason}
+              </span>
+              {hotkey.category
+                ? (
+                    <span>
+                      {' '}
+                      | Category:
+                      {hotkey.category}
+                    </span>
+                  )
+                : null}
               {hotkey.preventDefault ? <span> preventDefault</span> : null}
               {hotkey.stopPropagation ? <span> stopPropagation</span> : null}
             </div>
@@ -346,19 +372,28 @@ function ScopeTab({
           {scope.id}
         </span>
         <span style={{ marginLeft: 8, fontSize: 10, color: '#666' }}>
-          (priority: {scope.priority}, strategy: {scope.strategy})
+          (priority:
+          {' '}
+          {scope.priority}
+          , strategy:
+          {' '}
+          {scope.strategy}
+          )
         </span>
       </div>
       {Object.values(scope.children).map((child: any) =>
-        renderScope(child, depth + 1),
-      )}
+        renderScope(child, depth + 1))}
     </div>
   )
 
   return (
     <div>
       <div style={{ marginBottom: 12, fontSize: 11 }}>
-        <strong>Active Scopes ({activeScopes.length}):</strong>
+        <strong>
+          Active Scopes (
+          {activeScopes.length}
+          ):
+        </strong>
         <div style={{ color: '#4caf50', marginTop: 4 }}>
           {activeScopes.join(' → ')}
         </div>
@@ -375,40 +410,54 @@ function ScopeTab({
 function FocusTab({ focusContext }: { focusContext: FocusContext }) {
   return (
     <div>
-      {focusContext ? (
-        <>
-          <div style={{ marginBottom: 8 }}>
-            <strong>Current Scope:</strong> {focusContext.scopeId}
-          </div>
-          <div style={{ marginBottom: 8 }}>
-            <strong>Priority:</strong> {focusContext.priority}
-          </div>
-          <div style={{ marginBottom: 8 }}>
-            <strong>Scope Path:</strong>
-            <div style={{ marginTop: 4, color: '#4fc3f7' }}>
-              {focusContext.scopePath.join(' → ')}
+      {focusContext
+        ? (
+            <>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Current Scope:</strong>
+                {' '}
+                {focusContext.scopeId}
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Priority:</strong>
+                {' '}
+                {focusContext.priority}
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Scope Path:</strong>
+                <div style={{ marginTop: 4, color: '#4fc3f7' }}>
+                  {focusContext.scopePath.join(' → ')}
+                </div>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Element:</strong>
+                <div style={{ marginTop: 4, fontSize: 10, color: '#ccc' }}>
+                  {focusContext.element.tagName.toLowerCase()}
+                  {focusContext.element.className
+                    ? (
+                        <span>
+                          .
+                          {focusContext.element.className.split(' ').join('.')}
+                        </span>
+                      )
+                    : null}
+                  {focusContext.element.id
+                    ? (
+                        <span>
+                          #
+                          {focusContext.element.id}
+                        </span>
+                      )
+                    : null}
+                </div>
+              </div>
+            </>
+          )
+        : (
+            <div style={{ color: '#888', fontStyle: 'italic' }}>
+              No focus context available
             </div>
-          </div>
-          <div style={{ marginBottom: 8 }}>
-            <strong>Element:</strong>
-            <div style={{ marginTop: 4, fontSize: 10, color: '#ccc' }}>
-              {focusContext.element.tagName.toLowerCase()}
-              {focusContext.element.className ? (
-                <span>
-                  .{focusContext.element.className.split(' ').join('.')}
-                </span>
-              ) : null}
-              {focusContext.element.id ? (
-                <span>#{focusContext.element.id}</span>
-              ) : null}
-            </div>
-          </div>
-        </>
-      ) : (
-        <div style={{ color: '#888', fontStyle: 'italic' }}>
-          No focus context available
-        </div>
-      )}
+          )}
     </div>
   )
 }
@@ -417,16 +466,28 @@ function PerformanceTab({ metrics }: { metrics: any }) {
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
-        <strong>FPS:</strong> {metrics.fps}
+        <strong>FPS:</strong>
+        {' '}
+        {metrics.fps}
       </div>
       <div style={{ marginBottom: 8 }}>
-        <strong>CPU Usage:</strong> {metrics.cpuUsage}%
+        <strong>CPU Usage:</strong>
+        {' '}
+        {metrics.cpuUsage}
+        %
       </div>
       <div style={{ marginBottom: 8 }}>
-        <strong>Memory Usage:</strong> {metrics.memoryUsage} MB
+        <strong>Memory Usage:</strong>
+        {' '}
+        {metrics.memoryUsage}
+        {' '}
+        MB
       </div>
       <div style={{ marginBottom: 8 }}>
-        <strong>Hotkey Latency:</strong> {metrics.hotkeyLatency.toFixed(2)}ms
+        <strong>Hotkey Latency:</strong>
+        {' '}
+        {metrics.hotkeyLatency.toFixed(2)}
+        ms
       </div>
     </div>
   )

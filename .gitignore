@@ -17,3 +17,10 @@ scripts/apple/Contents/
 resources/security/update_privkey.pem
 
 .turbo
+
+.idea
+.vscode
+docs
+.serena
+AGENTS.md
+CLAUDE.md

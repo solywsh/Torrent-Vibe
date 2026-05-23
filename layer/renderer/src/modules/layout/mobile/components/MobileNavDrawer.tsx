@@ -83,18 +83,18 @@ const MobileNavDrawerContent = () => {
   const setTheme = useSetTheme()
   const isDark = useIsDark()
   const { downloadSpeed, uploadSpeed } = useGlobalSpeeds()
-  const { totalDownloaded, totalUploaded, freeSpaceOnDisk } =
-    useGlobalTotalData()
+  const { totalDownloaded, totalUploaded, totalTorrentsSize }
+    = useGlobalTotalData()
   const hasSelection = useHasSelection()
   const activeTorrentHash = useTorrentTableSelectors.useActiveTorrentHash()
-  const { showToolbar, toolbarActions, exitMultiSelectMode, selectionSummary } =
-    useMobileSelectionToolbar()
+  const { showToolbar, toolbarActions, exitMultiSelectMode, selectionSummary }
+    = useMobileSelectionToolbar()
 
   const canInteract = hasSelection || activeTorrentHash
 
   // Torrent action handler
   const handleTorrentAction = async (action: 'pause' | 'resume' | 'delete') => {
-    if (!canInteract) return
+    if (!canInteract) { return }
 
     const hashes = hasSelection
       ? useTorrentDataStore.getState().selectedTorrents
@@ -118,7 +118,8 @@ const MobileNavDrawerContent = () => {
           break
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`${getI18n().t('messages.torrentsAddFailed')}:`, error)
     }
   }
@@ -126,13 +127,15 @@ const MobileNavDrawerContent = () => {
   const toggleTheme = useCallback(() => {
     if (theme === 'system') {
       setTheme(isDark ? 'light' : 'dark')
-    } else {
+    }
+    else {
       const systemIsDark = window.matchMedia(
         '(prefers-color-scheme: dark)',
       ).matches
       if (theme === 'dark') {
         setTheme(systemIsDark ? 'light' : 'system')
-      } else if (theme === 'light') {
+      }
+      else if (theme === 'light') {
         setTheme(systemIsDark ? 'system' : 'dark')
       }
     }
@@ -194,10 +197,10 @@ const MobileNavDrawerContent = () => {
         <div className="mt-3 bg-material-ultra-thin rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">
             <i className="i-mingcute-usb-flash-disk-line text-blue text-sm" />
-            <span className="text-text-secondary text-sm">Free Space</span>
+            <span className="text-text-secondary text-sm">Torrents Size</span>
           </div>
           <div className="font-mono text-sm text-text">
-            {formatBytes(freeSpaceOnDisk)}
+            {formatBytes(totalTorrentsSize)}
           </div>
         </div>
       </div>
@@ -254,7 +257,7 @@ const MobileNavDrawerContent = () => {
               </div>
 
               <div className="space-y-2">
-                {toolbarActions.map((action) => (
+                {toolbarActions.map(action => (
                   <Button
                     key={action.id}
                     variant="ghost"
@@ -364,7 +367,8 @@ const MobileNavDrawerContent = () => {
                       : 'i-mingcute-moon-line',
                 )}
               />
-              Theme:{' '}
+              Theme:
+              {' '}
               {theme === 'system'
                 ? 'System'
                 : theme === 'dark'

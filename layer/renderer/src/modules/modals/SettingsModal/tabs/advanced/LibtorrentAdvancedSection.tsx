@@ -25,17 +25,15 @@ export const LibtorrentAdvancedSection = ({
         label="Async I/O threads"
         type="number"
         value={String(prefs.async_io_threads ?? 10)}
-        onChange={(v) =>
-          onPrefsChange({ async_io_threads: Number.parseInt(v) || 10 })
-        }
+        onChange={v =>
+          onPrefsChange({ async_io_threads: Number.parseInt(v) || 10 })}
       />
       <SettingInputField
         label="File pool size"
         type="number"
         value={String(prefs.file_pool_size ?? 100)}
-        onChange={(v) =>
-          onPrefsChange({ file_pool_size: Number.parseInt(v) || 100 })
-        }
+        onChange={v =>
+          onPrefsChange({ file_pool_size: Number.parseInt(v) || 100 })}
       />
       <SettingField label="Disk cache (requires libtorrent < 2.0)">
         <div className="flex items-center gap-2">
@@ -43,11 +41,10 @@ export const LibtorrentAdvancedSection = ({
             id="disk-cache"
             type="number"
             value={prefs.disk_cache ?? -1}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 disk_cache: Number.parseInt(e.target.value) || -1,
-              })
-            }
+              })}
             className="w-24"
           />
           <span className="text-sm text-text-tertiary">MiB</span>
@@ -59,11 +56,10 @@ export const LibtorrentAdvancedSection = ({
             id="disk-cache-ttl"
             type="number"
             value={prefs.disk_cache_ttl ?? 60}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 disk_cache_ttl: Number.parseInt(e.target.value) || 60,
-              })
-            }
+              })}
             className="w-24"
           />
           <span className="text-sm text-text-tertiary">s</span>
@@ -72,9 +68,8 @@ export const LibtorrentAdvancedSection = ({
       <SettingSelectField
         label="Upload choking algorithm"
         value={String(prefs.upload_choking_algorithm ?? 0)}
-        onValueChange={(value) =>
-          onPrefsChange({ upload_choking_algorithm: Number.parseInt(value) })
-        }
+        onValueChange={value =>
+          onPrefsChange({ upload_choking_algorithm: Number.parseInt(value) })}
         options={[
           { value: '0', label: 'Round-robin' },
           { value: '1', label: 'Fastest upload' },
@@ -84,9 +79,8 @@ export const LibtorrentAdvancedSection = ({
       <SettingSelectField
         label="Upload slots behavior"
         value={String(prefs.upload_slots_behavior ?? 0)}
-        onValueChange={(value) =>
-          onPrefsChange({ upload_slots_behavior: Number.parseInt(value) })
-        }
+        onValueChange={value =>
+          onPrefsChange({ upload_slots_behavior: Number.parseInt(value) })}
         options={[
           { value: '0', label: 'Fixed slots' },
           { value: '1', label: 'Upload rate based' },
@@ -96,33 +90,29 @@ export const LibtorrentAdvancedSection = ({
         id="enable-os-cache"
         label="Enable OS cache"
         checked={prefs.enable_os_cache ?? false}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ enable_os_cache: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ enable_os_cache: Boolean(checked) })}
       />
       <SettingSwitchField
         id="enable-coalesce-read-write"
         label="Coalesce reads & writes (requires libtorrent < 2.0)"
         checked={prefs.enable_coalesce_read_write ?? false}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ enable_coalesce_read_write: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ enable_coalesce_read_write: Boolean(checked) })}
       />
       <SettingSwitchField
         id="enable-piece-extent-affinity"
         label="Use piece extent affinity"
         checked={prefs.enable_piece_extent_affinity ?? false}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ enable_piece_extent_affinity: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ enable_piece_extent_affinity: Boolean(checked) })}
       />
       <SettingSwitchField
         id="enable-upload-suggestions"
         label="Send upload piece suggestions"
         checked={prefs.enable_upload_suggestions ?? false}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ enable_upload_suggestions: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ enable_upload_suggestions: Boolean(checked) })}
       />
       <SettingField label="Send buffer watermark">
         <div className="flex items-center gap-2">
@@ -130,11 +120,10 @@ export const LibtorrentAdvancedSection = ({
             id="send-buffer-watermark"
             type="number"
             value={prefs.send_buffer_watermark ?? 500}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 send_buffer_watermark: Number.parseInt(e.target.value) || 500,
-              })
-            }
+              })}
             className="w-24"
           />
           <span className="text-sm text-text-tertiary">KiB</span>
@@ -146,12 +135,11 @@ export const LibtorrentAdvancedSection = ({
             id="send-buffer-low-watermark"
             type="number"
             value={prefs.send_buffer_low_watermark ?? 10}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 send_buffer_low_watermark:
                   Number.parseInt(e.target.value) || 10,
-              })
-            }
+              })}
             className="w-24"
           />
           <span className="text-sm text-text-tertiary">KiB</span>
@@ -163,12 +151,11 @@ export const LibtorrentAdvancedSection = ({
             id="send-buffer-watermark-factor"
             type="number"
             value={prefs.send_buffer_watermark_factor ?? 50}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 send_buffer_watermark_factor:
                   Number.parseInt(e.target.value) || 50,
-              })
-            }
+              })}
             className="w-24"
           />
           <span className="text-sm text-text-tertiary">%</span>
@@ -178,25 +165,22 @@ export const LibtorrentAdvancedSection = ({
         label="Outgoing port (min) [0: disabled]"
         type="number"
         value={String(prefs.outgoing_ports_min ?? 0)}
-        onChange={(v) =>
-          onPrefsChange({ outgoing_ports_min: Number.parseInt(v) || 0 })
-        }
+        onChange={v =>
+          onPrefsChange({ outgoing_ports_min: Number.parseInt(v) || 0 })}
       />
       <SettingInputField
         label="Outgoing port (max) [0: disabled]"
         type="number"
         value={String(prefs.outgoing_ports_max ?? 0)}
-        onChange={(v) =>
-          onPrefsChange({ outgoing_ports_max: Number.parseInt(v) || 0 })
-        }
+        onChange={v =>
+          onPrefsChange({ outgoing_ports_max: Number.parseInt(v) || 0 })}
       />
       <SettingInputField
         label="Socket backlog size"
         type="number"
         value={String(prefs.socket_backlog_size ?? 30)}
-        onChange={(v) =>
-          onPrefsChange({ socket_backlog_size: Number.parseInt(v) || 30 })
-        }
+        onChange={v =>
+          onPrefsChange({ socket_backlog_size: Number.parseInt(v) || 30 })}
       />
     </SettingSectionCard>
   )

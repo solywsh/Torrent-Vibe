@@ -148,7 +148,7 @@ export class AppMenuManager {
               ?.isAlwaysOnTop(),
             click: () => {
               const mainWindow = WindowManager.getInstance().getMainWindow()
-              if (!mainWindow) return
+              if (!mainWindow) { return }
               mainWindow.setAlwaysOnTop(!mainWindow.isAlwaysOnTop())
               this.registerAppMenu()
             },

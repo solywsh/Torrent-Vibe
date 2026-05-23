@@ -13,7 +13,8 @@ import { SettingsModal } from './SettingsModal'
 export const presentSettingsModal = (options?: { tab: SettingsSection }) => {
   if (isMobile()) {
     Modal.present(MobileSettingsModal, options)
-  } else {
+  }
+  else {
     Modal.present(SettingsModal, options)
   }
 }

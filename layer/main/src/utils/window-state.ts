@@ -31,18 +31,19 @@ const getStateFile = (name?: string) =>
 function readState(name?: string): WindowStateData | null {
   try {
     const file = getStateFile(name)
-    if (!existsSync(file)) return null
+    if (!existsSync(file)) { return null }
     const raw = readFileSync(file, 'utf-8')
     const data = JSON.parse(raw) as WindowStateData
     if (
-      typeof data.x === 'number' &&
-      typeof data.y === 'number' &&
-      typeof data.width === 'number' &&
-      typeof data.height === 'number'
+      typeof data.x === 'number'
+      && typeof data.y === 'number'
+      && typeof data.width === 'number'
+      && typeof data.height === 'number'
     ) {
       return data
     }
-  } catch {
+  }
+  catch {
     // ignore corrupted state
   }
   return null
@@ -52,7 +53,8 @@ function writeState(state: WindowStateData, name?: string) {
   try {
     const file = getStateFile(name)
     writeFileSync(file, JSON.stringify(state))
-  } catch {
+  }
+  catch {
     // ignore write errors
   }
 }
@@ -109,12 +111,12 @@ export function trackWindowState(win: BrowserWindow, opts: RestoreOptions) {
   // Debounced writer
   let writeTimer: NodeJS.Timeout | null = null
   const scheduleWrite = (state: WindowStateData) => {
-    if (writeTimer) clearTimeout(writeTimer)
-    writeTimer = setTimeout(() => writeState(state), 150)
+    if (writeTimer) { clearTimeout(writeTimer) }
+    writeTimer = setTimeout(writeState, 150, state)
   }
 
   const writeCurrent = () => {
-    if (win.isDestroyed()) return
+    if (win.isDestroyed()) { return }
     // Only persist normal bounds (not minimized/maximized/fullscreen)
     const isMaximized = win.isMaximized()
     const isFull = win.isFullScreen()
@@ -162,12 +164,12 @@ export function trackNamedWindowState(
 ) {
   let writeTimer: NodeJS.Timeout | null = null
   const scheduleWrite = (state: WindowStateData) => {
-    if (writeTimer) clearTimeout(writeTimer)
-    writeTimer = setTimeout(() => writeState(state, name), 150)
+    if (writeTimer) { clearTimeout(writeTimer) }
+    writeTimer = setTimeout(writeState, 150, state, name)
   }
 
   const writeCurrent = () => {
-    if (win.isDestroyed()) return
+    if (win.isDestroyed()) { return }
     const isMaximized = win.isMaximized()
     const isFull = win.isFullScreen()
     const isMin = win.isMinimized()
@@ -185,4 +187,4 @@ export function trackNamedWindowState(
   win.on('close', writeCurrent)
 }
 
-export type { RestoreOptions,WindowBounds }
+export type { RestoreOptions, WindowBounds }

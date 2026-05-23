@@ -15,7 +15,7 @@ export class SessionManager {
   private constructor() {}
 
   initialize(options: SessionInitOptions): void {
-    if (this.initialized) return
+    if (this.initialized) { return }
     this.initialized = true
     this.options = options
 
@@ -43,7 +43,7 @@ export class SessionManager {
     if (!this.options) {
       throw new Error('SessionManager must be initialized before binding.')
     }
-    if (this.boundSessions.has(targetSession)) return
+    if (this.boundSessions.has(targetSession)) { return }
     this.boundSessions.add(targetSession)
 
     const { isDevelopment, devServerHost, devServerPort } = this.options
@@ -69,7 +69,7 @@ export class SessionManager {
       const setHeader = (name: string, value: string) => {
         const lower = name.toLowerCase()
         for (const key of Object.keys(responseHeaders)) {
-          if (key.toLowerCase() === lower) delete responseHeaders[key]
+          if (key.toLowerCase() === lower) { delete responseHeaders[key] }
         }
         responseHeaders[name] = [value]
       }
@@ -84,7 +84,7 @@ export class SessionManager {
       setHeader('Access-Control-Expose-Headers', '*')
 
       const setCookieKey = Object.keys(responseHeaders).find(
-        (k) => k.toLowerCase() === 'set-cookie',
+        k => k.toLowerCase() === 'set-cookie',
       )
       if (setCookieKey) {
         for (const cookieHeader of responseHeaders[setCookieKey]) {
@@ -105,7 +105,7 @@ export class SessionManager {
     details: Electron.OnBeforeSendHeadersListenerDetails,
   ): Promise<void> {
     try {
-      if (!this.isQBittorrentRequest(details.url)) return
+      if (!this.isQBittorrentRequest(details.url)) { return }
 
       const cookies = await targetSession.cookies.get({
         url: details.url,
@@ -114,15 +114,18 @@ export class SessionManager {
       if (cookies.length > 0) {
         const sidCookie = cookies[0]
         const cookieHeader = `SID=${sidCookie.value}`
-        if (details.requestHeaders['Cookie']) {
-          details.requestHeaders['Cookie'] += `; ${cookieHeader}`
-        } else {
-          details.requestHeaders['Cookie'] = cookieHeader
+        if (details.requestHeaders.Cookie) {
+          details.requestHeaders.Cookie += `; ${cookieHeader}`
         }
-      } else {
+        else {
+          details.requestHeaders.Cookie = cookieHeader
+        }
+      }
+      else {
         console.info('No SID cookie found for request:', details.url)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to attach SID cookie:', error)
     }
   }
@@ -131,9 +134,10 @@ export class SessionManager {
     try {
       const urlObj = new URL(url)
       const path = urlObj.pathname.toLowerCase()
-      if (path.includes('/auth/login')) return false
+      if (path.includes('/auth/login')) { return false }
       return path.startsWith('/api/v2/')
-    } catch {
+    }
+    catch {
       return false
     }
   }
@@ -144,7 +148,7 @@ export class SessionManager {
     cookieHeader: string,
   ): Promise<void> {
     try {
-      const parts = cookieHeader.split(';').map((part) => part.trim())
+      const parts = cookieHeader.split(';').map(part => part.trim())
       const [nameValue] = parts
       const [name, value] = nameValue.split('=', 2)
       if (!name || value === undefined) {
@@ -155,8 +159,8 @@ export class SessionManager {
       const urlObj = new URL(url)
       const domain = urlObj.hostname
       const isHttps = urlObj.protocol === 'https:'
-      const expirationDate =
-        name === 'SID'
+      const expirationDate
+        = name === 'SID'
           ? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
           : undefined
       const sameSitePolicy: 'no_restriction' | 'lax' = isHttps
@@ -180,11 +184,14 @@ export class SessionManager {
         const part = parts[i].toLowerCase()
         if (part.startsWith('path=')) {
           cookieDetails.path = part.slice(5)
-        } else if (part.startsWith('domain=')) {
+        }
+        else if (part.startsWith('domain=')) {
           cookieDetails.domain = part.slice(7)
-        } else if (part === 'httponly') {
+        }
+        else if (part === 'httponly') {
           cookieDetails.httpOnly = true
-        } else if (part === 'secure') {
+        }
+        else if (part === 'secure') {
           cookieDetails.secure = true
         }
       }
@@ -201,15 +208,15 @@ export class SessionManager {
                   cookies.length > 0 ? cookies[0] : 'Not found',
                 )
               })
-              .catch((err) =>
-                console.error('Failed to verify SID cookie:', err),
-              )
+              .catch(err =>
+                console.error('Failed to verify SID cookie:', err))
           }
         })
         .catch((error) => {
           console.error('Failed to set cookie:', error)
         })
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error parsing and setting cookie:', error)
     }
   }

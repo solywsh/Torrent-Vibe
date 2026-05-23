@@ -7,7 +7,7 @@ import { Drawer } from 'vaul'
 import { cn } from '~/lib/cn'
 import { jotaiStore } from '~/lib/jotai'
 
-import type { BottomSheetComponent,BottomSheetItem  } from './types'
+import type { BottomSheetComponent, BottomSheetItem } from './types'
 import {
   BottomSheet,
   bottomSheetItemsAtom,
@@ -19,7 +19,7 @@ export const UniversalBottomSheetContainer = () => {
   return (
     <div id="global-bottomsheet-container">
       <AnimatePresence initial={false}>
-        {items.map((item) => (
+        {items.map(item => (
           <BottomSheetWrapper key={item.id} item={item} />
         ))}
       </AnimatePresence>
@@ -58,7 +58,7 @@ const BottomSheetWrapper = ({ item }: { item: BottomSheetItem }) => {
       const items = jotaiStore.get(bottomSheetItemsAtom)
       jotaiStore.set(
         bottomSheetItemsAtom,
-        items.filter((i) => i.id !== item.id),
+        items.filter(i => i.id !== item.id),
       )
     }
   })
@@ -67,7 +67,8 @@ const BottomSheetWrapper = ({ item }: { item: BottomSheetItem }) => {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-    } else {
+    }
+    else {
       document.body.style.overflow = ''
     }
 

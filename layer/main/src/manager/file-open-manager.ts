@@ -12,7 +12,7 @@ export class FileOpenManager {
 
   private pendingTorrentOpens: string[] = []
   private pendingOpenFilePayloads: Array<{
-    files: Array<{ name: string; data: Uint8Array; mime?: string }>
+    files: Array<{ name: string, data: Uint8Array, mime?: string }>
   }> = []
 
   private constructor() {}
@@ -24,7 +24,8 @@ export class FileOpenManager {
       if (path && path.toLowerCase().endsWith('.torrent')) {
         if (app.isReady()) {
           void this.handleTorrentFileOpens([path])
-        } else {
+        }
+        else {
           this.pendingTorrentOpens.push(path)
         }
       }
@@ -62,14 +63,14 @@ export class FileOpenManager {
   }
 
   private async flushPendingTorrentOpens(): Promise<void> {
-    if (this.pendingTorrentOpens.length === 0) return
+    if (this.pendingTorrentOpens.length === 0) { return }
     const paths = [...this.pendingTorrentOpens]
     this.pendingTorrentOpens = []
     await this.handleTorrentFileOpens(paths)
   }
 
   private async flushPendingOpenFilePayloads(): Promise<void> {
-    if (this.pendingOpenFilePayloads.length === 0) return
+    if (this.pendingOpenFilePayloads.length === 0) { return }
     for (const payload of this.pendingOpenFilePayloads) {
       BridgeService.shared.broadcast('file:open-torrents', payload)
     }
@@ -77,12 +78,12 @@ export class FileOpenManager {
   }
 
   async handleTorrentFileOpens(paths: string[]): Promise<void> {
-    if (!paths || paths.length === 0) return
+    if (!paths || paths.length === 0) { return }
     // Ensure main window is visible
     await WindowManager.getInstance().showMainWindow()
 
     // Read files and broadcast to renderer
-    const files: Array<{ name: string; data: Uint8Array; mime: string }> = []
+    const files: Array<{ name: string, data: Uint8Array, mime: string }> = []
     for (const p of paths) {
       try {
         const buf = await fs.readFile(p)
@@ -91,7 +92,8 @@ export class FileOpenManager {
           data: new Uint8Array(buf),
           mime: 'application/x-bittorrent',
         })
-      } catch (e) {
+      }
+      catch (e) {
         console.warn('Failed to read .torrent file:', p, e)
       }
     }

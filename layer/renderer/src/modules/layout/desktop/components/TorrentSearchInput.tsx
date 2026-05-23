@@ -55,7 +55,7 @@ export const TorrentSearchInput: React.FC<TorrentSearchInputProps> = ({
   fullRounded = false,
   className,
 }) => {
-  const searchQuery = useTorrentDataStore((s) => s.searchQuery ?? '')
+  const searchQuery = useTorrentDataStore(s => s.searchQuery ?? '')
 
   const [value, setValue] = React.useState(searchQuery)
   const [focused, setFocused] = React.useState(false)
@@ -79,8 +79,8 @@ export const TorrentSearchInput: React.FC<TorrentSearchInputProps> = ({
   const styles = torrentSearchInputStyles({ variant, fullRounded })
 
   // Adjust widths based on variant
-  const widths =
-    variant === 'compact'
+  const widths
+    = variant === 'compact'
       ? { focused: 200, unfocused: 160 }
       : { focused: 240, unfocused: 192 }
 
@@ -94,7 +94,7 @@ export const TorrentSearchInput: React.FC<TorrentSearchInputProps> = ({
     >
       <Input
         type="search"
-        placeholder={'Search torrents...'}
+        placeholder="Search torrents..."
         inputClassName={cn(styles.input(), {
           'pr-8': isPending,
           'pr-6': isPending && variant === 'compact',
@@ -103,7 +103,7 @@ export const TorrentSearchInput: React.FC<TorrentSearchInputProps> = ({
         })}
         className={styles.input()}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={e => setValue(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />

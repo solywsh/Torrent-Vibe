@@ -57,12 +57,12 @@ export class TmdbClient {
   }>
 
   constructor() {
-    this.cache = new PersistentLRUCache<{ createdAt: number; data: unknown }>({
+    this.cache = new PersistentLRUCache<{ createdAt: number, data: unknown }>({
       fileName: 'tmdb-cache.json',
       namespace: 'tmdb-client.v1',
       limit: 800,
       ttlMs: 24 * 60 * 60 * 1000, // 1 day
-      createdAtSelector: (value) => value.createdAt,
+      createdAtSelector: value => value.createdAt,
     })
   }
 
@@ -73,7 +73,8 @@ export class TmdbClient {
     if (changed) {
       try {
         this.cache.clear()
-      } catch {
+      }
+      catch {
         // ignore
       }
     }
@@ -120,7 +121,8 @@ export class TmdbClient {
       }
 
       return { ok: true, data: { results }, tookMs }
-    } catch (error) {
+    }
+    catch (error) {
       log.warn('[tmdb] search failed', {
         query: params.query,
         mediaType: params.mediaType,
@@ -138,8 +140,8 @@ export class TmdbClient {
     }
 
     try {
-      const path =
-        params.mediaType === 'movie' ? `movie/${params.id}` : `tv/${params.id}`
+      const path
+        = params.mediaType === 'movie' ? `movie/${params.id}` : `tv/${params.id}`
       const { data, tookMs } = await this.request<any>(path, {
         language: params.language ?? undefined,
       })
@@ -176,7 +178,8 @@ export class TmdbClient {
       }
 
       return { ok: true, data: detail, tookMs }
-    } catch (error) {
+    }
+    catch (error) {
       log.warn('[tmdb] details failed', {
         id: params.id,
         mediaType: params.mediaType,
@@ -189,7 +192,7 @@ export class TmdbClient {
   private async request<T>(
     path: string,
     searchParams: Record<string, string | undefined>,
-  ): Promise<{ data: T; tookMs: number }> {
+  ): Promise<{ data: T, tookMs: number }> {
     if (!this.apiKey) {
       throw new Error('tmdb.notConfigured')
     }
@@ -205,7 +208,7 @@ export class TmdbClient {
     const token = this.apiKey.trim()
 
     for (const [key, value] of Object.entries(searchParams)) {
-      if (value == null || value === '') continue
+      if (value == null || value === '') { continue }
       url.searchParams.set(key, value)
     }
 
@@ -229,28 +232,29 @@ export class TmdbClient {
     const data = (await response.json()) as T
     try {
       this.cache.set(cacheKey, { createdAt: Date.now(), data })
-    } catch {
+    }
+    catch {
       // ignore cache write errors
     }
     return { data, tookMs: Date.now() - started }
   }
 
   private pickSearchEndpoint(mediaType: SearchParams['mediaType']): string {
-    if (mediaType === 'movie') return 'search/movie'
-    if (mediaType === 'tv') return 'search/tv'
+    if (mediaType === 'movie') { return 'search/movie' }
+    if (mediaType === 'tv') { return 'search/tv' }
     return 'search/multi'
   }
 
   private mapSearchEntry(entry: any): TmdbSearchResult | null {
-    if (!entry) return null
+    if (!entry) { return null }
     const mediaType: 'movie' | 'tv' | null = this.resolveMediaType(entry)
-    if (!mediaType) return null
+    if (!mediaType) { return null }
 
-    const titleField =
-      mediaType === 'movie'
+    const titleField
+      = mediaType === 'movie'
         ? (entry.title ?? entry.name)
         : (entry.name ?? entry.title)
-    if (!titleField || typeof titleField !== 'string') return null
+    if (!titleField || typeof titleField !== 'string') { return null }
 
     return {
       id: Number(entry.id),
@@ -288,22 +292,22 @@ export class TmdbClient {
   }
 
   private resolveMediaType(entry: any): 'movie' | 'tv' | null {
-    const explicit =
-      typeof entry.media_type === 'string' ? entry.media_type : null
+    const explicit
+      = typeof entry.media_type === 'string' ? entry.media_type : null
     if (explicit === 'movie' || explicit === 'tv') {
       return explicit
     }
 
     if (
-      typeof entry.release_date === 'string' ||
-      typeof entry.original_title === 'string'
+      typeof entry.release_date === 'string'
+      || typeof entry.original_title === 'string'
     ) {
       return 'movie'
     }
 
     if (
-      typeof entry.first_air_date === 'string' ||
-      typeof entry.original_name === 'string'
+      typeof entry.first_air_date === 'string'
+      || typeof entry.original_name === 'string'
     ) {
       return 'tv'
     }
@@ -312,7 +316,7 @@ export class TmdbClient {
   }
 
   private buildImageUrl(path: unknown, size: string): string | null {
-    if (!path || typeof path !== 'string') return null
+    if (!path || typeof path !== 'string') { return null }
     return `${TMDB_IMAGE_BASE}/${size}${path}`
   }
 

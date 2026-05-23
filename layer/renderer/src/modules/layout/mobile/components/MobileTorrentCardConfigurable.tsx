@@ -51,7 +51,7 @@ export const MobileTorrentCardConfigurable = ({
   const nameData = useTorrentDataStore(
     useShallow(
       useCallback(
-        (state) => selectTorrentName(state, deferredRowIndex),
+        state => selectTorrentName(state, deferredRowIndex),
         [deferredRowIndex],
       ),
     ),
@@ -60,7 +60,7 @@ export const MobileTorrentCardConfigurable = ({
   const progressData = useTorrentDataStore(
     useShallow(
       useCallback(
-        (state) => selectTorrentProgress(state, deferredRowIndex),
+        state => selectTorrentProgress(state, deferredRowIndex),
         [deferredRowIndex],
       ),
     ),
@@ -69,7 +69,7 @@ export const MobileTorrentCardConfigurable = ({
   const statusData = useTorrentDataStore(
     useShallow(
       useCallback(
-        (state) => selectTorrentStatus(state, deferredRowIndex),
+        state => selectTorrentStatus(state, deferredRowIndex),
         [deferredRowIndex],
       ),
     ),
@@ -78,7 +78,7 @@ export const MobileTorrentCardConfigurable = ({
   const selectionData = useTorrentDataStore(
     useShallow(
       useCallback(
-        (state) => selectTorrentSelectionData(state, deferredRowIndex),
+        state => selectTorrentSelectionData(state, deferredRowIndex),
         [deferredRowIndex],
       ),
     ),
@@ -122,9 +122,9 @@ export const MobileTorrentCardConfigurable = ({
   // Group fields by position
   const fieldGroups = useMemo(() => {
     const groups = {
-      primary: visibleFields.filter((f) => f.primary),
-      secondary: visibleFields.filter((f) => f.secondary),
-      trailing: visibleFields.filter((f) => f.trailing),
+      primary: visibleFields.filter(f => f.primary),
+      secondary: visibleFields.filter(f => f.secondary),
+      trailing: visibleFields.filter(f => f.trailing),
     }
 
     return groups
@@ -148,10 +148,10 @@ export const MobileTorrentCardConfigurable = ({
     const progress = progressData?.progress || 0
     const state = progressData?.state || ''
 
-    if (progress === 1) return 'i-mingcute-check-circle-fill text-green'
-    if (state === 'downloading') return 'i-mingcute-download-2-line text-blue'
-    if (state === 'uploading') return 'i-mingcute-upload-2-line text-green'
-    if (state === 'error') return 'i-mingcute-close-circle-fill text-red'
+    if (progress === 1) { return 'i-mingcute-check-circle-fill text-green' }
+    if (state === 'downloading') { return 'i-mingcute-download-2-line text-blue' }
+    if (state === 'uploading') { return 'i-mingcute-upload-2-line text-green' }
+    if (state === 'error') { return 'i-mingcute-close-circle-fill text-red' }
     return 'i-mingcute-file-line text-placeholder-text'
   }, [progressData?.progress, progressData?.state])
 
@@ -163,7 +163,8 @@ export const MobileTorrentCardConfigurable = ({
 
     if (onTap) {
       onTap(selectionData.hash)
-    } else {
+    }
+    else {
       openDetailSheet(selectionData.hash)
     }
   }, [multiSelectMode, onTap, selectionData.hash, openDetailSheet])
@@ -176,7 +177,8 @@ export const MobileTorrentCardConfigurable = ({
       if (Math.abs(offset.x) > threshold) {
         if (offset.x > 0 && onSwipeRight) {
           onSwipeRight(selectionData.hash)
-        } else if (offset.x < 0 && onSwipeLeft) {
+        }
+        else if (offset.x < 0 && onSwipeLeft) {
           onSwipeLeft(selectionData.hash)
         }
       }
@@ -195,8 +197,8 @@ export const MobileTorrentCardConfigurable = ({
   // Field rendering helper
   const renderField = useCallback(
     (field: MobileCellField) => {
-      const value =
-        field.key === 'custom'
+      const value
+        = field.key === 'custom'
           ? torrentData
           : torrentData[field.key as keyof TorrentData]
 
@@ -259,28 +261,30 @@ export const MobileTorrentCardConfigurable = ({
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Leading icon or selection indicator */}
           <div className="flex-shrink-0">
-            {multiSelectMode ? (
-              <div
-                className={cn(
-                  'w-5 h-5 rounded-full border-2 flex items-center justify-center',
-                  selectionData.isSelected
-                    ? 'bg-accent border-accent'
-                    : 'border-border bg-background',
+            {multiSelectMode
+              ? (
+                  <div
+                    className={cn(
+                      'w-5 h-5 rounded-full border-2 flex items-center justify-center',
+                      selectionData.isSelected
+                        ? 'bg-accent border-accent'
+                        : 'border-border bg-background',
+                    )}
+                  >
+                    {selectionData.isSelected && (
+                      <i className="i-mingcute-check-line text-white text-xs" />
+                    )}
+                  </div>
+                )
+              : (
+                  <i className={cn('text-lg', torrentIcon)} />
                 )}
-              >
-                {selectionData.isSelected && (
-                  <i className="i-mingcute-check-line text-white text-xs" />
-                )}
-              </div>
-            ) : (
-              <i className={cn('text-lg', torrentIcon)} />
-            )}
           </div>
 
           {/* Main content area */}
           <div className="flex-1 min-w-0">
             {/* Primary field (title) */}
-            {fieldGroups.primary.map((field) => (
+            {fieldGroups.primary.map(field => (
               <div
                 key={field.id}
                 className="text-base font-normal text-text leading-tight mb-1 min-w-0"
@@ -304,20 +308,22 @@ export const MobileTorrentCardConfigurable = ({
                     {index > 0 && (
                       <span className="text-placeholder-text text-xs">•</span>
                     )}
-                    {field.id === 'status' ? (
-                      <span
-                        className={cn(
-                          'inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium flex-shrink-0',
-                          statusClassName,
+                    {field.id === 'status'
+                      ? (
+                          <span
+                            className={cn(
+                              'inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium flex-shrink-0',
+                              statusClassName,
+                            )}
+                          >
+                            {statusLabel}
+                          </span>
+                        )
+                      : (
+                          <span className="text-xs truncate max-w-[80px] sm:max-w-[120px] inline-flex items-center gap-1">
+                            {renderField(field)?.props?.children}
+                          </span>
                         )}
-                      >
-                        {statusLabel}
-                      </span>
-                    ) : (
-                      <span className="text-xs truncate max-w-[80px] sm:max-w-[120px] inline-flex items-center gap-1">
-                        {renderField(field)?.props?.children}
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>
@@ -328,7 +334,7 @@ export const MobileTorrentCardConfigurable = ({
           <div className="flex-shrink-0 flex items-center gap-1.5">
             {/* Trailing fields - adaptive sizing */}
             <div className="flex flex-col items-end gap-1 text-xs text-text-secondary min-w-0">
-              {fieldGroups.trailing.slice(0, 2).map((field) => (
+              {fieldGroups.trailing.slice(0, 2).map(field => (
                 <span
                   key={field.id}
                   className="font-mono tabular-nums inline-flex items-center gap-1 truncate max-w-[60px] sm:max-w-[80px] md:max-w-[100px]"
@@ -383,7 +389,7 @@ export const MobileTorrentCardConfigurable = ({
             {/* Additional trailing fields in iOS-style list */}
             {fieldGroups.trailing.length > 2 && (
               <div className="space-y-2 mb-3">
-                {fieldGroups.trailing.slice(2).map((field) => (
+                {fieldGroups.trailing.slice(2).map(field => (
                   <div
                     key={field.id}
                     className="flex items-center justify-between py-1.5 min-h-[32px] gap-3"
@@ -422,7 +428,7 @@ export const MobileTorrentCardConfigurable = ({
                     {nameData.tags
                       .split(',')
                       .filter(Boolean)
-                      .map((tag) => (
+                      .map(tag => (
                         <Tag key={tag.trim()} tag={tag.trim()} />
                       ))}
                   </div>

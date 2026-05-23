@@ -19,15 +19,15 @@ export function createPlatformSpecificImportPlugin(platform: Platform): Plugin {
         '.desktop.jsx',
       ]
 
-      if (!allowExts.some((ext) => importer.endsWith(ext))) return null
+      if (!allowExts.some(ext => importer.endsWith(ext))) { return null }
 
-      if (importer.includes('node_modules')) return null
+      if (importer.includes('node_modules')) { return null }
       const [path, query] = source.split('?')
 
       if (
-        path.startsWith('.') ||
-        path.startsWith('/') ||
-        path.startsWith('@follow/')
+        path.startsWith('.')
+        || path.startsWith('/')
+        || path.startsWith('@follow/')
       ) {
         let priorities: string[] = []
         switch (platform) {
@@ -74,7 +74,8 @@ export function createPlatformSpecificImportPlugin(platform: Platform): Plugin {
             if (resolvedPath) {
               return resolvedPath.id
             }
-          } catch {
+          }
+          catch {
             /* empty */
           }
         }

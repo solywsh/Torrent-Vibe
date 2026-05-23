@@ -25,14 +25,14 @@ export const DiscoverModalHeader = ({ onClose }: DiscoverModalHeaderProps) => {
   const { t } = useTranslation(['app', 'setting'])
   const providers = useDiscoverProviders()
   const activeProviderId = useDiscoverModalStore(
-    (state) => state.activeProviderId,
+    state => state.activeProviderId,
   )
   const actions = DiscoverModalActions.shared
   const { provider } = actions.slices
 
   const providerOptions = useMemo(
     () =>
-      providers.map((provider) => ({
+      providers.map(provider => ({
         id: provider.id,
         label: provider.implementation.label,
         ready: provider.ready,
@@ -54,9 +54,8 @@ export const DiscoverModalHeader = ({ onClose }: DiscoverModalHeaderProps) => {
         <div className="flex items-center gap-1.5">
           <Select
             value={activeProviderId}
-            onValueChange={(value) =>
-              provider.setActiveProviderId(value as DiscoverProviderId)
-            }
+            onValueChange={value =>
+              provider.setActiveProviderId(value as DiscoverProviderId)}
           >
             <SelectTrigger className="h-9 w-full sm:w-72 no-drag-region">
               <SelectValue
@@ -64,7 +63,7 @@ export const DiscoverModalHeader = ({ onClose }: DiscoverModalHeaderProps) => {
               />
             </SelectTrigger>
             <SelectContent>
-              {providerOptions.map((provider) => (
+              {providerOptions.map(provider => (
                 <SelectItem key={provider.id} value={provider.id}>
                   <div className="flex items-center justify-between gap-2">
                     <span>{provider.label}</span>

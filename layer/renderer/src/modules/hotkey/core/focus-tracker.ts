@@ -59,7 +59,8 @@ export class FocusTracker {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             this.visibleElements.add(entry.target as HTMLElement)
-          } else {
+          }
+          else {
             this.visibleElements.delete(entry.target as HTMLElement)
           }
         })
@@ -75,13 +76,13 @@ export class FocusTracker {
     // Track element size changes that might affect focus
     this.resizeObserver = new ResizeObserver((entries) => {
       // Debounce resize events
-      if (this.pendingUpdate) return
+      if (this.pendingUpdate) { return }
 
       this.pendingUpdate = requestAnimationFrame(() => {
         // Recheck focus context if current focused element resized
         const currentElement = this.currentContext?.element
         const resizedElement = entries.find(
-          (entry) => entry.target === currentElement,
+          entry => entry.target === currentElement,
         )
 
         if (resizedElement && currentElement) {
@@ -169,9 +170,9 @@ export class FocusTracker {
 
   private isElementVisible(element: HTMLElement): boolean {
     // Fast checks first
-    if (element.offsetParent === null) return false
-    if (element.style.display === 'none') return false
-    if (element.style.visibility === 'hidden') return false
+    if (element.offsetParent === null) { return false }
+    if (element.style.display === 'none') { return false }
+    if (element.style.visibility === 'hidden') { return false }
 
     // Check intersection observer cache
     return (
@@ -182,11 +183,11 @@ export class FocusTracker {
   private isElementInViewport(element: HTMLElement): boolean {
     const rect = element.getBoundingClientRect()
     return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      rect.top >= 0
+      && rect.left >= 0
+      && rect.bottom
+      <= (window.innerHeight || document.documentElement.clientHeight)
+      && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     )
   }
 
@@ -244,8 +245,8 @@ export class FocusTracker {
     ctx1: FocusContext | null,
     ctx2: FocusContext | null,
   ): boolean {
-    if (!ctx1 && !ctx2) return true
-    if (!ctx1 || !ctx2) return false
+    if (!ctx1 && !ctx2) { return true }
+    if (!ctx1 || !ctx2) { return false }
 
     return ctx1.scopeId === ctx2.scopeId && ctx1.element === ctx2.element
   }
@@ -272,7 +273,8 @@ export class FocusTracker {
     this.listeners.forEach((listener) => {
       try {
         listener(newContext, previousContext)
-      } catch (error) {
+      }
+      catch (error) {
         console.error('[FocusTracker] Error in focus listener:', error)
       }
     })
@@ -285,8 +287,8 @@ export class FocusTracker {
 
     // Stop observing old element if different
     if (
-      previousContext?.element &&
-      previousContext.element !== newContext?.element
+      previousContext?.element
+      && previousContext.element !== newContext?.element
     ) {
       this.visibilityObserver.unobserve(previousContext.element)
       this.resizeObserver.unobserve(previousContext.element)

@@ -18,13 +18,13 @@ export const RemainingCell = ({ rowIndex }: RemainingCellProps) => {
 
   const remaining = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentRemaining(state, deferredRowIndex),
+      state => selectTorrentRemaining(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   return (
-    <div className="flex items-center justify-end px-2 py-2 text-sm text-text tabular-nums">
+    <div className="flex items-center justify-start px-2 py-2 text-sm text-text tabular-nums">
       {remaining > 0 ? formatBytes(remaining) : '-'}
     </div>
   )

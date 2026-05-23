@@ -69,7 +69,7 @@ export const DEFAULT_MOBILE_FIELDS: MobileCellField[] = [
     key: 'size',
     visible: true,
     trailing: true,
-    formatter: (value) => formatBytes(value),
+    formatter: value => formatBytes(value),
   },
   {
     id: 'progress',
@@ -77,7 +77,7 @@ export const DEFAULT_MOBILE_FIELDS: MobileCellField[] = [
     key: 'progress',
     visible: true,
     trailing: true,
-    formatter: (value) => `${(value * 100).toFixed(1)}%`,
+    formatter: value => `${(value * 100).toFixed(1)}%`,
   },
   {
     id: 'speed',
@@ -94,7 +94,7 @@ export const DEFAULT_MOBILE_FIELDS: MobileCellField[] = [
     key: 'eta',
     visible: false,
     trailing: true,
-    formatter: (value) => formatEta(value),
+    formatter: value => formatEta(value),
   },
   {
     id: 'ratio',
@@ -102,6 +102,6 @@ export const DEFAULT_MOBILE_FIELDS: MobileCellField[] = [
     key: 'ratio',
     visible: false,
     trailing: true,
-    formatter: (value) => value?.toFixed(2) || '0.00',
+    formatter: value => value?.toFixed(2) || '0.00',
   },
 ]

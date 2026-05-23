@@ -1,6 +1,5 @@
 import type { FC } from 'react'
 
-
 export const Panel: FC = () => {
   return null
   // const [dragging, setDragging] = React.useState(false)

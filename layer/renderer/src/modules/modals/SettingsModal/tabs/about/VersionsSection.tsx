@@ -12,9 +12,9 @@ export const VersionsSection = () => {
 
   useEffect(() => {
     let mounted = true
-    if (!ELECTRON) return
+    if (!ELECTRON) { return }
     ipcServices?.app.getVersions().then((v) => {
-      if (!mounted) return
+      if (!mounted) { return }
       setAppVersion(v.appVersion)
       setAppBuildTime(v.appBuildTime)
       setRendererVersion(v.rendererVersion)

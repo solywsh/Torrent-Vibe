@@ -22,10 +22,10 @@ export function ErrorElement() {
 
   const reloadRef = useRef(false)
   if (
-    message.startsWith('Failed to fetch dynamically imported module') &&
-    window.sessionStorage.getItem('reload') !== '1'
+    message.startsWith('Failed to fetch dynamically imported module')
+    && window.sessionStorage.getItem('reload') !== '1'
   ) {
-    if (reloadRef.current) return null
+    if (reloadRef.current) { return null }
     window.sessionStorage.setItem('reload', '1')
     window.location.reload()
     reloadRef.current = true

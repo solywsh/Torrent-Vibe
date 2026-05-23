@@ -26,24 +26,25 @@ export const MobileSettingsHeader: React.FC<MobileSettingsHeaderProps> = ({
   const currentScreen = useMobileNavigationSelectors.useCurrentScreen()
   const canGoBack = useMobileNavigationSelectors.useCanGoBack()
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
-  const navigationDirection =
-    useMobileNavigationSelectors.useNavigationDirection()
+  const navigationDirection
+    = useMobileNavigationSelectors.useNavigationDirection()
   const { pop } = useStackNavigation()
 
   // Determine if back button should be shown
-  const shouldShowBackButton =
-    showBackButton ?? (canGoBack && currentScreen?.canGoBack)
+  const shouldShowBackButton
+    = showBackButton ?? (canGoBack && currentScreen?.canGoBack)
 
   // Get title from prop or current screen
   const displayTitle = title ?? currentScreen?.title ?? 'Settings'
 
   // Handle back button press
   const handleBackPress = useCallback(() => {
-    if (isNavigating) return // Prevent navigation during animation
+    if (isNavigating) { return } // Prevent navigation during animation
 
     if (onBackPress) {
       onBackPress()
-    } else {
+    }
+    else {
       pop()
     }
   }, [isNavigating, onBackPress, pop])
@@ -166,21 +167,23 @@ export const MobileSettingsHeaderWithClose: React.FC<
     onClose?.()
   }, [onClose])
 
-  const closeButton = showCloseButton ? (
-    <Button
-      variant="ghost"
-      size="sm"
-      className={cn(
-        'p-2 -mr-2 ml-2 min-w-[40px] h-[40px]',
-        'hover:bg-fill-tertiary active:bg-fill',
-        'text-text-secondary hover:text-text',
-      )}
-      onClick={handleClose}
-      aria-label="Close settings"
-    >
-      <i className="i-mingcute-close-line text-lg" />
-    </Button>
-  ) : undefined
+  const closeButton = showCloseButton
+    ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            'p-2 -mr-2 ml-2 min-w-[40px] h-[40px]',
+            'hover:bg-fill-tertiary active:bg-fill',
+            'text-text-secondary hover:text-text',
+          )}
+          onClick={handleClose}
+          aria-label="Close settings"
+        >
+          <i className="i-mingcute-close-line text-lg" />
+        </Button>
+      )
+    : undefined
 
   return <MobileSettingsHeader {...headerProps} rightContent={closeButton} />
 }

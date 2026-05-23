@@ -12,7 +12,7 @@ export const torrentAiMetadataTable = sqliteTable(
     model: text('model').notNull(),
     createdAt: integer('created_at').notNull(),
   },
-  (table) => ({
+  table => ({
     createdAtIdx: index('idx_torrent_ai_metadata_created_at').on(
       table.createdAt,
     ),

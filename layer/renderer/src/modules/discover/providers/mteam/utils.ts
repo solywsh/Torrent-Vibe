@@ -19,7 +19,7 @@ export const parseNumber = (value: unknown): number | null => {
 
   if (typeof value === 'string') {
     const cleaned = value.trim()
-    if (!cleaned) return null
+    if (!cleaned) { return null }
     const parsed = Number(cleaned)
     return Number.isFinite(parsed) ? parsed : null
   }
@@ -28,7 +28,7 @@ export const parseNumber = (value: unknown): number | null => {
 }
 
 export const parseDateToIso = (value: unknown): string | null => {
-  if (value === null || value === undefined) return null
+  if (value === null || value === undefined) { return null }
   if (typeof value === 'string') {
     const date = new Date(value)
     return Number.isNaN(date.getTime()) ? null : date.toISOString()
@@ -49,7 +49,7 @@ export const firstNonEmptyString = (
     const resolved = typeof value === 'function' ? value() : value
     if (typeof resolved === 'string') {
       const trimmed = resolved.trim()
-      if (trimmed) return trimmed
+      if (trimmed) { return trimmed }
     }
   }
   return null
@@ -70,12 +70,12 @@ export const normalizeSynopsis = (value: string): string =>
     .trim()
 
 export const normalizeTags = (input: unknown): string[] => {
-  if (!Array.isArray(input)) return []
+  if (!Array.isArray(input)) { return [] }
   const seen = new Set<string>()
   for (const candidate of input) {
-    if (typeof candidate !== 'string') continue
+    if (typeof candidate !== 'string') { continue }
     const normalized = candidate.trim()
-    if (!normalized) continue
+    if (!normalized) { continue }
     seen.add(normalized)
   }
   return Array.from(seen)
@@ -84,9 +84,9 @@ export const normalizeTags = (input: unknown): string[] => {
 export const extractImdbId = (
   value: string | null | undefined,
 ): string | null => {
-  if (!value) return null
+  if (!value) { return null }
   const trimmed = value.trim()
-  if (!trimmed) return null
+  if (!trimmed) { return null }
   const match = trimmed.match(/tt\d{7,}/i)
   return match ? match[0] : null
 }
@@ -95,14 +95,14 @@ export const isNonEmptyString = (value: unknown): value is string =>
   typeof value === 'string' && value.trim().length > 0
 
 export const parseCategories = (value: unknown): number[] => {
-  if (!value) return []
+  if (!value) { return [] }
   if (Array.isArray(value)) {
     return value
       .map((item) => {
-        if (typeof item === 'number') return item
+        if (typeof item === 'number') { return item }
         if (typeof item === 'string') {
           const cleaned = item.trim()
-          if (!cleaned) return null
+          if (!cleaned) { return null }
           const parsed = Number(cleaned)
           return Number.isFinite(parsed) ? parsed : null
         }
@@ -113,10 +113,10 @@ export const parseCategories = (value: unknown): number[] => {
   if (typeof value === 'string') {
     return value
       .split(',')
-      .map((item) => item.trim())
+      .map(item => item.trim())
       .filter(Boolean)
       .map(Number)
-      .filter((num) => Number.isFinite(num))
+      .filter(num => Number.isFinite(num))
   }
   return []
 }
@@ -139,15 +139,17 @@ export const handleErrorResponse = async (response: Response) => {
   const fallback = `${response.status} ${response.statusText}`
   try {
     const text = await response.text()
-    if (!text) throw new Error(fallback)
+    if (!text) { throw new Error(fallback) }
     try {
       const json = JSON.parse(text) as { message?: string }
       throw new Error(json.message || fallback)
-    } catch {
+    }
+    catch {
       throw new Error(text)
     }
-  } catch (error) {
-    if (error instanceof Error) throw error
+  }
+  catch (error) {
+    if (error instanceof Error) { throw error }
     throw new Error(fallback)
   }
 }

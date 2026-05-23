@@ -81,7 +81,8 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
     if (scopeState) {
       scopeState.hotkeys.set(binding.combo, fullBinding)
-    } else if (import.meta.env.DEV) {
+    }
+    else if (import.meta.env.DEV) {
       throw new Error(`Scope ${binding.scopeId} not found`)
     }
 
@@ -96,7 +97,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
   unregister(id: string): boolean {
     const binding = this.registry.get(id)
-    if (!binding) return false
+    if (!binding) { return false }
 
     this.registry.delete(id)
 
@@ -140,7 +141,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
   }
 
   activateScope(scopeId: string, context?: FocusContext): void {
-    if (this.activeScopes.has(scopeId)) return
+    if (this.activeScopes.has(scopeId)) { return }
 
     const definition = this.scopeDefinitions.get(scopeId)
     if (!definition) {
@@ -150,9 +151,9 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
     // Check conditional activation
     if (
-      definition.conditionalActivation &&
-      context &&
-      !definition.conditionalActivation(context)
+      definition.conditionalActivation
+      && context
+      && !definition.conditionalActivation(context)
     ) {
       return
     }
@@ -170,7 +171,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
   }
 
   deactivateScope(scopeId: string): void {
-    if (!this.activeScopes.has(scopeId)) return
+    if (!this.activeScopes.has(scopeId)) { return }
 
     const scopeState = this.scopeStates.get(scopeId)!
     scopeState.active = false
@@ -185,7 +186,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
   updateScopeState(scopeId: string, state: Partial<ScopeState>): void {
     const scopeState = this.scopeStates.get(scopeId)
-    if (!scopeState) return
+    if (!scopeState) { return }
 
     Object.assign(scopeState, state)
 
@@ -193,8 +194,8 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
     if (state.context && this.activeScopes.has(scopeId)) {
       const definition = this.scopeDefinitions.get(scopeId)
       if (
-        definition?.conditionalActivation &&
-        !definition.conditionalActivation(state.context)
+        definition?.conditionalActivation
+        && !definition.conditionalActivation(state.context)
       ) {
         this.deactivateScope(scopeId)
       }
@@ -203,7 +204,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
   updateScopeCondition(scopeId: string, condition: () => boolean): void {
     const definition = this.scopeDefinitions.get(scopeId)
-    if (!definition) return
+    if (!definition) { return }
 
     definition.conditionalActivation = () => condition()
 
@@ -219,7 +220,7 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
 
     // Get active scope hierarchy
     const activeScopes = Array.from(this.activeScopes)
-      .map((id) => this.scopeDefinitions.get(id)!)
+      .map(id => this.scopeDefinitions.get(id)!)
       .filter(Boolean)
       .sort((a, b) => b.priority - a.priority)
 
@@ -237,14 +238,14 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
     this.performanceMetrics.hotkeyLatency = performance.now() - startTime
 
     this.debugLog('Reconciled hotkeys', {
-      activeScopes: activeScopes.map((s) => s.id),
+      activeScopes: activeScopes.map(s => s.id),
       resolvedCount: this.resolvedHotkeys.size,
     })
   }
 
   private handleKeyEvent(combo: string, event: KeyboardEvent): void {
     const resolvedHotkey = this.resolvedHotkeys.get(combo)
-    if (!resolvedHotkey || resolvedHotkey.disabled) return
+    if (!resolvedHotkey || resolvedHotkey.disabled) { return }
 
     // Handle event options
     if (resolvedHotkey.preventDefault) {
@@ -258,7 +259,8 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
     try {
       resolvedHotkey.handler(event, this.currentFocusContext || undefined)
       this.emitter.emit('hotkey-triggered', combo, this.currentFocusContext)
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`[Hotkey] Error executing handler for ${combo}:`, error)
     }
   }
@@ -277,13 +279,14 @@ class HotkeyManagerCore implements HotkeyManagerInterface {
       // Deactivate scopes not in current path
       this.activeScopes.forEach((scopeId) => {
         if (
-          scopeId !== HotkeyScope.GLOBAL &&
-          !context.scopePath.includes(scopeId as HotkeyScope)
+          scopeId !== HotkeyScope.GLOBAL
+          && !context.scopePath.includes(scopeId as HotkeyScope)
         ) {
           this.deactivateScope(scopeId)
         }
       })
-    } else {
+    }
+    else {
       this.activeScopes.clear()
       this.debugLog('Focus context cleared')
     }

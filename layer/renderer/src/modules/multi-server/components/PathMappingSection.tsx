@@ -37,7 +37,7 @@ import { PathMappingModal } from './PathMappingModal'
 export const PathMappingSection = () => {
   const { t } = useTranslation('setting')
   const mappings = usePathMappings()
-  const servers = useMultiServerStore((state) => state.servers)
+  const servers = useMultiServerStore(state => state.servers)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -45,7 +45,7 @@ export const PathMappingSection = () => {
     }),
   )
 
-  const sortableIds = useMemo(() => mappings.map((item) => item.id), [mappings])
+  const sortableIds = useMemo(() => mappings.map(item => item.id), [mappings])
 
   const handleRemove = async (id: string) => {
     await Prompt.prompt({
@@ -62,12 +62,12 @@ export const PathMappingSection = () => {
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event
-    if (!over || active.id === over.id) return
+    if (!over || active.id === over.id) { return }
 
     setPathMappings((prev) => {
-      const oldIndex = prev.findIndex((item) => item.id === active.id)
-      const newIndex = prev.findIndex((item) => item.id === over.id)
-      if (oldIndex === -1 || newIndex === -1) return prev
+      const oldIndex = prev.findIndex(item => item.id === active.id)
+      const newIndex = prev.findIndex(item => item.id === over.id)
+      if (oldIndex === -1 || newIndex === -1) { return prev }
       return arrayMove(prev, oldIndex, newIndex)
     })
   }, [])
@@ -87,46 +87,46 @@ export const PathMappingSection = () => {
             items={sortableIds}
             strategy={verticalListSortingStrategy}
           >
-            {mappings.length === 0 ? (
-              <div className="border border-dashed border-border rounded-md p-4 text-sm text-text-secondary">
-                {t('servers.pathMapping.empty')}
-              </div>
-            ) : (
-              mappings.map((mapping, index) => {
-                const serverLabel = mapping.serverId
-                  ? servers[mapping.serverId]?.name || mapping.serverId
-                  : t('servers.pathMapping.serverAny')
-
-                const remoteDisplay =
-                  mapping.remoteBasePath ||
-                  t('servers.pathMapping.fallbackName', {
-                    index: index + 1,
-                  })
-                const localDisplay = mapping.localBasePath || '—'
-
-                return (
-                  <SortableMappingRow
-                    key={mapping.id}
-                    mapping={mapping}
-                    remoteLabel={remoteDisplay}
-                    localLabel={localDisplay}
-                    serverLabel={serverLabel}
-                    onToggle={(checked) =>
-                      updatePathMapping(mapping.id, {
-                        enabled: Boolean(checked),
-                      })
-                    }
-                    onEdit={() =>
-                      Modal.present(PathMappingModal, {
-                        mode: 'edit',
-                        mappingId: mapping.id,
-                      })
-                    }
-                    onRemove={() => handleRemove(mapping.id)}
-                  />
+            {mappings.length === 0
+              ? (
+                  <div className="border border-dashed border-border rounded-md p-4 text-sm text-text-secondary">
+                    {t('servers.pathMapping.empty')}
+                  </div>
                 )
-              })
-            )}
+              : (
+                  mappings.map((mapping, index) => {
+                    const serverLabel = mapping.serverId
+                      ? servers[mapping.serverId]?.name || mapping.serverId
+                      : t('servers.pathMapping.serverAny')
+
+                    const remoteDisplay
+                      = mapping.remoteBasePath
+                        || t('servers.pathMapping.fallbackName', {
+                          index: index + 1,
+                        })
+                    const localDisplay = mapping.localBasePath || '—'
+
+                    return (
+                      <SortableMappingRow
+                        key={mapping.id}
+                        mapping={mapping}
+                        remoteLabel={remoteDisplay}
+                        localLabel={localDisplay}
+                        serverLabel={serverLabel}
+                        onToggle={checked =>
+                          updatePathMapping(mapping.id, {
+                            enabled: Boolean(checked),
+                          })}
+                        onEdit={() =>
+                          Modal.present(PathMappingModal, {
+                            mode: 'edit',
+                            mappingId: mapping.id,
+                          })}
+                        onRemove={() => handleRemove(mapping.id)}
+                      />
+                    )
+                  })
+                )}
           </SortableContext>
         </DndContext>
 
@@ -134,8 +134,7 @@ export const PathMappingSection = () => {
           onClick={() =>
             Modal.present(PathMappingModal, {
               mode: 'create',
-            })
-          }
+            })}
           variant="secondary"
         >
           <i className="i-lucide-plus mr-1 size-4" />
@@ -233,7 +232,7 @@ const SortableMappingRow = ({
             <span>{t('servers.pathMapping.enabled')}</span>
             <Switch
               checked={mapping.enabled}
-              onCheckedChange={(checked) => onToggle(Boolean(checked))}
+              onCheckedChange={checked => onToggle(Boolean(checked))}
             />
           </div>
           <Button

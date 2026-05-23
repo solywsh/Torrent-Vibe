@@ -45,7 +45,8 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
 
     contextBridge.exposeInMainWorld('platform', process.platform)
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
   }
 }

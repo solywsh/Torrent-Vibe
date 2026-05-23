@@ -20,14 +20,13 @@ export const AutoTrackerSection = ({
     <SettingSectionCard
       title={t('bittorrent.autoTracker.title')}
       enabled={prefs.add_trackers_enabled ?? false}
-      onToggleEnabled={(checked) =>
-        onPrefsChange({ add_trackers_enabled: Boolean(checked) })
-      }
+      onToggleEnabled={checked =>
+        onPrefsChange({ add_trackers_enabled: Boolean(checked) })}
     >
       <div className="space-y-2">
         <Textarea
           value={prefs.add_trackers ?? ''}
-          onChange={(e) => onPrefsChange({ add_trackers: e.target.value })}
+          onChange={e => onPrefsChange({ add_trackers: e.target.value })}
           placeholder={t('bittorrent.autoTracker.placeholder')}
           className="h-32 font-mono text-xs"
           rows={8}

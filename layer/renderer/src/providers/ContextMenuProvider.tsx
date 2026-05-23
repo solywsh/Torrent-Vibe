@@ -32,9 +32,9 @@ const Handler = () => {
   const [contextMenuState, setContextMenuState] = useContextMenuState()
 
   useEffect(() => {
-    if (!contextMenuState.open) return
+    if (!contextMenuState.open) { return }
     const triggerElement = ref.current
-    if (!triggerElement) return
+    if (!triggerElement) { return }
     // [ContextMenu] Add ability to control
     // https://github.com/radix-ui/primitives/issues/1307#issuecomment-1689754796
     triggerElement.dispatchEvent(
@@ -49,8 +49,8 @@ const Handler = () => {
 
   const handleOpenChange = useCallback(
     (state: boolean) => {
-      if (state) return
-      if (!contextMenuState.open) return
+      if (state) { return }
+      if (!contextMenuState.open) { return }
       setContextMenuState({ open: false })
       contextMenuState.abortController.abort()
     },
@@ -61,12 +61,12 @@ const Handler = () => {
     <ContextMenu onOpenChange={handleOpenChange}>
       <ContextMenuTrigger className="hidden" ref={ref} />
       <ContextMenuContent onContextMenu={preventDefault}>
-        {contextMenuState.open &&
-          contextMenuState.menuItems.map((item, index) => {
+        {contextMenuState.open
+          && contextMenuState.menuItems.map((item, index) => {
             const prevItem = contextMenuState.menuItems[index - 1]
             if (
-              prevItem instanceof MenuItemSeparator &&
-              item instanceof MenuItemSeparator
+              prevItem instanceof MenuItemSeparator
+              && item instanceof MenuItemSeparator
             ) {
               return null
             }

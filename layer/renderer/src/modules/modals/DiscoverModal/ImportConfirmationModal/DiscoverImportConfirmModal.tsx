@@ -66,13 +66,13 @@ export const DiscoverImportConfirmModal: ModalComponent<
     return t('discover.modal.resultCount', { count: items.length })
   }, [items.length, mode, t])
 
-  const confirmLabel =
-    mode === 'preview'
+  const confirmLabel
+    = mode === 'preview'
       ? t('discover.modal.importThis')
       : t('discover.modal.importSelected', { count: items.length })
 
   const handleConfirm = async () => {
-    if (isSubmitting) return
+    if (isSubmitting) { return }
     setIsSubmitting(true)
     const result = await onConfirm(formData)
     if (result.ok) {
@@ -110,16 +110,18 @@ export const DiscoverImportConfirmModal: ModalComponent<
             viewportClassName="px-3 py-2"
           >
             <ul className="flex flex-col gap-2 text-sm text-text-secondary">
-              {items.map((item) => (
+              {items.map(item => (
                 <li key={item.id} className="flex flex-col min-w-0">
                   <span className="text-text font-medium line-clamp-5">
                     {item.title}
                   </span>
-                  {item.category ? (
-                    <span className="text-xs text-text-tertiary">
-                      {item.category}
-                    </span>
-                  ) : null}
+                  {item.category
+                    ? (
+                        <span className="text-xs text-text-tertiary">
+                          {item.category}
+                        </span>
+                      )
+                    : null}
                 </li>
               ))}
             </ul>
@@ -142,23 +144,21 @@ export const DiscoverImportConfirmModal: ModalComponent<
               <TorrentOptionToggle
                 id="auto-tmm"
                 checked={!!formData.autoTMM}
-                onChange={(checked) =>
-                  setFormData((prev) => ({
+                onChange={checked =>
+                  setFormData(prev => ({
                     ...prev,
                     autoTMM: checked,
-                  }))
-                }
+                  }))}
                 label={t('addTorrent.settingsPanel.autoTMM')}
               />
               <TorrentOptionToggle
                 id="start-torrent"
                 checked={formData.startTorrent}
-                onChange={(checked) =>
-                  setFormData((prev) => ({
+                onChange={checked =>
+                  setFormData(prev => ({
                     ...prev,
                     startTorrent: checked,
-                  }))
-                }
+                  }))}
                 label={t('addTorrent.settingsPanel.startTorrent')}
               />
             </div>

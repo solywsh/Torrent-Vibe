@@ -24,10 +24,12 @@ export const torrentAiStore = {
     if (typeof updater === 'function') {
       if (replace) {
         useTorrentAiStore.setState(updater, true)
-      } else {
+      }
+      else {
         useTorrentAiStore.setState(updater)
       }
-    } else {
+    }
+    else {
       useTorrentAiStore.setState(updater, true)
     }
   },

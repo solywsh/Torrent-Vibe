@@ -53,7 +53,7 @@ export const MobileSettingsScreen: React.FC<MobileSettingsScreenProps> = ({
 
   // Render appropriate header
   const renderHeader = () => {
-    if (hideHeader) return null
+    if (hideHeader) { return null }
 
     if (customHeader) {
       return customHeader
@@ -98,17 +98,19 @@ export const MobileSettingsScreen: React.FC<MobileSettingsScreenProps> = ({
 
       {/* Content */}
       <div className={contentClasses}>
-        {scrollable ? (
-          <ScrollArea
-            flex
-            rootClassName="h-full"
-            viewportClassName={innerContentClasses}
-          >
-            {children}
-          </ScrollArea>
-        ) : (
-          <div className={innerContentClasses}>{children}</div>
-        )}
+        {scrollable
+          ? (
+              <ScrollArea
+                flex
+                rootClassName="h-full"
+                viewportClassName={innerContentClasses}
+              >
+                {children}
+              </ScrollArea>
+            )
+          : (
+              <div className={innerContentClasses}>{children}</div>
+            )}
       </div>
     </div>
   )
@@ -139,7 +141,7 @@ export const MobileSettingsContent = {
     sections,
     className,
   }: {
-    sections: Array<{ title?: string; content: React.ReactNode }>
+    sections: Array<{ title?: string, content: React.ReactNode }>
     className?: string
   }) => (
     <div className={cn('space-y-8', className)}>

@@ -23,7 +23,7 @@ export class UpdateDecryptor {
       this.publicKeyPem,
       parsed.signature,
     )
-    if (!sigOk) throw new Error('Invalid package signature')
+    if (!sigOk) { throw new Error('Invalid package signature') }
 
     const aesKey = crypto.privateDecrypt(
       {
@@ -114,7 +114,8 @@ function parseBinaryPackage(data: Buffer): {
     offset += metaLen
     try {
       metadata = JSON.parse(metaBuf.toString('utf8')) as Record<string, unknown>
-    } catch {
+    }
+    catch {
       throw new Error('Malformed package metadata JSON')
     }
   }

@@ -30,7 +30,7 @@ export const createAtomSelector = <T>(atom: Atom<T>) => {
     useAtomValue(
       selectAtom(
         atom,
-        useCallback((a) => selector(a as T), deps),
+        useCallback(a => selector(a as T), deps),
       ),
     )
 

@@ -51,25 +51,25 @@ export const QueryKeys = {
 export type QueryKeyCategory = keyof typeof QueryKeys
 
 // Extract all possible query key types for type safety
-export type QueryKey =
-  | ReturnType<typeof QueryKeys.discover.imdb>
-  | ReturnType<typeof QueryKeys.torrents.all>
-  | ReturnType<typeof QueryKeys.torrents.serverState>
-  | ReturnType<typeof QueryKeys.torrents.list>
-  | ReturnType<typeof QueryKeys.categories.all>
-  | ReturnType<typeof QueryKeys.categories.withCounts>
-  | ReturnType<typeof QueryKeys.tags.all>
-  | ReturnType<typeof QueryKeys.tags.withCounts>
-  | ReturnType<typeof QueryKeys.torrentDetails.all>
-  | ReturnType<typeof QueryKeys.torrentDetails.files>
-  | ReturnType<typeof QueryKeys.torrentDetails.peers>
-  | ReturnType<typeof QueryKeys.torrentDetails.trackers>
-  | ReturnType<typeof QueryKeys.torrentDetails.properties>
-  | ReturnType<typeof QueryKeys.torrentDetails.pieceStates>
-  | ReturnType<typeof QueryKeys.qbittorrent.preferences>
-  | ReturnType<typeof QueryKeys.qbittorrent.version>
-  | ReturnType<typeof QueryKeys.qbittorrent.buildInfo>
-  | ReturnType<typeof QueryKeys.qbittorrent.mainData>
+export type QueryKey
+  = | ReturnType<typeof QueryKeys.discover.imdb>
+    | ReturnType<typeof QueryKeys.torrents.all>
+    | ReturnType<typeof QueryKeys.torrents.serverState>
+    | ReturnType<typeof QueryKeys.torrents.list>
+    | ReturnType<typeof QueryKeys.categories.all>
+    | ReturnType<typeof QueryKeys.categories.withCounts>
+    | ReturnType<typeof QueryKeys.tags.all>
+    | ReturnType<typeof QueryKeys.tags.withCounts>
+    | ReturnType<typeof QueryKeys.torrentDetails.all>
+    | ReturnType<typeof QueryKeys.torrentDetails.files>
+    | ReturnType<typeof QueryKeys.torrentDetails.peers>
+    | ReturnType<typeof QueryKeys.torrentDetails.trackers>
+    | ReturnType<typeof QueryKeys.torrentDetails.properties>
+    | ReturnType<typeof QueryKeys.torrentDetails.pieceStates>
+    | ReturnType<typeof QueryKeys.qbittorrent.preferences>
+    | ReturnType<typeof QueryKeys.qbittorrent.version>
+    | ReturnType<typeof QueryKeys.qbittorrent.buildInfo>
+    | ReturnType<typeof QueryKeys.qbittorrent.mainData>
 
 // Utility type to extract query key type from factory function
 export type QueryKeyType<T extends readonly unknown[]> = T

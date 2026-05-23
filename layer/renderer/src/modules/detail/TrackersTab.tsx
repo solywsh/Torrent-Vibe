@@ -85,9 +85,15 @@ export const TrackersTab = ({ trackers, isLoading }: TrackersTabProps) => {
                   {tracker.url.replace(/^https?:\/\//, '')}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-text-secondary mt-1">
-                  <span>Seeds: {tracker.num_seeds}</span>
+                  <span>
+                    Seeds:
+                    {tracker.num_seeds}
+                  </span>
                   <span>•</span>
-                  <span>Peers: {tracker.num_peers}</span>
+                  <span>
+                    Peers:
+                    {tracker.num_peers}
+                  </span>
                 </div>
               </div>
             </div>

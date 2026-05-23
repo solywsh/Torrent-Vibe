@@ -23,7 +23,7 @@ export const CheckboxCell = ({ rowIndex }: CheckboxCellProps) => {
   const selectionData = useTorrentDataStore(
     useShallow(
       useCallback(
-        (state) => selectTorrentSelectionData(state, deferredRowIndex),
+        state => selectTorrentSelectionData(state, deferredRowIndex),
         [deferredRowIndex],
       ),
     ),
@@ -31,7 +31,7 @@ export const CheckboxCell = ({ rowIndex }: CheckboxCellProps) => {
 
   return (
     <div
-      className={'flex items-center absolute inset-x-0 top-4 justify-center'}
+      className="flex items-center absolute inset-x-0 top-4 justify-center"
     >
       <Checkbox
         className="border border-border"

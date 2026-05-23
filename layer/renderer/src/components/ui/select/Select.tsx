@@ -44,11 +44,13 @@ const SelectTrigger = ({
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      {loading ? (
-        <i className="i-mingcute-loading-3-line animate-spin size-4 text-text-tertiary" />
-      ) : (
-        <i className="i-mingcute-down-line -mr-1 ml-2 text-text-secondary size-4 shrink-0 opacity-60 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-      )}
+      {loading
+        ? (
+            <i className="i-mingcute-loading-3-line animate-spin size-4 text-text-tertiary" />
+          )
+        : (
+            <i className="i-mingcute-down-line -mr-1 ml-2 text-text-secondary size-4 shrink-0 opacity-60 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          )}
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 )
@@ -96,8 +98,8 @@ const SelectScrollDownButton = ({
     <i className="i-mingcute-down-line size-3.5" />
   </SelectPrimitive.ScrollDownButton>
 )
-SelectScrollDownButton.displayName =
-  SelectPrimitive.ScrollDownButton.displayName
+SelectScrollDownButton.displayName
+  = SelectPrimitive.ScrollDownButton.displayName
 
 const SelectContent = ({
   ref,
@@ -123,8 +125,8 @@ const SelectContent = ({
       <SelectPrimitive.Viewport
         className={clsxm(
           'p-0',
-          position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
+          position === 'popper'
+          && 'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
         )}
       >
         {children}

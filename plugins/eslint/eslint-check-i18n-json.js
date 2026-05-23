@@ -23,12 +23,13 @@ export default {
           Program(node) {
             const { filename, sourceCode } = context
 
-            if (!filename.endsWith('.json')) return
+            if (!filename.endsWith('.json')) { return }
 
             let json
             try {
               json = JSON.parse(cleanJsonText(sourceCode.text))
-            } catch {
+            }
+            catch {
               context.report({
                 node,
                 message: 'Invalid JSON format',
@@ -72,7 +73,7 @@ export default {
         type: 'problem',
         docs: {
           description:
-            "Ensure non-English JSON files don't have extra keys not present in en.json",
+            'Ensure non-English JSON files don\'t have extra keys not present in en.json',
           category: 'Possible Errors',
           recommended: true,
         },
@@ -83,13 +84,13 @@ export default {
           Program(node) {
             const { filename, sourceCode } = context
 
-            if (!filename.endsWith('.json')) return
+            if (!filename.endsWith('.json')) { return }
 
             const parts = filename.split(path.sep)
             const lang = parts.at(-1).split('.')[0]
             const namespace = parts.at(-2)
 
-            if (lang === 'en') return
+            if (lang === 'en') { return }
 
             let currentJson = {}
             let englishJson = {}
@@ -103,7 +104,8 @@ export default {
                 'en.json',
               )
               englishJson = JSON.parse(fs.readFileSync(englishFilePath, 'utf8'))
-            } catch (error) {
+            }
+            catch (error) {
               context.report({
                 node,
                 message: `Error parsing JSON: ${error.message}`,
@@ -112,7 +114,7 @@ export default {
             }
 
             const extraKeys = Object.keys(currentJson).filter(
-              (key) => !Object.prototype.hasOwnProperty.call(englishJson, key),
+              key => !Object.hasOwn(englishJson, key),
             )
 
             for (const key of extraKeys) {

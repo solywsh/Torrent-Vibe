@@ -16,15 +16,15 @@ export const SavePathCell = ({ rowIndex }: SavePathCellProps) => {
 
   const savePath = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentSavePath(state, deferredRowIndex),
+      state => selectTorrentSavePath(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   const getShortPath = (path: string) => {
-    if (!path) return '-'
+    if (!path) { return '-' }
     const parts = path.split(/[/\\]/)
-    if (parts.length <= 2) return path
+    if (parts.length <= 2) { return path }
     return `.../${parts.slice(-2).join('/')}`
   }
 

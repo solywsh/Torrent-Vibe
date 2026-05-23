@@ -19,7 +19,7 @@ export const UpdateContainer = () => {
   })
 
   useBridgeEvent('update:progress', (data) => {
-    setUpdateInfo((prev) => ({
+    setUpdateInfo(prev => ({
       ...prev,
       downloadProgress: data.percent,
       isDownloading: true,
@@ -29,8 +29,8 @@ export const UpdateContainer = () => {
 
   useBridgeEvent('update:error', (data) => {
     if (
-      data.code === AppErrorCode.AppVersionTooLow ||
-      data.code === AppErrorCode.MainHashMissing
+      data.code === AppErrorCode.AppVersionTooLow
+      || data.code === AppErrorCode.MainHashMissing
     ) {
       setUpdateInfo({
         hasError: true,
@@ -80,7 +80,7 @@ export const UpdateContainer = () => {
       onLater={handleLater}
       onRetry={handleRetry}
       onDismiss={handleDismiss}
-      onOpenUrl={(url) => ipcServices?.app.openUrl(url)}
+      onOpenUrl={url => ipcServices?.app.openUrl(url)}
     />
   )
 }

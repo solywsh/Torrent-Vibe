@@ -31,26 +31,30 @@ export const StatusIndicator = ({
       layout
       transition={Spring.presets.smooth}
     >
-      {isLoading ? (
-        <div className="flex items-center gap-2 text-text-secondary">
-          <i className="i-mingcute-loading-3-line animate-spin" />
-          {t('torrent.loading')}
-        </div>
-      ) : (
-        <div className="flex items-center gap-2">
-          <i
-            className={`${currentFilterStat.icon} ${currentFilterStat.color}`}
-          />
-          <span className="font-medium text-text">
-            {currentFilterStat.count} {currentFilterStat.label.toLowerCase()}
-          </span>
-          {totalStats > 0 && isFilteredView && (
-            <span className="text-text-tertiary">
-              {t('torrent.statusIndicator.of', { total: totalStats })}
-            </span>
+      {isLoading
+        ? (
+            <div className="flex items-center gap-2 text-text-secondary">
+              <i className="i-mingcute-loading-3-line animate-spin" />
+              {t('torrent.loading')}
+            </div>
+          )
+        : (
+            <div className="flex items-center gap-2">
+              <i
+                className={`${currentFilterStat.icon} ${currentFilterStat.color}`}
+              />
+              <span className="font-medium text-text">
+                {currentFilterStat.count}
+                {' '}
+                {currentFilterStat.label.toLowerCase()}
+              </span>
+              {totalStats > 0 && isFilteredView && (
+                <span className="text-text-tertiary">
+                  {t('torrent.statusIndicator.of', { total: totalStats })}
+                </span>
+              )}
+            </div>
           )}
-        </div>
-      )}
     </m.div>
   )
 }

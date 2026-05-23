@@ -13,7 +13,7 @@ export const ProgressCell = ({ rowIndex }: ProgressCellProps) => {
   // Use granular selector for just the progress data we need
   const progress = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentProgress(state, deferredRowIndex).progress,
+      state => selectTorrentProgress(state, deferredRowIndex).progress,
       [deferredRowIndex],
     ),
   )
@@ -23,7 +23,7 @@ export const ProgressCell = ({ rowIndex }: ProgressCellProps) => {
   )
 
   return (
-    <div className={'px-2 absolute inset-0 flex top-4'}>
+    <div className="px-2 absolute inset-0 flex top-4">
       <div className="relative w-full h-4 bg-gray9/20 rounded-full overflow-hidden">
         {/* Progress bar fill */}
         <div
@@ -34,7 +34,8 @@ export const ProgressCell = ({ rowIndex }: ProgressCellProps) => {
         {/* Background text (visible in unfilled area) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-xs font-medium text-text-secondary">
-            {percentage}%
+            {percentage}
+            %
           </span>
         </div>
 
@@ -46,7 +47,10 @@ export const ProgressCell = ({ rowIndex }: ProgressCellProps) => {
             transition: 'clip-path 300ms ease-out',
           }}
         >
-          <span className="text-xs font-medium text-white">{percentage}%</span>
+          <span className="text-xs font-medium text-white">
+            {percentage}
+            %
+          </span>
         </div>
       </div>
     </div>

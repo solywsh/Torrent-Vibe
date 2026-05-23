@@ -53,7 +53,7 @@ export const useMobileNavigationStore = create<MobileNavigationState>()(
     push: (screenData) => {
       const state = get()
 
-      if (state.isNavigating) return // Prevent navigation during animation
+      if (state.isNavigating) { return } // Prevent navigation during animation
 
       const newScreen: MobileNavigationScreen = {
         ...screenData,
@@ -73,7 +73,7 @@ export const useMobileNavigationStore = create<MobileNavigationState>()(
     pop: () => {
       const state = get()
 
-      if (state.isNavigating || state.screens.length <= 1) return false
+      if (state.isNavigating || state.screens.length <= 1) { return false }
 
       const newScreens = state.screens.slice(0, -1)
       const newIndex = newScreens.length - 1
@@ -93,7 +93,7 @@ export const useMobileNavigationStore = create<MobileNavigationState>()(
     popToRoot: () => {
       const state = get()
 
-      if (state.isNavigating || state.screens.length <= 1) return
+      if (state.isNavigating || state.screens.length <= 1) { return }
 
       const rootScreen = state.screens[0]
 
@@ -109,7 +109,7 @@ export const useMobileNavigationStore = create<MobileNavigationState>()(
     replace: (screenData) => {
       const state = get()
 
-      if (state.isNavigating) return
+      if (state.isNavigating) { return }
 
       const newScreen: MobileNavigationScreen = {
         ...screenData,
@@ -167,11 +167,11 @@ export const MobileNavigationActions = {
 // Selectors
 export const useMobileNavigationSelectors = {
   useCurrentScreen: () =>
-    useMobileNavigationStore((state) => state.currentScreen),
-  useCanGoBack: () => useMobileNavigationStore((state) => state.canGoBack()),
+    useMobileNavigationStore(state => state.currentScreen),
+  useCanGoBack: () => useMobileNavigationStore(state => state.canGoBack()),
   useIsNavigating: () =>
-    useMobileNavigationStore((state) => state.isNavigating),
+    useMobileNavigationStore(state => state.isNavigating),
   useNavigationDirection: () =>
-    useMobileNavigationStore((state) => state.navigationDirection),
-  useScreenStack: () => useMobileNavigationStore((state) => state.screens),
+    useMobileNavigationStore(state => state.navigationDirection),
+  useScreenStack: () => useMobileNavigationStore(state => state.screens),
 }

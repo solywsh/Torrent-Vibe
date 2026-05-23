@@ -38,16 +38,15 @@ const presentImportConfirmation = (
 
     try {
       const links = await Promise.all(
-        targets.map((target) =>
+        targets.map(target =>
           DiscoverService.downloadUrl(providerId, {
             id: target.id,
             item: target.item ?? undefined,
-          }),
-        ),
+          })),
       )
 
       const uniqueUrls = Array.from(
-        new Set(links.map((link) => link.url)),
+        new Set(links.map(link => link.url)),
       ).join('\n')
 
       if (!uniqueUrls) {
@@ -73,12 +72,14 @@ const presentImportConfirmation = (
             count: targets.length,
           }),
         )
-      } else {
+      }
+      else {
         toast.success(i18n.t('discover.messages.singleImportSuccess'))
       }
 
       return { ok: true }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
       context.setState((draft) => {
         draft.importing = false
@@ -86,7 +87,8 @@ const presentImportConfirmation = (
 
       if (mode === 'selected') {
         toast.error(i18n.t('discover.messages.importFailed'))
-      } else {
+      }
+      else {
         toast.error(i18n.t('discover.messages.singleImportFailed'))
       }
 
@@ -96,7 +98,7 @@ const presentImportConfirmation = (
 
   Modal.present(DiscoverImportConfirmModal, {
     mode,
-    items: targets.map((target) => target.summary),
+    items: targets.map(target => target.summary),
     onConfirm: handleConfirm,
   })
 }
@@ -146,8 +148,8 @@ export const createImportingSlice = (context: DiscoverActionContext) => {
       return { ok: false, error: 'noPreview' }
     }
 
-    const previewItem =
-      state.previewDetail ?? findItemById(state.items, previewId) ?? null
+    const previewItem
+      = state.previewDetail ?? findItemById(state.items, previewId) ?? null
 
     const targets: DownloadTarget[] = [
       {

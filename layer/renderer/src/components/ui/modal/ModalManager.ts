@@ -19,7 +19,7 @@ export const Modal = {
     // Enforce single instance per ModalComponent. If an instance exists,
     // move it to the top and update its props/content, returning its id.
     const existingIndex = items.findIndex(
-      (m) => m.component === (Component as ModalComponent<any>),
+      m => m.component === (Component as ModalComponent<any>),
     )
     if (existingIndex !== -1) {
       const existing = items[existingIndex]
@@ -54,7 +54,7 @@ export const Modal = {
     const items = jotaiStore.get(modalItemsAtom)
     jotaiStore.set(
       modalItemsAtom,
-      items.filter((m) => m.id !== id),
+      items.filter(m => m.id !== id),
     )
   },
 

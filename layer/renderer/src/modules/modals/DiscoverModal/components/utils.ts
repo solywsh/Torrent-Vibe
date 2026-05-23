@@ -11,7 +11,7 @@ export const formatDiscountLabel = (
   discount: string | null | undefined,
   t: (key: string, options?: any) => string,
 ) => {
-  if (!discount) return '—'
+  if (!discount) { return '—' }
   const key = discountLabelMap[discount]
   return key ? t(key) : discount.replaceAll('_', ' ')
 }

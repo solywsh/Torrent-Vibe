@@ -73,8 +73,8 @@ const RadioGroupItem = ({
   ref: forwardedRef,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof RadioGroupPrimitives.Item> &
-  HTMLMotionProps<'button'> & {
+}: React.ComponentPropsWithoutRef<typeof RadioGroupPrimitives.Item>
+  & HTMLMotionProps<'button'> & {
     ref?: React.RefObject<React.ElementRef<
       typeof RadioGroupPrimitives.Item
     > | null>

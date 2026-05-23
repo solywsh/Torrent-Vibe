@@ -172,8 +172,8 @@ export class QBQueryManager {
                 )
               }
 
-              const queryKeyFactory =
-                category[methodKey as keyof typeof category]
+              const queryKeyFactory
+                = category[methodKey as keyof typeof category]
 
               return async (...args: any[]) => {
                 const queryKey = (queryKeyFactory as any)(...args)
@@ -287,6 +287,5 @@ export class QBQueryManager {
       const queryKey = queryKeyFactory(...args)
       return this.queryClient.getQueryState(queryKey)
     }
-    return
   }
 }

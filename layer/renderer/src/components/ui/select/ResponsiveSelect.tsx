@@ -87,9 +87,9 @@ export const ResponsiveSelect = ({
           ref={setRealSelectRef}
           className="absolute inset-0 opacity-0"
           value={valueInner}
-          onChange={(e) => onValueChange?.(e.target.value)}
+          onChange={e => onValueChange?.(e.target.value)}
         >
-          {items.map((item) => (
+          {items.map(item => (
             <option key={item.value} value={item.value}>
               {renderItem?.(item) ?? item.label}
             </option>
@@ -110,7 +110,7 @@ export const ResponsiveSelect = ({
         <SelectValue />
       </SelectTrigger>
       <SelectContent className={contentClassName} position="item-aligned">
-        {items.map((item) => (
+        {items.map(item => (
           <SelectItem key={item.value} value={item.value}>
             {renderItem?.(item) ?? item.label}
           </SelectItem>

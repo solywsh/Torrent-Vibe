@@ -40,9 +40,8 @@ export const ProxyServerSection = ({
       <SettingField label={t('connection.proxy.type')}>
         <Select
           value={prefs.proxy_type?.toString() || '0'}
-          onValueChange={(value) =>
-            onPrefsChange({ proxy_type: Number.parseInt(value) })
-          }
+          onValueChange={value =>
+            onPrefsChange({ proxy_type: Number.parseInt(value) })}
         >
           <SelectTrigger className="w-24">
             <SelectValue />
@@ -59,16 +58,15 @@ export const ProxyServerSection = ({
       <SettingInputField
         label={t('connection.proxy.host')}
         value={prefs.proxy_ip || ''}
-        onChange={(v) => onPrefsChange({ proxy_ip: v })}
+        onChange={v => onPrefsChange({ proxy_ip: v })}
         disabled={!proxyEnabled}
       />
       <SettingInputField
         label={t('connection.proxy.port')}
         type="number"
         value={String(prefs.proxy_port || 8080)}
-        onChange={(v) =>
-          onPrefsChange({ proxy_port: Number.parseInt(v) || 8080 })
-        }
+        onChange={v =>
+          onPrefsChange({ proxy_port: Number.parseInt(v) || 8080 })}
         disabled={!proxyEnabled}
       />
 
@@ -76,30 +74,28 @@ export const ProxyServerSection = ({
         id="proxy_peer_connections"
         label={t('connection.proxy.peerConnections')}
         checked={Boolean(prefs.proxy_peer_connections)}
-        onCheckedChange={(v) =>
-          onPrefsChange({ proxy_peer_connections: Boolean(v) })
-        }
+        onCheckedChange={v =>
+          onPrefsChange({ proxy_peer_connections: Boolean(v) })}
         disabled={!proxyEnabled}
       />
 
       <SettingSectionCard
         title={t('connection.proxy.auth')}
         enabled={Boolean(prefs.proxy_auth_enabled)}
-        onToggleEnabled={(v) =>
-          onPrefsChange({ proxy_auth_enabled: Boolean(v) })
-        }
+        onToggleEnabled={v =>
+          onPrefsChange({ proxy_auth_enabled: Boolean(v) })}
       >
         <SettingInputField
           label={t('connection.proxy.username')}
           value={prefs.proxy_username || ''}
-          onChange={(v) => onPrefsChange({ proxy_username: v })}
+          onChange={v => onPrefsChange({ proxy_username: v })}
           disabled={!proxyEnabled}
         />
         <SettingInputField
           label={t('connection.proxy.password')}
           type="password"
           value={prefs.proxy_password || ''}
-          onChange={(v) => onPrefsChange({ proxy_password: v })}
+          onChange={v => onPrefsChange({ proxy_password: v })}
           disabled={!proxyEnabled}
         />
         <div className="text-xs text-text-secondary">

@@ -33,15 +33,16 @@ export class ScopeResolver {
 
     for (const scope of orderedScopes) {
       const scopeState = scopeStates.get(scope.id)
-      if (!scopeState?.active) continue
+      if (!scopeState?.active) { continue }
 
       const scopeHotkeys = scopeState.hotkeys
-      if (scopeHotkeys.size === 0) continue
+      if (scopeHotkeys.size === 0) { continue }
 
       // Simplified strategy support: UNION and ADDITIVE only
       if (scope.strategy === ScopeActivationStrategy.ADDITIVE) {
         this.mergeAdditive(resolvedHotkeys, scopeHotkeys, scope)
-      } else {
+      }
+      else {
         this.mergeUnion(resolvedHotkeys, scopeHotkeys, scope)
       }
     }
@@ -67,7 +68,7 @@ export class ScopeResolver {
 
     // Topological sort with priority consideration
     const visit = (scopeId: string) => {
-      if (visited.has(scopeId)) return
+      if (visited.has(scopeId)) { return }
       visited.add(scopeId)
 
       const dependencies = graph.get(scopeId) || []
@@ -77,14 +78,14 @@ export class ScopeResolver {
         }
       })
 
-      const scope = scopes.find((s) => s.id === scopeId)
+      const scope = scopes.find(s => s.id === scopeId)
       if (scope) {
         result.push(scope)
       }
     }
 
     // Visit all scopes in dependency order
-    scopes.forEach((scope) => visit(scope.id))
+    scopes.forEach(scope => visit(scope.id))
 
     // Final sort by priority for scopes at the same dependency level
     return result.sort((a, b) => a.priority - b.priority)
@@ -138,7 +139,7 @@ export class ScopeResolver {
       }
     })
 
-    toRemove.forEach((combo) => resolved.delete(combo))
+    toRemove.forEach(combo => resolved.delete(combo))
   }
 
   private shouldDisableHotkey(
@@ -146,22 +147,22 @@ export class ScopeResolver {
     focusContext?: FocusContext,
   ): boolean {
     // Disable if explicitly disabled
-    if (hotkey.disabled) return true
+    if (hotkey.disabled) { return true }
 
     // Check focus context requirements
     if (focusContext) {
       const scope = this.scopeDefinitions.get(hotkey.scopeId)
       if (
-        scope?.conditionalActivation &&
-        !scope.conditionalActivation(focusContext)
+        scope?.conditionalActivation
+        && !scope.conditionalActivation(focusContext)
       ) {
         return true
       }
 
       // Disable input-conflicting hotkeys when focused on form elements
       if (
-        this.isFormElementFocused(focusContext) &&
-        this.isInputConflict(hotkey.combo)
+        this.isFormElementFocused(focusContext)
+        && this.isInputConflict(hotkey.combo)
       ) {
         return true
       }
@@ -173,11 +174,11 @@ export class ScopeResolver {
   private isFormElementFocused(context: FocusContext): boolean {
     const { element } = context
     return (
-      element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement ||
-      element instanceof HTMLSelectElement ||
-      element.contentEditable === 'true' ||
-      element.role === 'textbox'
+      element instanceof HTMLInputElement
+      || element instanceof HTMLTextAreaElement
+      || element instanceof HTMLSelectElement
+      || element.contentEditable === 'true'
+      || element.role === 'textbox'
     )
   }
 
@@ -194,7 +195,7 @@ export class ScopeResolver {
       /^(Backspace|Delete|Enter|Tab)$/,
     ]
 
-    return inputConflicts.some((pattern) => pattern.test(combo))
+    return inputConflicts.some(pattern => pattern.test(combo))
   }
 
   private createResolvedHotkey(
@@ -250,7 +251,7 @@ export class ScopeResolver {
     // Find conflicts (same combo, different scopes)
     comboMap.forEach((hotkeys, combo) => {
       if (hotkeys.length > 1) {
-        const uniqueScopes = new Set(hotkeys.map((h) => h.scopeId))
+        const uniqueScopes = new Set(hotkeys.map(h => h.scopeId))
         if (uniqueScopes.size > 1) {
           conflicts.set(combo, hotkeys)
         }

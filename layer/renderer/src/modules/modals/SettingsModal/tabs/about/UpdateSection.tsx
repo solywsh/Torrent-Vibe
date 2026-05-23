@@ -1,4 +1,4 @@
-import { APP_LATEST_RELEASE_URL,AppErrorCode } from '@torrent-vibe/shared'
+import { APP_LATEST_RELEASE_URL, AppErrorCode } from '@torrent-vibe/shared'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,13 +6,13 @@ import { Button } from '~/components/ui/button/Button'
 import { useBridgeEvent } from '~/hooks/common'
 import { ipcServices } from '~/lib/ipc-client'
 
-type UpdateStatus =
-  | 'idle'
-  | 'checking'
-  | 'uptodate'
-  | 'downloading'
-  | 'ready'
-  | 'error'
+type UpdateStatus
+  = | 'idle'
+    | 'checking'
+    | 'uptodate'
+    | 'downloading'
+    | 'ready'
+    | 'error'
 
 export const UpdateSection = () => {
   const { t } = useTranslation('setting')
@@ -52,9 +52,9 @@ export const UpdateSection = () => {
     setStatus('error')
     setProgress(undefined)
 
-    const isVersionTooLow =
-      data.code === AppErrorCode.AppVersionTooLow ||
-      data.code === AppErrorCode.MainHashMissing
+    const isVersionTooLow
+      = data.code === AppErrorCode.AppVersionTooLow
+        || data.code === AppErrorCode.MainHashMissing
     const message = isVersionTooLow
       ? t('about.update.versionTooLow')
       : data.message
@@ -63,7 +63,7 @@ export const UpdateSection = () => {
 
   useEffect(() => {
     // Reset transient error on status change away from error
-    if (status !== 'error' && error) setError(undefined)
+    if (status !== 'error' && error) { setError(undefined) }
   }, [status])
 
   const onCheck = () => {
@@ -93,7 +93,8 @@ export const UpdateSection = () => {
         {status === 'downloading' && (
           <span className="inline-flex items-center gap-2 text-text">
             <i className="i-mingcute-download-line text-accent" />
-            {t('about.update.downloading')}{' '}
+            {t('about.update.downloading')}
+            {' '}
             {progress ? `${Math.round(progress)}%` : ''}
           </span>
         )}

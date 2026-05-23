@@ -18,14 +18,16 @@ export const createSelectionSlice = (
       const next = new Set(draft.selectedIds)
       if (next.has(id)) {
         next.delete(id)
-      } else {
+      }
+      else {
         next.add(id)
       }
       draft.selectedIds = next
 
       if (next.has(id)) {
         nextPreview = id
-      } else if (draft.previewId === id) {
+      }
+      else if (draft.previewId === id) {
         nextPreview = next.values().next().value ?? null
       }
     })
@@ -45,12 +47,13 @@ export const createSelectionSlice = (
         return
       }
 
-      draft.selectedIds = new Set(items.map((item) => item.id))
+      draft.selectedIds = new Set(items.map(item => item.id))
     })
 
     if (!shouldClear) {
       deps.preview.setPreview(items[0]?.id ?? null)
-    } else {
+    }
+    else {
       deps.preview.closePreview()
     }
   }

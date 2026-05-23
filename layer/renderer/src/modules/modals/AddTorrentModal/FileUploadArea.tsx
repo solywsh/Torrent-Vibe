@@ -61,51 +61,57 @@ export const FileUploadArea = ({ formData, handlers }: FileUploadAreaProps) => {
           type="file"
           accept=".torrent"
           multiple
-          onChange={(e) =>
-            e.target.files && handleFileSelect(Array.from(e.target.files))
-          }
+          onChange={e =>
+            e.target.files && handleFileSelect(Array.from(e.target.files))}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
 
         <div className="text-center">
-          {formData.files.length > 0 ? (
-            <div className="space-y-2">
-              <i className="i-mingcute-file-check-line text-2xl text-green" />
-              <p className="text-sm font-medium text-text">
-                <span>{formData.files.length} file</span>
-                <span>{formData.files.length > 1 ? 's' : ''}</span>
-                <span> selected</span>
-              </p>
-              <p className="text-xs text-text-secondary">
-                {(
-                  formData.files.reduce((sum, file) => sum + file.size, 0) /
-                  1024
-                ).toFixed(1)}{' '}
-                KB total
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <i
-                className={cn(
-                  'text-2xl transition-colors',
-                  dragActive
-                    ? 'i-mingcute-download-line text-accent'
-                    : 'i-mingcute-file-line text-text-secondary',
-                )}
-              />
-              <div>
-                <p className="text-sm font-medium text-text">
-                  {dragActive
-                    ? 'Drop your torrent files here'
-                    : 'Choose torrent files'}
-                </p>
-                <p className="text-xs text-text-secondary">
-                  or drag and drop (multiple files supported)
-                </p>
-              </div>
-            </div>
-          )}
+          {formData.files.length > 0
+            ? (
+                <div className="space-y-2">
+                  <i className="i-mingcute-file-check-line text-2xl text-green" />
+                  <p className="text-sm font-medium text-text">
+                    <span>
+                      {formData.files.length}
+                      {' '}
+                      file
+                    </span>
+                    <span>{formData.files.length > 1 ? 's' : ''}</span>
+                    <span> selected</span>
+                  </p>
+                  <p className="text-xs text-text-secondary">
+                    {(
+                      formData.files.reduce((sum, file) => sum + file.size, 0)
+                      / 1024
+                    ).toFixed(1)}
+                    {' '}
+                    KB total
+                  </p>
+                </div>
+              )
+            : (
+                <div className="space-y-2">
+                  <i
+                    className={cn(
+                      'text-2xl transition-colors',
+                      dragActive
+                        ? 'i-mingcute-download-line text-accent'
+                        : 'i-mingcute-file-line text-text-secondary',
+                    )}
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-text">
+                      {dragActive
+                        ? 'Drop your torrent files here'
+                        : 'Choose torrent files'}
+                    </p>
+                    <p className="text-xs text-text-secondary">
+                      or drag and drop (multiple files supported)
+                    </p>
+                  </div>
+                </div>
+              )}
         </div>
       </div>
 
@@ -127,7 +133,9 @@ export const FileUploadArea = ({ formData, handlers }: FileUploadAreaProps) => {
                     {file.name}
                   </p>
                   <p className="text-xs text-text-secondary">
-                    {(file.size / 1024).toFixed(1)} KB
+                    {(file.size / 1024).toFixed(1)}
+                    {' '}
+                    KB
                   </p>
                 </div>
                 <button
@@ -145,10 +153,12 @@ export const FileUploadArea = ({ formData, handlers }: FileUploadAreaProps) => {
 
       {handlers.previewState.source === 'file' && (
         <div className="text-xs text-text-secondary">
-          {handlers.previewState.status === 'error' &&
-          handlers.previewState.error ? (
-            <span className="text-red">{handlers.previewState.error}</span>
-          ) : null}
+          {handlers.previewState.status === 'error'
+            && handlers.previewState.error
+            ? (
+                <span className="text-red">{handlers.previewState.error}</span>
+              )
+            : null}
         </div>
       )}
     </div>

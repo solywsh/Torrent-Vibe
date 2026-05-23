@@ -64,7 +64,7 @@ const VirtualizedTorrentList = ({ onCellTap }: VirtualizedTorrentListProps) => {
 
     // Count visible secondary fields
     const secondaryFieldsCount = cellConfig.fields.filter(
-      (f) => f.secondary && f.visible,
+      f => f.secondary && f.visible,
     ).length
 
     // Add height for each secondary field line
@@ -158,7 +158,7 @@ const VirtualizedTorrentList = ({ onCellTap }: VirtualizedTorrentListProps) => {
           contain: 'strict', // Performance optimization for virtualization
         }}
       >
-        {items.map((virtualItem) => (
+        {items.map(virtualItem => (
           <div
             key={virtualItem.key}
             data-index={virtualItem.index} // For measureElement to identify items

@@ -31,7 +31,9 @@ export const MobileFieldSelectorButton = ({
     >
       <i className="i-mingcute-settings-4-line text-sm" />
       <span className="text-xs font-medium">
-        Fields ({visibleFields.length})
+        Fields (
+        {visibleFields.length}
+        )
       </span>
     </Button>
   )

@@ -9,8 +9,8 @@ import { mainHash } from './calc-main-hash.js'
 
 function getArg(name, def) {
   const i = process.argv.indexOf(`--${name}`)
-  if (i === -1) return def
-  if (i + 1 >= process.argv.length) throw new Error(`Missing --${name} value`)
+  if (i === -1) { return def }
+  if (i + 1 >= process.argv.length) { throw new Error(`Missing --${name} value`) }
   return process.argv[i + 1]
 }
 

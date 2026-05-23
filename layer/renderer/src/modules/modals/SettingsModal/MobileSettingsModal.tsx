@@ -11,5 +11,5 @@ export const MobileSettingsModal: ModalComponent<{ tab?: SettingsSection }> = ({
 }
 
 // Mobile settings should take full screen
-MobileSettingsModal.contentClassName =
-  'w-full h-full max-w-none max-h-none rounded-none p-0 overflow-hidden'
+MobileSettingsModal.contentClassName
+  = 'w-full h-full max-w-none max-h-none rounded-none p-0 overflow-hidden'

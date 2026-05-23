@@ -17,14 +17,14 @@ export const SizeCell = ({ rowIndex }: SizeCellProps) => {
   // Use granular selector for just the size data we need
   const size = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentSize(state, deferredRowIndex).size,
+      state => selectTorrentSize(state, deferredRowIndex).size,
       [deferredRowIndex],
     ),
   )
 
   return (
     <div
-      className={'flex items-center justify-end px-2 absolute inset-x-0 top-4'}
+      className="flex items-center justify-start px-2 absolute inset-x-0 top-4"
     >
       <span className="text-sm tabular-nums text-text">
         {formatBytesSmart(size)}

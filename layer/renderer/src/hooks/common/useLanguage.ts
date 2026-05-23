@@ -22,7 +22,8 @@ export const useLanguage = () => {
         if (window.ipcRenderer) {
           await ipcServices?.app.setMainLanguage(language)
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to change language:', error)
       }
     },

@@ -1,6 +1,5 @@
 import type { FC } from 'react'
 
-
 // Bubble-only renderer; hover shows a separate bottom panel via IPC
 
 // const useMiniTransferMetric = () => {

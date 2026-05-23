@@ -47,11 +47,10 @@ export const SpeedTab = () => {
               id="up-limit"
               type="number"
               value={prefs.up_limit ?? 0}
-              onChange={(e) =>
+              onChange={e =>
                 handlePrefsChange({
                   up_limit: Number.parseInt(e.target.value) || 0,
-                })
-              }
+                })}
               min={0}
               className="w-28"
             />
@@ -66,11 +65,10 @@ export const SpeedTab = () => {
               id="dl-limit"
               type="number"
               value={prefs.dl_limit ?? 0}
-              onChange={(e) =>
+              onChange={e =>
                 handlePrefsChange({
                   dl_limit: Number.parseInt(e.target.value) || 0,
-                })
-              }
+                })}
               min={0}
               className="w-28"
             />
@@ -106,8 +104,8 @@ interface SectionProps {
 
 const AlternativeRateLimitsSection = ({ prefs, onChange }: SectionProps) => {
   const { t } = useTranslation('setting')
-  const altEnabled =
-    (prefs.alt_dl_limit ?? 0) > 0 || (prefs.alt_up_limit ?? 0) > 0
+  const altEnabled
+    = (prefs.alt_dl_limit ?? 0) > 0 || (prefs.alt_up_limit ?? 0) > 0
   return (
     <SettingSectionCard title={t('speed.alt.title')} enabled={altEnabled}>
       <SettingField label={t('speed.alt.upload')}>
@@ -115,9 +113,8 @@ const AlternativeRateLimitsSection = ({ prefs, onChange }: SectionProps) => {
           <Input
             type="number"
             value={prefs.alt_up_limit ?? 0}
-            onChange={(e) =>
-              onChange({ alt_up_limit: Number.parseInt(e.target.value) || 0 })
-            }
+            onChange={e =>
+              onChange({ alt_up_limit: Number.parseInt(e.target.value) || 0 })}
             min={0}
             className="w-28"
           />
@@ -129,9 +126,8 @@ const AlternativeRateLimitsSection = ({ prefs, onChange }: SectionProps) => {
           <Input
             type="number"
             value={prefs.alt_dl_limit ?? 0}
-            onChange={(e) =>
-              onChange({ alt_dl_limit: Number.parseInt(e.target.value) || 0 })
-            }
+            onChange={e =>
+              onChange({ alt_dl_limit: Number.parseInt(e.target.value) || 0 })}
             min={0}
             className="w-28"
           />
@@ -158,7 +154,7 @@ const AlternativeRateLimitSchedulerSection = ({
       <SettingSwitchField
         label={t('speed.scheduler.enable')}
         checked={schedulerEnabled}
-        onCheckedChange={(enable) => onChange({ scheduler_enabled: enable })}
+        onCheckedChange={enable => onChange({ scheduler_enabled: enable })}
       />
 
       <div className="flex flex-col gap-3">
@@ -170,15 +166,14 @@ const AlternativeRateLimitSchedulerSection = ({
             min={0}
             max={23}
             value={prefs.schedule_from_hour ?? 0}
-            onChange={(e) =>
+            onChange={e =>
               onChange({
                 schedule_from_hour: clamp(
                   Number.parseInt(e.target.value) || 0,
                   0,
                   23,
                 ),
-              })
-            }
+              })}
           />
           <span>:</span>
           <Input
@@ -187,15 +182,14 @@ const AlternativeRateLimitSchedulerSection = ({
             min={0}
             max={59}
             value={prefs.schedule_from_min ?? 0}
-            onChange={(e) =>
+            onChange={e =>
               onChange({
                 schedule_from_min: clamp(
                   Number.parseInt(e.target.value) || 0,
                   0,
                   59,
                 ),
-              })
-            }
+              })}
           />
         </div>
 
@@ -207,15 +201,14 @@ const AlternativeRateLimitSchedulerSection = ({
             min={0}
             max={23}
             value={prefs.schedule_to_hour ?? 0}
-            onChange={(e) =>
+            onChange={e =>
               onChange({
                 schedule_to_hour: clamp(
                   Number.parseInt(e.target.value) || 0,
                   0,
                   23,
                 ),
-              })
-            }
+              })}
           />
           <span>:</span>
           <Input
@@ -224,15 +217,14 @@ const AlternativeRateLimitSchedulerSection = ({
             min={0}
             max={59}
             value={prefs.schedule_to_min ?? 0}
-            onChange={(e) =>
+            onChange={e =>
               onChange({
                 schedule_to_min: clamp(
                   Number.parseInt(e.target.value) || 0,
                   0,
                   59,
                 ),
-              })
-            }
+              })}
           />
         </div>
 
@@ -275,23 +267,22 @@ const RateLimitOptionsSection = ({ prefs, onChange }: SectionProps) => {
           id="limit-utp-rate"
           label={t('speed.options.utp')}
           checked={Boolean(prefs.limit_utp_rate)}
-          onCheckedChange={(checked) => onChange({ limit_utp_rate: checked })}
+          onCheckedChange={checked => onChange({ limit_utp_rate: checked })}
         />
 
         <SettingSwitchField
           id="limit-tcp-overhead"
           label={t('speed.options.overhead')}
           checked={Boolean(prefs.limit_tcp_overhead)}
-          onCheckedChange={(checked) =>
-            onChange({ limit_tcp_overhead: checked })
-          }
+          onCheckedChange={checked =>
+            onChange({ limit_tcp_overhead: checked })}
         />
 
         <SettingSwitchField
           id="limit-lan-peers"
           label={t('speed.options.lan')}
           checked={Boolean(prefs.limit_lan_peers)}
-          onCheckedChange={(checked) => onChange({ limit_lan_peers: checked })}
+          onCheckedChange={checked => onChange({ limit_lan_peers: checked })}
         />
       </div>
     </SettingSectionCard>

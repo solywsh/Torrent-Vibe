@@ -4,19 +4,19 @@ import { createAtomHooks } from '~/lib/jotai'
 import type { ServerInfo } from '~/shared/types/qbittorrent'
 
 // Connection status
-export type ConnectionStatus =
-  | 'disconnected'
-  | 'connecting'
-  | 'connected'
-  | 'error'
+export type ConnectionStatus
+  = | 'disconnected'
+    | 'connecting'
+    | 'connected'
+    | 'error'
 export const connectionStatusAtom = atom<ConnectionStatus>('disconnected')
 
 // Authentication status
-export type AuthStatus =
-  | 'authenticated'
-  | 'unauthenticated'
-  | 'authenticating'
-  | 'auth_failed'
+export type AuthStatus
+  = | 'authenticated'
+    | 'unauthenticated'
+    | 'authenticating'
+    | 'auth_failed'
 export const authStatusAtom = atom<AuthStatus>('unauthenticated')
 
 // Error state
@@ -98,14 +98,14 @@ export const [
 
 // Derived atoms
 export const isConnectedAtom = atom(
-  (get) => get(connectionStatusAtom) === 'connected',
+  get => get(connectionStatusAtom) === 'connected',
 )
 
 export const isConnectingAtom = atom(
-  (get) => get(connectionStatusAtom) === 'connecting',
+  get => get(connectionStatusAtom) === 'connecting',
 )
 
-export const hasErrorAtom = atom((get) => get(connectionStatusAtom) === 'error')
+export const hasErrorAtom = atom(get => get(connectionStatusAtom) === 'error')
 
 export const useIsConnected = () => {
   const status = useConnectionStatusValue()
@@ -143,8 +143,8 @@ export const useShouldDisableQueries = () => {
 
   // Disable queries if auth failed or connection is down
   return (
-    authStatus === 'auth_failed' ||
-    connectionStatus === 'error' ||
-    connectionStatus === 'disconnected'
+    authStatus === 'auth_failed'
+    || connectionStatus === 'error'
+    || connectionStatus === 'disconnected'
   )
 }

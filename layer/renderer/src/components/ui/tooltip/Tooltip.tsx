@@ -61,7 +61,7 @@ function Tooltip(props: TooltipProps) {
   )
 
   React.useEffect(() => {
-    if (props?.open !== undefined) setIsOpen(props.open)
+    if (props?.open !== undefined) { setIsOpen(props.open) }
   }, [props?.open])
 
   const handleOpenChange = React.useCallback(

@@ -43,13 +43,13 @@ export const TorrentContentPreview = ({
     [selectedFileIndices, state],
   )
 
-  const allSelected =
-    totalFiles > 0 && selectedSummary.selectedCount === totalFiles
-  const isIndeterminate =
-    selectedSummary.selectedCount > 0 &&
-    selectedSummary.selectedCount < totalFiles
+  const allSelected
+    = totalFiles > 0 && selectedSummary.selectedCount === totalFiles
+  const isIndeterminate
+    = selectedSummary.selectedCount > 0
+      && selectedSummary.selectedCount < totalFiles
 
-  if (state.status === 'idle') return null
+  if (state.status === 'idle') { return null }
 
   if (state.status === 'loading') {
     return (
@@ -115,7 +115,7 @@ export const TorrentContentPreview = ({
             size="sm"
             checked={allSelected}
             indeterminate={isIndeterminate}
-            onCheckedChange={(checked) => onToggleAll(Boolean(checked))}
+            onCheckedChange={checked => onToggleAll(Boolean(checked))}
             aria-label={
               allSelected
                 ? t('addTorrent.preview.deselectAll')
@@ -165,9 +165,8 @@ export const TorrentContentPreview = ({
                 <Checkbox
                   size="sm"
                   checked={selected}
-                  onCheckedChange={(checked) =>
-                    onToggleFile(file.index, Boolean(checked))
-                  }
+                  onCheckedChange={checked =>
+                    onToggleFile(file.index, Boolean(checked))}
                 />
                 <div className="flex-1 min-w-0">
                   <div

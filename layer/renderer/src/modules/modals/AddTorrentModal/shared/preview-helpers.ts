@@ -2,9 +2,9 @@ import type { TorrentContentPreviewState } from '../types'
 
 export const getPreviewFileMetrics = (state: TorrentContentPreviewState) => {
   const totalFiles = state.files.length
-  const totalSize =
-    state.totalSize ??
-    state.files.reduce((sum, file) => sum + (file.size ?? 0), 0)
+  const totalSize
+    = state.totalSize
+      ?? state.files.reduce((sum, file) => sum + (file.size ?? 0), 0)
 
   return { totalFiles, totalSize }
 }

@@ -48,7 +48,7 @@ const loadInitialConfig = (): DiscoverProviderConfigState => {
     STORAGE_KEYS.DISCOVER_PROVIDERS,
   )
 
-  if (!stored) return DEFAULT_CONFIG
+  if (!stored) { return DEFAULT_CONFIG }
 
   const merged: DiscoverProviderConfigState = {
     providers: {
@@ -93,8 +93,8 @@ export const updateDiscoverProviderConfig = <T extends DiscoverProviderId>(
 ) => {
   const prev = getDiscoverConfig()
   const current = prev.providers[id]
-  const next =
-    typeof updater === 'function'
+  const next
+    = typeof updater === 'function'
       ? (
           updater as (
             p: DiscoverProviderConfigMap[T],
@@ -135,7 +135,7 @@ export const setDiscoverProviderEnabled = <T extends DiscoverProviderId>(
   id: T,
   enabled: boolean,
 ) => {
-  updateDiscoverProviderConfig(id, (prev) => ({ ...prev, enabled }))
+  updateDiscoverProviderConfig(id, prev => ({ ...prev, enabled }))
 }
 
 export {

@@ -36,11 +36,12 @@ function loadPollingInterval(): PollingInterval {
     const stored = storage.getItem(STORAGE_KEYS.POLLING_INTERVAL)
     if (stored) {
       const parsed = Number(stored) as PollingInterval
-      if (POLLING_INTERVAL_OPTIONS.some((option) => option.value === parsed)) {
+      if (POLLING_INTERVAL_OPTIONS.some(option => option.value === parsed)) {
         return parsed
       }
     }
-  } catch {
+  }
+  catch {
     // Fall through to default
   }
   return DEFAULT_POLLING_INTERVAL
@@ -54,8 +55,8 @@ function savePollingInterval(interval: PollingInterval): void {
 const pollingIntervalAtom = atom(loadPollingInterval())
 
 // Create hooks using Folo pattern
-const [, , usePollingInterval, , getPollingInterval, setPollingIntervalDirect] =
-  createAtomHooks(pollingIntervalAtom)
+const [, , usePollingInterval, , getPollingInterval, setPollingIntervalDirect]
+  = createAtomHooks(pollingIntervalAtom)
 
 // Direct setter for non-React contexts
 const setPollingInterval = (interval: PollingInterval) => {
@@ -72,7 +73,8 @@ function loadShowFloatOnClose(): boolean {
     if (stored) {
       return stored === 'true'
     }
-  } catch {
+  }
+  catch {
     // Fall through to default
   }
   return DEFAULT_SHOW_FLOAT_ON_CLOSE
@@ -93,8 +95,7 @@ ipcServices?.float?.setShowFloatOnClose(initialValue)
 const [
   ,
   ,
-  useShowFloatOnClose,
-  ,
+  useShowFloatOnClose,,
   getShowFloatOnClose,
   setShowFloatOnCloseDirect,
 ] = createAtomHooks(showFloatOnCloseAtom)

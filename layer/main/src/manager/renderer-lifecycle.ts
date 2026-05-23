@@ -4,8 +4,9 @@ import { ipcMain } from 'electron'
  * Singleton manager that tracks renderer readiness and notifies subscribers.
  */
 export class RendererLifecycleManager {
-  public static instance: RendererLifecycleManager =
-    new RendererLifecycleManager()
+  public static instance: RendererLifecycleManager
+    = new RendererLifecycleManager()
+
   private ready = false
   private emitter = new EventTarget()
 

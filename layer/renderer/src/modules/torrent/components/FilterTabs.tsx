@@ -16,13 +16,13 @@ import {
 } from '../stores/torrent-data-store'
 import { selectFilterState } from '../stores/torrent-selectors'
 
-type FilterKey =
-  | 'all'
-  | 'downloading'
-  | 'seeding'
-  | 'completed'
-  | 'paused'
-  | 'error'
+type FilterKey
+  = | 'all'
+    | 'downloading'
+    | 'seeding'
+    | 'completed'
+    | 'paused'
+    | 'error'
 
 const TAB_CONFIGS: Array<{
   key: FilterKey
@@ -68,13 +68,13 @@ const TAB_CONFIGS: Array<{
   },
 ]
 
-const FilterTab = memo(function FilterTab(props: {
+const FilterTab = memo((props: {
   filterKey: FilterKey
   labelKey: I18nKeys
   icon: string
   color: string
   count: number
-}) {
+}) => {
   const { t } = useTranslation()
 
   const isActive = useTorrentDataStore(
@@ -82,11 +82,11 @@ const FilterTab = memo(function FilterTab(props: {
       (s) => {
         const fs = selectFilterState(s)
         return (
-          fs === props.filterKey ||
-          (typeof fs === 'object' &&
-            fs.type === 'multi' &&
-            typeof props.filterKey === 'string' &&
-            fs.statuses?.includes(props.filterKey))
+          fs === props.filterKey
+          || (typeof fs === 'object'
+            && fs.type === 'multi'
+            && typeof props.filterKey === 'string'
+            && fs.statuses?.includes(props.filterKey))
         )
       },
       [props.filterKey],
@@ -98,10 +98,10 @@ const FilterTab = memo(function FilterTab(props: {
       (s) => {
         const fs = selectFilterState(s)
         return (
-          typeof fs === 'object' &&
-          fs.type === 'multi' &&
-          typeof props.filterKey === 'string' &&
-          fs.statuses?.includes(props.filterKey)
+          typeof fs === 'object'
+          && fs.type === 'multi'
+          && typeof props.filterKey === 'string'
+          && fs.statuses?.includes(props.filterKey)
         )
       },
       [props.filterKey],
@@ -112,36 +112,35 @@ const FilterTab = memo(function FilterTab(props: {
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      if (isEmpty) return
       if (e.ctrlKey || e.metaKey) {
         if (props.filterKey !== 'all') {
           torrentDataStoreSetters.toggleStatusFilter(props.filterKey)
-        } else {
+        }
+        else {
           torrentDataStoreSetters.setFilter('all')
         }
-      } else {
+      }
+      else {
         torrentDataStoreSetters.setFilter(props.filterKey)
       }
     },
-    [isEmpty, props.filterKey],
+    [props.filterKey],
   )
 
   return (
     <m.button
       key={String(props.filterKey)}
       className={clsx(
-        'relative px-3 py-2 rounded-lg text-sm font-medium transition-all',
+        'relative px-3 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer',
         isActive
           ? 'bg-accent/10 text-accent'
           : isEmpty
-            ? 'text-text-tertiary hover:text-text-secondary'
+            ? 'text-text-tertiary hover:text-text-secondary hover:bg-fill'
             : 'text-text-secondary hover:text-text hover:bg-fill',
-        isEmpty ? 'cursor-not-allowed' : 'cursor-pointer',
       )}
       onClick={handleClick}
-      disabled={isEmpty}
-      whileHover={!isEmpty ? { scale: 1.02 } : undefined}
-      whileTap={!isEmpty ? { scale: 0.98 } : undefined}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       transition={Spring.presets.snappy}
     >
       <div className="flex items-center gap-2">
@@ -153,12 +152,12 @@ const FilterTab = memo(function FilterTab(props: {
           className={`
                 px-1.5 py-0.5 rounded text-xs 
                 ${
-                  isActive
-                    ? 'bg-accent/20 text-accent'
-                    : isEmpty
-                      ? 'bg-material-opaque text-text-quaternary'
-                      : 'bg-material-opaque text-text-tertiary'
-                }
+    isActive
+      ? 'bg-accent/20 text-accent'
+      : isEmpty
+        ? 'bg-material-opaque text-text-quaternary'
+        : 'bg-material-opaque text-text-tertiary'
+    }
               `}
         >
           {props.count}
@@ -197,14 +196,15 @@ export const FilterTabs = () => {
           name: result.trim(),
           savePath: '', // Default empty save path, can be modified later
         })
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to create category:', error)
       }
     }
   }, [createCategoryMutation, t])
 
   const handleRemoveUnusedCategories = useCallback(async () => {
-    const unusedCategories = categories.filter((cat) => cat.count === 0)
+    const unusedCategories = categories.filter(cat => cat.count === 0)
 
     if (unusedCategories.length === 0) {
       Prompt.prompt({
@@ -215,7 +215,7 @@ export const FilterTabs = () => {
       return
     }
 
-    const categoryNames = unusedCategories.map((cat) => cat.name).join(', ')
+    const categoryNames = unusedCategories.map(cat => cat.name).join(', ')
 
     return new Promise<void>((resolve) => {
       Prompt.prompt({
@@ -232,7 +232,8 @@ export const FilterTabs = () => {
             for (const category of unusedCategories) {
               await deleteCategoryMutation.mutateAsync(category.name)
             }
-          } catch (error) {
+          }
+          catch (error) {
             console.error('Failed to remove unused categories:', error)
           }
           resolve()
@@ -259,7 +260,7 @@ export const FilterTabs = () => {
           label: t('torrent.categories.removeUnused'),
           icon: <i className="i-mingcute-delete-line" />,
           click: handleRemoveUnusedCategories,
-          disabled: categories.filter((cat) => cat.count === 0).length === 0,
+          disabled: categories.filter(cat => cat.count === 0).length === 0,
         }),
       ]
 
@@ -291,7 +292,7 @@ export const FilterTabs = () => {
       className="flex items-center gap-1 h-[50px]"
       onContextMenu={handleContextMenu}
     >
-      {TAB_CONFIGS.map((cfg) => (
+      {TAB_CONFIGS.map(cfg => (
         <FilterTab
           key={cfg.key}
           filterKey={cfg.key}

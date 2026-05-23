@@ -32,25 +32,24 @@ export const IPFilteringSection = ({
       <SettingSwitchField
         label={t('connection.ipFiltering.filterPathEnabled')}
         checked={ipFilterEnabled}
-        onCheckedChange={(v) => handleChange({ ip_filter_enabled: Boolean(v) })}
+        onCheckedChange={v => handleChange({ ip_filter_enabled: Boolean(v) })}
       />
       <SettingInputField
         label={t('connection.ipFiltering.filterPath')}
         value={ipFilterPath}
-        onChange={(v) => handleChange({ ip_filter_path: v })}
+        onChange={v => handleChange({ ip_filter_path: v })}
       />
       <SettingSwitchField
         id="ip_filter_trackers"
         label={t('connection.ipFiltering.applyToTrackers')}
         checked={ipFilterTrackers}
-        onCheckedChange={(v) =>
-          handleChange({ ip_filter_trackers: Boolean(v) })
-        }
+        onCheckedChange={v =>
+          handleChange({ ip_filter_trackers: Boolean(v) })}
       />
       <SettingTextareaField
         label={t('connection.ipFiltering.bannedIPs')}
         value={bannedIPs}
-        onChange={(v) => handleChange({ banned_IPs: v })}
+        onChange={v => handleChange({ banned_IPs: v })}
         placeholder={t('connection.ipFiltering.placeholder') as any}
         rows={6}
       />

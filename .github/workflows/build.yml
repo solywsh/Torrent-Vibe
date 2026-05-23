@@ -8,19 +8,19 @@ on:
     inputs:
       build_macos:
         type: boolean
-        description: 'Build for macOS'
+        description: Build for macOS
         default: true
       build_ubuntu:
         type: boolean
-        description: 'Build for Ubuntu Linux'
+        description: Build for Ubuntu Linux
         default: true
       build_windows:
         type: boolean
-        description: 'Build for Windows'
+        description: Build for Windows
         default: true
       build_web:
         type: boolean
-        description: 'Build Web version'
+        description: Build Web version
         default: true
 
 # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs
@@ -99,7 +99,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm i
@@ -193,7 +193,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm i

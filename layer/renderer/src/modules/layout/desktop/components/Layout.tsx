@@ -66,13 +66,13 @@ export const Layout = () => {
   const showDetailInLayout = detailPanelVisible && !isDetailPanelFloating
 
   const resizablePanel = React.useMemo<ResizablePanelConfig | undefined>(() => {
-    if (!showDetailInLayout) return
+    if (!showDetailInLayout) { return }
 
     return {
       isVisible: true,
       width: detailPanelWidth,
       minWidth: 280,
-      maxWidth: 600,
+      maxWidth: 800,
       onResize: (nextWidth: number) => {
         setDetailPanelWidth(nextWidth)
       },

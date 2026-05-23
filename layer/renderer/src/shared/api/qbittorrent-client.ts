@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-static-only-class */
 // In web builds, use the HTTP client directly.
 // In Electron builds, calls must go through IPC to the main process.
 
@@ -11,8 +10,8 @@ import type {
 import { ipcServices } from '~/lib/ipc-client'
 
 const useElectronAdapter = ELECTRON
-const forceUseRendererRequest =
-  import.meta.env.VITE_APP_FORCE_USE_RENDERER_REQUEST === '1'
+const forceUseRendererRequest
+  = import.meta.env.VITE_APP_FORCE_USE_RENDERER_REQUEST === '1'
 
 export class QBittorrentClient {
   static shared: (typeof import('@torrent-vibe/qb-client').QBittorrentClient)['shared']
@@ -30,7 +29,8 @@ if (!useElectronAdapter || forceUseRendererRequest) {
 
   // @ts-ignore - reassign exported class
   QBittorrentClient = mod.QBittorrentClient
-} else {
+}
+else {
   type AnyFn = (...args: any[]) => any
 
   // Adapter instance that proxies any method call to main via IPC.
@@ -45,8 +45,8 @@ if (!useElectronAdapter || forceUseRendererRequest) {
       // Return a proxy to trap arbitrary method calls
       return new Proxy(this, {
         get: (target, prop, receiver) => {
-          if (prop in target) return Reflect.get(target, prop, receiver)
-          if (typeof prop !== 'string') return
+          if (prop in target) { return Reflect.get(target, prop, receiver) }
+          if (typeof prop !== 'string') { return }
           // Return a function that forwards to IPC
           const fn: AnyFn = async (...args: any[]) => {
             return await (target as AdapterImpl).invoke(prop, args)

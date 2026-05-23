@@ -43,7 +43,7 @@ export const SettingSelectField = ({
         <SelectContent>
           {renderItems
             ? renderItems()
-            : options?.map((opt) => (
+            : options?.map(opt => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
                 </SelectItem>

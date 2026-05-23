@@ -1,4 +1,4 @@
-import type { ReactNode,TextareaHTMLAttributes } from 'react'
+import type { ReactNode, TextareaHTMLAttributes } from 'react'
 
 import { Textarea } from '~/components/ui/input/Textarea'
 
@@ -32,7 +32,7 @@ export const SettingTextareaField = ({
         id={id}
         value={value}
         rows={rows}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         className="text-xs"
         {...rest}
       />

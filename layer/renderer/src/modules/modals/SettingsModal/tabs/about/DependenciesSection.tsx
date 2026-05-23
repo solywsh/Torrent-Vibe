@@ -27,7 +27,9 @@ export const DependenciesSection: React.FC<DependenciesSectionProps> = ({
               {index === dependencies.length - 1 ? '└──' : '├──'}
             </span>
             <span className="text-text flex-1">
-              {dep.name}@{dep.version}
+              {dep.name}
+              @
+              {dep.version}
             </span>
             <span className="text-text-secondary ml-4">{dep.license}</span>
           </div>

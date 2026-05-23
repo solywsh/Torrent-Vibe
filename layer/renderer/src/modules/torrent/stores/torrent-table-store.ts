@@ -43,6 +43,35 @@ const computeTanStackState = (persistentState: TorrentTablePersistentState) => {
     'completion_on',
     'last_activity',
     'save_path',
+    // qBittorrent standard fields (new)
+    'availability',
+    'auto_tmm',
+    'content_path',
+    'dl_limit',
+    'up_limit',
+    'downloaded_session',
+    'uploaded_session',
+    'magnet_uri',
+    'f_l_piece_prio',
+    'force_start',
+    'ratio_limit',
+    'seeding_time_limit',
+    'seen_complete',
+    'seq_dl',
+    'super_seeding',
+    'total_size',
+    // qBittorrent 5.0+ fields
+    'infohash_v1',
+    'infohash_v2',
+    'popularity',
+    'comment',
+    'private',
+    'has_metadata',
+    'reannounce',
+    'root_path',
+    'download_path',
+    'trackers_count',
+    'inactive_seeding_time_limit',
   ]
 
   // Set visibility for other columns
@@ -72,7 +101,7 @@ export interface TorrentTableDragState {
   isDragging: boolean
   draggedColumnId: string | null
   dropZoneColumnId: string | null
-  dragOffset: { x: number; y: number }
+  dragOffset: { x: number, y: number }
 }
 
 export interface TorrentTablePersistentState {
@@ -148,8 +177,8 @@ export interface TorrentTableActions {
 // Complete store interface
 export interface TorrentTableStore
   extends TorrentTablePersistentState,
-    TorrentTableSessionState,
-    TorrentTableActions {}
+  TorrentTableSessionState,
+  TorrentTableActions {}
 
 // Default states
 const defaultPersistentState: TorrentTablePersistentState = {
@@ -186,25 +215,40 @@ const createTorrentTableSlice: StateCreator<
 
   // Persistent state actions
   setVisibleColumns: (columns) => {
-    set({ visibleColumns: columns })
+    // Keep orderedColumns in sync: any previously-ordered column that is
+    // still visible keeps its position; newly visible columns append.
+    const { orderedColumns } = get()
+    const kept = orderedColumns.filter(id => columns.includes(id))
+    const added = columns.filter(id => !kept.includes(id))
+    set({ visibleColumns: columns, orderedColumns: [...kept, ...added] })
     get().syncTanStackState()
   },
 
   addVisibleColumn: (columnId) => {
-    const { visibleColumns } = get()
+    const { visibleColumns, orderedColumns } = get()
     if (!visibleColumns.includes(columnId)) {
-      const newColumns = [...visibleColumns, columnId]
-      set({ visibleColumns: newColumns })
+      // Append to orderedColumns so dnd-kit's SortableContext sees the
+      // new column as a draggable / drop target.
+      const nextOrdered = orderedColumns.includes(columnId)
+        ? orderedColumns
+        : [...orderedColumns, columnId]
+      set({
+        visibleColumns: [...visibleColumns, columnId],
+        orderedColumns: nextOrdered,
+      })
       get().syncTanStackState()
     }
   },
 
   removeVisibleColumn: (columnId) => {
-    const { visibleColumns } = get()
-    const newColumns = visibleColumns.filter((id) => id !== columnId)
+    const { visibleColumns, orderedColumns } = get()
+    const newColumns = visibleColumns.filter(id => id !== columnId)
     // Ensure at least one column remains visible
     if (newColumns.length > 0) {
-      set({ visibleColumns: newColumns })
+      set({
+        visibleColumns: newColumns,
+        orderedColumns: orderedColumns.filter(id => id !== columnId),
+      })
       get().syncTanStackState()
     }
   },
@@ -213,7 +257,8 @@ const createTorrentTableSlice: StateCreator<
     const { visibleColumns } = get()
     if (visibleColumns.includes(columnId)) {
       get().removeVisibleColumn(columnId)
-    } else {
+    }
+    else {
       get().addVisibleColumn(columnId)
     }
   },
@@ -242,7 +287,7 @@ const createTorrentTableSlice: StateCreator<
   },
 
   setSortState: (state) => {
-    set((prev) => ({
+    set(prev => ({
       sortState: { ...prev.sortState, ...state },
     }))
   },
@@ -253,7 +298,7 @@ const createTorrentTableSlice: StateCreator<
 
   // Session state actions
   setDragState: (state) => {
-    set((prev) => ({
+    set(prev => ({
       dragState: { ...prev.dragState, ...state },
     }))
   },
@@ -285,7 +330,7 @@ const createTorrentTableSlice: StateCreator<
   },
 
   updateColumnOrder: (updater) => {
-    set((prev) => ({
+    set(prev => ({
       columnOrder:
         typeof updater === 'function' ? updater(prev.columnOrder) : updater,
     }))
@@ -296,7 +341,7 @@ const createTorrentTableSlice: StateCreator<
   },
 
   updateColumnVisibility: (updater) => {
-    set((prev) => ({
+    set(prev => ({
       columnVisibility:
         typeof updater === 'function'
           ? updater(prev.columnVisibility)
@@ -310,8 +355,8 @@ const createTorrentTableSlice: StateCreator<
 
   updateColumnSizing: (updater) => {
     set((prev) => {
-      const newSizing =
-        typeof updater === 'function' ? updater(prev.columnSizing) : updater
+      const newSizing
+        = typeof updater === 'function' ? updater(prev.columnSizing) : updater
       // Sync to persistent store
       return {
         columnSizing: newSizing,
@@ -361,6 +406,17 @@ export const useTorrentTableStore = createWithEqualityFn<TorrentTableStore>()(
       onRehydrateStorage: () => (state) => {
         // After rehydration, immediately compute correct TanStack state
         if (state) {
+          // Migration: ensure every currently-visible column is present in
+          // orderedColumns. Older builds only persisted ordering for the
+          // initial column set, so columns added later would not appear in
+          // SortableContext.items and could not be drag-reordered.
+          const missingInOrder = state.visibleColumns.filter(
+            id => !state.orderedColumns.includes(id),
+          )
+          if (missingInOrder.length > 0) {
+            state.orderedColumns = [...state.orderedColumns, ...missingInOrder]
+          }
+
           const persistentState: TorrentTablePersistentState = {
             visibleColumns: state.visibleColumns,
             orderedColumns: state.orderedColumns,
@@ -382,20 +438,20 @@ export const useTorrentTableStore = createWithEqualityFn<TorrentTableStore>()(
 export const useTorrentTableSelectors = {
   // Persistent state selectors
   useVisibleColumns: () =>
-    useTorrentTableStore((state) => state.visibleColumns),
+    useTorrentTableStore(state => state.visibleColumns),
   useOrderedColumns: () =>
-    useTorrentTableStore((state) => state.orderedColumns),
-  useResizeColumns: () => useTorrentTableStore((state) => state.resizeColumns),
-  useSortState: () => useTorrentTableStore((state) => state.sortState),
+    useTorrentTableStore(state => state.orderedColumns),
+  useResizeColumns: () => useTorrentTableStore(state => state.resizeColumns),
+  useSortState: () => useTorrentTableStore(state => state.sortState),
 
   // Session state selectors
-  useDragState: () => useTorrentTableStore((state) => state.dragState),
-  useColumnOrder: () => useTorrentTableStore((state) => state.columnOrder),
+  useDragState: () => useTorrentTableStore(state => state.dragState),
+  useColumnOrder: () => useTorrentTableStore(state => state.columnOrder),
   useColumnVisibility: () =>
-    useTorrentTableStore((state) => state.columnVisibility),
-  useColumnSizing: () => useTorrentTableStore((state) => state.columnSizing),
+    useTorrentTableStore(state => state.columnVisibility),
+  useColumnSizing: () => useTorrentTableStore(state => state.columnSizing),
   useActiveTorrentHash: () =>
-    useTorrentTableStore((state) => state.activeTorrentHash),
+    useTorrentTableStore(state => state.activeTorrentHash),
   useRowActiveByIndex: (index: number) => {
     const [isActive, setIsActive] = useState(false)
 
@@ -409,8 +465,8 @@ export const useTorrentTableSelectors = {
           index,
         )
 
-        const isActiveTorrent =
-          activeTorrentHash === torrentHash && activeTorrentHash !== null
+        const isActiveTorrent
+          = activeTorrentHash === torrentHash && activeTorrentHash !== null
         const isSelectedTorrent = torrentHash
           ? selectedTorrents.includes(torrentHash)
           : false
@@ -457,7 +513,7 @@ export const useTorrentTableSelectors = {
   },
   // Combined selectors
   useTableConfig: () =>
-    useTorrentTableStore((state) => ({
+    useTorrentTableStore(state => ({
       columnOrder: state.columnOrder,
       columnVisibility: state.columnVisibility,
       columnSizing: state.columnSizing,

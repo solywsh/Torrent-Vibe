@@ -63,7 +63,8 @@ function collectModuleDependencies(
     for (const depName of Object.keys(dependencies || {})) {
       collectModuleDependencies(depName, rootPath, collected, visited)
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.warn(`Failed to read package.json for ${moduleName}:`, error)
   }
 
@@ -117,16 +118,14 @@ async function cleanSources(
 
   // Keep only node_modules to be included in the app
   await Promise.all([
-    ...(await readdir(buildPath).then((items) =>
+    ...(await readdir(buildPath).then(items =>
       items
-        .filter((item) => !appItems.has(item))
-        .map((item) => rimraf(path.join(buildPath, item))),
-    )),
-    ...(await readdir(path.join(buildPath, 'node_modules')).then((items) =>
+        .filter(item => !appItems.has(item))
+        .map(item => rimraf(path.join(buildPath, item))))),
+    ...(await readdir(path.join(buildPath, 'node_modules')).then(items =>
       items
-        .filter((item) => !allModulesToKeep.has(item))
-        .map((item) => rimraf(path.join(buildPath, 'node_modules', item))),
-    )),
+        .filter(item => !allModulesToKeep.has(item))
+        .map(item => rimraf(path.join(buildPath, 'node_modules', item))))),
   ])
 
   // copy needed node_modules to be included in the app
@@ -171,9 +170,11 @@ const injectMainHashAfterCopy = async (
 
     console.info('[forge] injectMainHashAfterCopy', mainHash)
     fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
-  } catch (e) {
+  }
+  catch (e) {
     console.warn('[forge] injectMainHashAfterCopy failed:', e)
-  } finally {
+  }
+  finally {
     callback()
   }
 }
@@ -203,18 +204,17 @@ const ignorePattern = createIgnorePattern(keepModules)
  * - "1.2.3" -> "1.2.3.0"
  */
 function toFileVersion(input?: string): string | undefined {
-  if (!input) return undefined
+  if (!input) { return undefined }
   let cleaned = input.trim()
-  if (cleaned.startsWith('v') || cleaned.startsWith('V'))
-    cleaned = cleaned.slice(1)
+  if (cleaned.startsWith('v') || cleaned.startsWith('V')) { cleaned = cleaned.slice(1) }
 
   // If already dotted numeric, clamp and pad to 4 parts
   const dotted = cleaned.split('.')
-  if (dotted.length > 1 && dotted.every((p) => /^\d+$/.test(p))) {
+  if (dotted.length > 1 && dotted.every(p => /^\d+$/.test(p))) {
     const nums = dotted
       .slice(0, 4)
-      .map((n) => Math.min(Number.parseInt(n, 10) || 0, 65535))
-    while (nums.length < 4) nums.push(0)
+      .map(n => Math.min(Number.parseInt(n, 10) || 0, 65535))
+    while (nums.length < 4) { nums.push(0) }
     return nums.join('.')
   }
 
@@ -245,7 +245,7 @@ function toFileVersion(input?: string): string | undefined {
     Number.parseInt(digits.slice(8, 12) || '0', 10) || 0,
     65535,
   )
-  if (a + b + c + d === 0) return undefined
+  if (a + b + c + d === 0) { return undefined }
   return [a, b, c, d].join('.')
 }
 
@@ -383,9 +383,9 @@ const config: ForgeConfig = {
   ],
   hooks: {
     postMake: async (_config, makeResults) => {
-      if (!fileVersion) return makeResults
+      if (!fileVersion) { return makeResults }
 
-      const newResults = makeResults.map((result) => ({
+      const newResults = makeResults.map(result => ({
         ...result,
         artifacts: result.artifacts.map((artifact) => {
           const oldPath = artifact
@@ -417,15 +417,20 @@ const config: ForgeConfig = {
           let newName: string
           if (oldPath.includes('.dmg')) {
             newName = `Torrent.Vibe-${fileVersion}-${platformArch}.dmg`
-          } else if (oldPath.includes('.zip') && result.platform === 'darwin') {
+          }
+          else if (oldPath.includes('.zip') && result.platform === 'darwin') {
             newName = `Torrent.Vibe-${fileVersion}-${platformArch}.zip`
-          } else if (oldPath.includes('.AppImage')) {
+          }
+          else if (oldPath.includes('.AppImage')) {
             newName = `Torrent.Vibe-${fileVersion}-${platformArch}.AppImage`
-          } else if (oldPath.includes('.pkg')) {
+          }
+          else if (oldPath.includes('.pkg')) {
             newName = `Torrent.Vibe-${fileVersion}-mas-${arch}.pkg`
-          } else if (oldPath.includes('.exe')) {
+          }
+          else if (oldPath.includes('.exe')) {
             newName = `Torrent.Vibe-${fileVersion}-${platformArch}.exe`
-          } else {
+          }
+          else {
             return artifact
           }
 
@@ -455,7 +460,8 @@ const config: ForgeConfig = {
             entries: combined,
           })
         }
-      } catch (e) {
+      }
+      catch (e) {
         console.warn('[forge] Failed to generate electron-updater metadata:', e)
       }
 
@@ -465,14 +471,14 @@ const config: ForgeConfig = {
 }
 
 function collectMetadataEntries(makeResults: any[]) {
-  const entries: { platform: string; arch: string; path: string }[] = []
+  const entries: { platform: string, arch: string, path: string }[] = []
 
   for (const result of makeResults) {
     for (const artifact of result.artifacts) {
       const ext = path.extname(artifact).toLowerCase()
       const { platform } = result
       const arch = result.arch || detectArchFromPath(artifact)
-      if (!platform || !arch) continue
+      if (!platform || !arch) { continue }
 
       if (platform === 'win32' && ext === '.exe') {
         entries.push({ platform, arch, path: artifact })
@@ -495,14 +501,14 @@ function collectMetadataEntries(makeResults: any[]) {
 }
 
 function dedupeArtifacts(
-  entries: { platform: string; arch: string; path: string }[],
+  entries: { platform: string, arch: string, path: string }[],
 ) {
   const seen = new Set<string>()
   const unique: typeof entries = []
   for (const entry of entries) {
-    if (!entry) continue
+    if (!entry) { continue }
     const key = `${entry.platform}:${entry.arch}:${entry.path}`
-    if (seen.has(key)) continue
+    if (seen.has(key)) { continue }
     seen.add(key)
     unique.push(entry)
   }
@@ -511,7 +517,7 @@ function dedupeArtifacts(
 
 function detectArchFromPath(p: string) {
   const match = p.match(/-(arm64|x64|ia32|aarch64|amd64)/i)
-  if (match) return match[1].toLowerCase()
+  if (match) { return match[1].toLowerCase() }
   return 'x64'
 }
 
@@ -519,15 +525,16 @@ function findLatestZip(dir: string) {
   try {
     const zips = fs
       .readdirSync(dir)
-      .filter((name) => name.toLowerCase().endsWith('.zip'))
-      .map((name) => ({
+      .filter(name => name.toLowerCase().endsWith('.zip'))
+      .map(name => ({
         name,
         mtime: statSync(path.join(dir, name)).mtimeMs,
       }))
       .sort((a, b) => b.mtime - a.mtime)
     return zips[0] ? path.join(dir, zips[0].name) : undefined
-  } catch {
-    return
+  }
+  catch {
+
   }
 }
 

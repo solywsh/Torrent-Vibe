@@ -27,16 +27,19 @@ interface SpeedHistory {
 }
 
 const sanitizeSpeedValue = (value: number): number => {
-  if (!Number.isFinite(value) || value < 0) return 0
+  if (!Number.isFinite(value) || value < 0) { return 0 }
   return value
 }
 
 const normalizeSeriesLength = (series: number[], length: number): number[] => {
-  if (series.length === length) return series
+  if (series.length === length) { return series }
   if (series.length > length) {
     return series.slice(series.length - length)
   }
-  return [...Array.from({ length: length - series.length }, () => 0), ...series]
+  return [
+    ...Array.from<number>({ length: length - series.length }).fill(0),
+    ...series,
+  ]
 }
 
 const useSpeedHistory = (
@@ -45,8 +48,8 @@ const useSpeedHistory = (
   length = SPEED_HISTORY_LENGTH,
 ): SpeedHistory => {
   const [history, setHistory] = useState<SpeedHistory>(() => ({
-    download: Array.from({ length }, () => 0),
-    upload: Array.from({ length }, () => 0),
+    download: Array.from<number>({ length }).fill(0),
+    upload: Array.from<number>({ length }).fill(0),
   }))
   const latestSpeedsRef = useRef({
     download: sanitizeSpeedValue(downloadSpeed),
@@ -115,11 +118,11 @@ const SpeedSparkline = ({
 
   useEffect(() => {
     const element = containerRef.current
-    if (!element) return
+    if (!element) { return }
 
     const measure = () => {
       const width = Math.floor(element.getBoundingClientRect().width)
-      setContainerWidth((prev) => (prev !== width ? width : prev))
+      setContainerWidth(prev => (prev !== width ? width : prev))
     }
 
     measure()
@@ -154,35 +157,37 @@ const SpeedSparkline = ({
       aria-label={ariaLabel}
       className={`h-20 w-full ${colorClass}`}
     >
-      {containerWidth > 0 ? (
-        <AreaChart
-          width={containerWidth}
-          height={80}
-          data={chartData}
-          margin={{ top: 8, right: 0, left: 0, bottom: 8 }}
-        >
-          <XAxis dataKey="index" hide tickLine={false} axisLine={false} />
-          <YAxis
-            hide
-            tickLine={false}
-            axisLine={false}
-            domain={[0, yDomainMax]}
-            allowDecimals
-          />
-          <Area
-            type="monotone"
-            dataKey="value"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            strokeOpacity={0.8}
-            fill="currentColor"
-            fillOpacity={0.16}
-            isAnimationActive={false}
-            dot={false}
-            activeDot={false}
-          />
-        </AreaChart>
-      ) : null}
+      {containerWidth > 0
+        ? (
+            <AreaChart
+              width={containerWidth}
+              height={80}
+              data={chartData}
+              margin={{ top: 8, right: 0, left: 0, bottom: 8 }}
+            >
+              <XAxis dataKey="index" hide tickLine={false} axisLine={false} />
+              <YAxis
+                hide
+                tickLine={false}
+                axisLine={false}
+                domain={[0, yDomainMax]}
+                allowDecimals
+              />
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                strokeOpacity={0.8}
+                fill="currentColor"
+                fillOpacity={0.16}
+                isAnimationActive={false}
+                dot={false}
+                activeDot={false}
+              />
+            </AreaChart>
+          )
+        : null}
     </div>
   )
 }
@@ -194,7 +199,7 @@ interface SpeedMetricsHoverContentProps {
   uploadSpeedText: string
   totalDownloaded: number
   totalUploaded: number
-  freeSpaceOnDisk: number
+  totalTorrentsSize: number
 }
 
 const SpeedMetricsHoverContent = ({
@@ -204,7 +209,7 @@ const SpeedMetricsHoverContent = ({
   uploadSpeedText,
   totalDownloaded,
   totalUploaded,
-  freeSpaceOnDisk,
+  totalTorrentsSize,
 }: SpeedMetricsHoverContentProps) => {
   const { t } = useTranslation()
   const totalTransferred = totalDownloaded + totalUploaded
@@ -262,10 +267,10 @@ const SpeedMetricsHoverContent = ({
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs uppercase tracking-wide text-text-tertiary">
-            {t('status.disk_free')}
+            {t('status.torrents_size')}
           </span>
           <span className="font-medium text-text">
-            {formatBytes(freeSpaceOnDisk)}
+            {formatBytes(totalTorrentsSize)}
           </span>
         </div>
         <div className="flex flex-col gap-1">
@@ -287,11 +292,11 @@ export const SpeedIndicators = ({
 }: SpeedIndicatorsProps) => {
   const { t } = useTranslation()
   const { downloadSpeed, uploadSpeed } = useGlobalSpeeds()
-  const { totalDownloaded, totalUploaded, freeSpaceOnDisk } =
-    useGlobalTotalData()
+  const { totalDownloaded, totalUploaded, totalTorrentsSize }
+    = useGlobalTotalData()
 
   const handleHoverCardOpenChange = (open: boolean) => {
-    if (!open) return
+    if (!open) { return }
     // Ensure ResponsiveContainer measures non-zero width after content becomes visible
     requestAnimationFrame(() => {
       window.dispatchEvent(new Event('resize'))
@@ -311,10 +316,10 @@ export const SpeedIndicators = ({
       <div className="flex items-center gap-2 text-xs">
         <i className="i-lucide-hard-drive text-sm text-blue/80" />
         <span className="text-text-tertiary text-xs">
-          {t('status.disk_free')}
+          {t('status.torrents_size')}
         </span>
         <span className="tabular-nums text-text-secondary text-right min-w-[70px]">
-          {formatBytes(freeSpaceOnDisk)}
+          {formatBytes(totalTorrentsSize)}
         </span>
       </div>
 
@@ -339,7 +344,7 @@ export const SpeedIndicators = ({
     <div className="flex items-center gap-3 text-sm no-drag-region">
       <div className="flex items-center gap-1.5 shrink-0 tabular-nums whitespace-nowrap">
         <i className="i-lucide-hard-drive text-blue text-sm" />
-        <span className="text-text">{formatBytes(freeSpaceOnDisk)}</span>
+        <span className="text-text">{formatBytes(totalTorrentsSize)}</span>
       </div>
 
       <div className="h-4 w-px bg-border" />
@@ -351,7 +356,9 @@ export const SpeedIndicators = ({
         </span>
         {showTotalData && (
           <span className="text-text-tertiary">
-            ({formatBytes(totalDownloaded)})
+            (
+            {formatBytes(totalDownloaded)}
+            )
           </span>
         )}
       </div>
@@ -362,15 +369,17 @@ export const SpeedIndicators = ({
         </span>
         {showTotalData && (
           <span className="text-text-tertiary">
-            ({formatBytes(totalUploaded)})
+            (
+            {formatBytes(totalUploaded)}
+            )
           </span>
         )}
       </div>
     </div>
   )
 
-  const indicatorContent =
-    variant === 'compact' ? compactIndicator : standardIndicator
+  const indicatorContent
+    = variant === 'compact' ? compactIndicator : standardIndicator
 
   return (
     <HoverCard
@@ -387,7 +396,7 @@ export const SpeedIndicators = ({
           uploadSpeedText={uploadSpeedInfo.text}
           totalDownloaded={totalDownloaded}
           totalUploaded={totalUploaded}
-          freeSpaceOnDisk={freeSpaceOnDisk}
+          totalTorrentsSize={totalTorrentsSize}
         />
         <HoverCardArrow />
       </HoverCardContent>

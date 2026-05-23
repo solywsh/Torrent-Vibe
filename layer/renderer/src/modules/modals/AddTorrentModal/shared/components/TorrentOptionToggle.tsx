@@ -20,7 +20,7 @@ export const TorrentOptionToggle = ({
       <Checkbox
         id={id}
         checked={checked}
-        onCheckedChange={(value) => onChange(Boolean(value))}
+        onCheckedChange={value => onChange(Boolean(value))}
       />
       <label htmlFor={id} className="text-sm ml-3">
         {label}

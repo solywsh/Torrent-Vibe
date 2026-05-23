@@ -7,7 +7,7 @@ import { createAtomHooks } from '~/lib/jotai'
 export const detailPanelVisibleAtom = atom<boolean>(false)
 export const detailPanelWidthAtom = atomWithStorage<number>(
   'detailPanelWidth',
-  320,
+  440,
   undefined,
   { getOnInit: true },
 )

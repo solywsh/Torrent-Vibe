@@ -16,8 +16,8 @@ export interface TagWithCount {
  * Hook to get tags with torrent counts
  */
 export const useTagsWithCounts = () => {
-  const tags = useTorrentDataStore((state) => state.tags)
-  const torrents = useTorrentDataStore((state) => state.torrents)
+  const tags = useTorrentDataStore(state => state.tags)
+  const torrents = useTorrentDataStore(state => state.torrents)
 
   const { data, isLoading, error } = useQBQuery.tags()
 
@@ -28,16 +28,15 @@ export const useTagsWithCounts = () => {
 
   const tagsWithCounts = useMemo(() => {
     const tagsData = tags || data
-    if (!tagsData || !torrents) return []
+    if (!tagsData || !torrents) { return [] }
 
-    return tagsData.map((tagName) => ({
+    return tagsData.map(tagName => ({
       name: tagName,
-      count: torrents.filter((torrent) =>
+      count: torrents.filter(torrent =>
         torrent.tags
           .split(', ')
-          .filter((tag) => tag.trim())
-          .includes(tagName),
-      ).length,
+          .filter(tag => tag.trim())
+          .includes(tagName)).length,
     }))
   }, [tags, data, torrents])
 

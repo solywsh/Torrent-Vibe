@@ -13,7 +13,7 @@ export class AppAutoUpdater {
   private logger = log.scope('AppAutoUpdater')
 
   static get instance(): AppAutoUpdater {
-    if (!this._instance) this._instance = new AppAutoUpdater()
+    if (!this._instance) { this._instance = new AppAutoUpdater() }
     return this._instance
   }
 
@@ -31,7 +31,8 @@ export class AppAutoUpdater {
 
       this.registerEvents()
       this.logger.info('AppAutoUpdater initialized')
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.error('Failed to initialize AppAutoUpdater:', e)
     }
   }
@@ -40,7 +41,8 @@ export class AppAutoUpdater {
     try {
       this.logger.info('Checking for application updates via electron-updater')
       void autoUpdater.checkForUpdates()
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.error('checkForUpdates failed:', e)
     }
   }
@@ -87,10 +89,12 @@ export class AppAutoUpdater {
             this.logger.info('Quitting and installing update...')
             // Quit and install immediately
             autoUpdater.quitAndInstall(false, true)
-          } else {
+          }
+          else {
             this.logger.info('User chose to install later')
           }
-        } catch (e) {
+        }
+        catch (e) {
           this.logger.error('Failed to prompt for update installation:', e)
         }
       },

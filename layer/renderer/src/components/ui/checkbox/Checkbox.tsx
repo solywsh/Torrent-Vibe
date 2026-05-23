@@ -39,9 +39,9 @@ const checkboxIndicatorStyles = tv({
   },
 })
 
-type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root> &
-  HTMLMotionProps<'button'> &
-  VariantProps<typeof checkboxStyles> & {
+type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root>
+  & HTMLMotionProps<'button'>
+  & VariantProps<typeof checkboxStyles> & {
     indeterminate?: boolean
   }
 
@@ -57,7 +57,7 @@ function Checkbox({
   )
 
   React.useEffect(() => {
-    if (props?.checked !== undefined) setIsChecked(props.checked)
+    if (props?.checked !== undefined) { setIsChecked(props.checked) }
   }, [props?.checked])
 
   // Determine the actual state including indeterminate

@@ -13,7 +13,8 @@ import type { TorrentInfo } from '~/types/torrent'
 const getActiveServerId = (): string | null => {
   try {
     return useMultiServerStore.getState().activeServerId ?? null
-  } catch {
+  }
+  catch {
     return null
   }
 }
@@ -22,13 +23,14 @@ const showFailure = (reason?: string) => {
   const { t } = getI18n()
   if (reason) {
     toast.error(t('messages.openPathFailedWithReason', { message: reason }))
-  } else {
+  }
+  else {
     toast.error(t('messages.openPathFailed'))
   }
 }
 
 const sanitizePath = (value?: string | null) => {
-  if (!value) return null
+  if (!value) { return null }
   const trimmed = value.trim()
   return trimmed || null
 }
@@ -36,12 +38,12 @@ const sanitizePath = (value?: string | null) => {
 const joinRemotePath = (base: string, relative: string) => {
   const normalizedBase = base.replaceAll(/[/\\]+$/g, '')
   const sanitizedRelative = relative.replace(/^[/\\]+/, '')
-  if (!sanitizedRelative) return normalizedBase
+  if (!sanitizedRelative) { return normalizedBase }
 
   if (
-    normalizedBase.startsWith('\\\\') ||
-    /^[A-Z]:/i.test(normalizedBase) ||
-    (normalizedBase.includes('\\') && !normalizedBase.includes('/'))
+    normalizedBase.startsWith('\\\\')
+    || /^[A-Z]:/i.test(normalizedBase)
+    || (normalizedBase.includes('\\') && !normalizedBase.includes('/'))
   ) {
     const basePath = normalizedBase.endsWith('\\')
       ? normalizedBase
@@ -73,7 +75,8 @@ const runPathAction = async (
       return false
     }
     return true
-  } catch (error) {
+  }
+  catch (error) {
     showFailure(error instanceof Error ? error.message : String(error))
     return false
   }
@@ -106,10 +109,10 @@ const ensurePathMapping = async (
   remotePath: string,
   mapping: PathMappingEntry | null,
 ) => {
-  if (!ELECTRON) return true
+  if (!ELECTRON) { return true }
 
-  const enabledMappings = getPathMappings().filter((entry) => entry.enabled)
-  if (mapping) return true
+  const enabledMappings = getPathMappings().filter(entry => entry.enabled)
+  if (mapping) { return true }
 
   if (enabledMappings.length === 0) {
     await showPathMappingPrompt(remotePath, 'no-mapping')
@@ -127,8 +130,8 @@ const resolveTorrentBasePath = (
   const content = sanitizePath(torrent.content_path)
   const save = sanitizePath(torrent.save_path)
 
-  if (preference === 'content') return content || save
-  if (preference === 'save') return save || content
+  if (preference === 'content') { return content || save }
+  if (preference === 'save') { return save || content }
 
   return content || save
 }

@@ -22,6 +22,7 @@ class EventBusStatic<E extends AnyObject> {
     this.subscribe = this.subscribe.bind(this)
     this.unsubscribe = this.unsubscribe.bind(this)
   }
+
   dispatch: IDispatcher<E> = <T extends keyof E>(event: T, data?: E[T]) => {
     window.dispatchEvent(new EventBusEvent(event as string, data))
   }

@@ -32,7 +32,7 @@ function Dialog({ children, ...props }: DialogProps) {
   )
 
   React.useEffect(() => {
-    if (props?.open !== undefined) setIsOpen(props.open)
+    if (props?.open !== undefined) { setIsOpen(props.open) }
   }, [props?.open])
 
   const handleOpenChange = React.useCallback(
@@ -97,13 +97,13 @@ function DialogOverlay({ className, ...props }: DialogOverlayProps) {
 
 export type DialogContentProps = React.ComponentProps<
   typeof DialogPrimitive.Content
-> &
-  HTMLMotionProps<'div'> & {
-    transition?: Transition
-    showCloseButton?: boolean
-    disableOverlayClickToClose?: boolean
-    disableTransition?: boolean
-  }
+>
+& HTMLMotionProps<'div'> & {
+  transition?: Transition
+  showCloseButton?: boolean
+  disableOverlayClickToClose?: boolean
+  disableTransition?: boolean
+}
 
 const contentTransition: Transition = {
   type: 'spring',

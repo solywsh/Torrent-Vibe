@@ -45,19 +45,19 @@ export const getItemDetail = async (
 
   const detail = (await response.json()) as MTeamDetailResponseBody
   const { data } = detail
-  if (!data) throw new Error('Failed to load details from M-Team')
+  if (!data) { throw new Error('Failed to load details from M-Team') }
 
   const baseItem: DiscoverItem = (params.item as DiscoverItem | undefined) ?? {
     id: String(data.id),
     providerId: 'mteam',
     title:
-      firstNonEmptyString(data.title, data.name) ??
-      (params.item as DiscoverItem | undefined)?.title ??
-      'Unknown title',
+      firstNonEmptyString(data.title, data.name)
+      ?? (params.item as DiscoverItem | undefined)?.title
+      ?? 'Unknown title',
   }
 
   const files = Array.isArray(data.fileList)
-    ? data.fileList.map((file) => ({
+    ? data.fileList.map(file => ({
         name: file.name,
         sizeBytes: parseNumber(file.size),
       }))
@@ -82,9 +82,8 @@ export const getItemDetail = async (
     : null
 
   const screenshots = (() => {
-    if (Array.isArray(data.screenshotUrls)) return data.screenshotUrls
-    if (Array.isArray(data.imageList)) return data.imageList
-    return
+    if (Array.isArray(data.screenshotUrls)) { return data.screenshotUrls }
+    if (Array.isArray(data.imageList)) { return data.imageList }
   })()
 
   const detailLabels = Array.isArray(data.labelsNew) ? data.labelsNew : []
@@ -94,13 +93,13 @@ export const getItemDetail = async (
   const imdbRating = imdbRatingRaw && imdbRatingRaw > 0 ? imdbRatingRaw : null
   const doubanUrl = isNonEmptyString(data.douban) ? data.douban.trim() : null
   const doubanRatingRaw = parseNumber(data.doubanRating)
-  const doubanRating =
-    doubanRatingRaw && doubanRatingRaw > 0 ? doubanRatingRaw : null
+  const doubanRating
+    = doubanRatingRaw && doubanRatingRaw > 0 ? doubanRatingRaw : null
   const rawSynopsis = isNonEmptyString(data.smallDescr) ? data.smallDescr : null
   const synopsisFromDetail = rawSynopsis ? normalizeSynopsis(rawSynopsis) : null
 
   const extra: Record<string, unknown> = {}
-  if (detailLabels.length > 0) extra.labels = detailLabels
+  if (detailLabels.length > 0) { extra.labels = detailLabels }
   if (isNonEmptyString(data.originFileName)) {
     extra.originFileName = data.originFileName
   }
@@ -128,8 +127,8 @@ export const getItemDetail = async (
 
   const extraExists = Object.keys(extra).length > 0
 
-  const categoryLabel =
-    detailLabels.length > 0
+  const categoryLabel
+    = detailLabels.length > 0
       ? detailLabels.join(' / ')
       : typeof (data as { category?: unknown }).category === 'number'
         ? String((data as { category?: number }).category)
@@ -160,8 +159,8 @@ export const getItemDetail = async (
       rating: imdbRating ?? prevImdb?.rating,
       enrichment: prevImdb?.enrichment ?? null,
       enrichmentStatus:
-        prevImdb?.enrichmentStatus ??
-        (prevImdb?.enrichment
+        prevImdb?.enrichmentStatus
+        ?? (prevImdb?.enrichment
           ? 'success'
           : imdbIdFromDetail
             ? 'idle'
@@ -186,33 +185,33 @@ export const getItemDetail = async (
     }
   }
 
-  const normalizedExternal: DiscoverItem['external'] | undefined =
-    nextExternal && Object.keys(nextExternal).length > 0
+  const normalizedExternal: DiscoverItem['external'] | undefined
+    = nextExternal && Object.keys(nextExternal).length > 0
       ? nextExternal
       : undefined
 
   return {
     ...baseItem,
     title:
-      firstNonEmptyString(data.title, data.name) ??
-      baseItem.title ??
-      'Unknown title',
+      firstNonEmptyString(data.title, data.name)
+      ?? baseItem.title
+      ?? 'Unknown title',
     sizeBytes: parseNumber(data.size) ?? baseItem.sizeBytes,
     createdAt:
-      parseDateToIso((data as { createDate?: unknown }).createDate) ??
-      parseDateToIso((data as { createdDate?: unknown }).createdDate) ??
-      baseItem.createdAt,
+      parseDateToIso((data as { createDate?: unknown }).createDate)
+      ?? parseDateToIso((data as { createdDate?: unknown }).createdDate)
+      ?? baseItem.createdAt,
     seeders: parseNumber(data.status?.seeders) ?? baseItem.seeders,
     leechers: parseNumber(data.status?.leechers) ?? baseItem.leechers,
     snatches:
       parseNumber(
         (data.status as { snatches?: number | string } | undefined)?.snatches,
-      ) ??
-      parseNumber(
+      )
+      ?? parseNumber(
         (data.status as { timesCompleted?: number | string } | undefined)
           ?.timesCompleted,
-      ) ??
-      baseItem.snatches,
+      )
+      ?? baseItem.snatches,
     discount: data.status?.discount ?? baseItem.discount,
     discountEndsAt:
       parseDateToIso(data.status?.discountEndTime) ?? baseItem.discountEndsAt,

@@ -21,7 +21,8 @@ export const MTeamDiscoverProvider: DiscoverProviderImplementation<'mteam'> = {
     try {
       ensureConfigReady(config)
       return true
-    } catch {
+    }
+    catch {
       return false
     }
   },
@@ -57,15 +58,13 @@ export const MTeamDiscoverProvider: DiscoverProviderImplementation<'mteam'> = {
     return {
       ...filters,
       mode:
-        (typeof filters.mode === 'string' && filters.mode.trim()) ||
-        config.mode ||
-        MTeamFilterType.TV,
+        (typeof filters.mode === 'string' && filters.mode.trim())
+        || config.mode
+        || MTeamFilterType.TV,
     }
   },
 }
 
-
-
 export type MTeamProviderId = Extract<DiscoverProviderId, 'mteam'>
 
-export {MTEAM_FILTER_DEFINITIONS_MODES} from './filters'
+export { MTEAM_FILTER_DEFINITIONS_MODES } from './filters'

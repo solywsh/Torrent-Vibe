@@ -18,7 +18,7 @@ const createDefaultSlotState = (): ApiTokenSlotState => ({
 
 const createInitialState = (): ApiTokenState => {
   const slots = Object.fromEntries(
-    API_TOKEN_SLOTS.map((slot) => [slot.id, createDefaultSlotState()]),
+    API_TOKEN_SLOTS.map(slot => [slot.id, createDefaultSlotState()]),
   ) as Record<ApiTokenSlotId, ApiTokenSlotState>
 
   return {
@@ -42,10 +42,12 @@ export const apiTokenStore = {
     if (typeof updater === 'function') {
       if (replace) {
         useApiTokenStore.setState(updater, true)
-      } else {
+      }
+      else {
         useApiTokenStore.setState(updater)
       }
-    } else {
+    }
+    else {
       useApiTokenStore.setState(updater, true)
     }
   },

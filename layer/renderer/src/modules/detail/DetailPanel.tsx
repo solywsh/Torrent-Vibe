@@ -79,7 +79,7 @@ export const DetailPanelFloat = ({ className, children }: DetailPanelProps) => {
   }
 
   return (
-    <div className={'relative'}>
+    <div className="relative">
       <m.aside
         className={cn(
           'bg-background relative border-border flex flex-col outline-1 outline-border container-type-[inline-size]',

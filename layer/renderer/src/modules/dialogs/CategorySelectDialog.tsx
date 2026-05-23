@@ -22,11 +22,11 @@ export const CategorySelectDialog: ModalComponent<
 > = ({ onConfirm, currentCategory: initialCategory = '', title }) => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
   const { t } = useTranslation()
-  const categories = useTorrentDataStore((state) => state.categories)
+  const categories = useTorrentDataStore(state => state.categories)
   const dialogTitle = title || t('dialogs.category.title')
 
   const categoryOptions = useMemo(() => {
-    if (!categories) return ['']
+    if (!categories) { return [''] }
     return ['', ...Object.keys(categories)]
   }, [categories])
 

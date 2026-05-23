@@ -18,13 +18,13 @@ export const DownloadedCell = ({ rowIndex }: DownloadedCellProps) => {
 
   const downloaded = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentDownloaded(state, deferredRowIndex),
+      state => selectTorrentDownloaded(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   return (
-    <div className="flex items-center justify-end px-2 py-4 text-sm text-text tabular-nums">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text tabular-nums">
       {formatBytes(downloaded)}
     </div>
   )

@@ -15,8 +15,8 @@ export const mapSearchItemToDiscoverItem = (
   const stats: Partial<Status> = item.status ?? {}
   const tags = normalizeTags(item.labelsNew)
   const snatches = parseNumber(stats.timesCompleted)
-  const categoryLabel =
-    tags.length > 0
+  const categoryLabel
+    = tags.length > 0
       ? tags.join(' / ')
       : item.category
         ? String(item.category)
@@ -32,8 +32,8 @@ export const mapSearchItemToDiscoverItem = (
 
   const doubanUrl = isNonEmptyString(item.douban) ? item.douban.trim() : null
   const doubanRatingRaw = parseNumber(item.doubanRating)
-  const doubanRating =
-    doubanRatingRaw && doubanRatingRaw > 0 ? doubanRatingRaw : null
+  const doubanRating
+    = doubanRatingRaw && doubanRatingRaw > 0 ? doubanRatingRaw : null
 
   const external: DiscoverItem['external'] = {}
   if (imdbUrl) {

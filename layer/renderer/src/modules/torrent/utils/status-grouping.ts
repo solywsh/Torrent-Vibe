@@ -2,12 +2,12 @@ import type { TorrentInfo, TorrentState } from '~/types/torrent'
 
 import type { TorrentStats } from '../types/store'
 
-export type TorrentStatusGroup =
-  | 'downloading'
-  | 'seeding'
-  | 'completed'
-  | 'paused'
-  | 'error'
+export type TorrentStatusGroup
+  = | 'downloading'
+    | 'seeding'
+    | 'completed'
+    | 'paused'
+    | 'error'
 
 const GROUP_TO_STATES: Record<
   TorrentStatusGroup,
@@ -33,7 +33,7 @@ export const statusToGroup = (
   for (const [group, states] of Object.entries(GROUP_TO_STATES) as Array<
     [TorrentStatusGroup, ReadonlyArray<TorrentState>]
   >) {
-    if (states.includes(state)) return group
+    if (states.includes(state)) { return group }
   }
   return null
 }

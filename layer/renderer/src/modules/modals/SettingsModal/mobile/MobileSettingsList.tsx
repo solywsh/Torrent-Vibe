@@ -52,12 +52,12 @@ export interface MobileSettingsCellCustom extends BaseMobileSettingsCell {
   onPress?: () => void
 }
 
-export type MobileSettingsCell =
-  | MobileSettingsCellButton
-  | MobileSettingsCellSwitch
-  | MobileSettingsCellInput
-  | MobileSettingsCellValue
-  | MobileSettingsCellCustom
+export type MobileSettingsCell
+  = | MobileSettingsCellButton
+    | MobileSettingsCellSwitch
+    | MobileSettingsCellInput
+    | MobileSettingsCellValue
+    | MobileSettingsCellCustom
 
 // Section interface
 export interface MobileSettingsSection {
@@ -161,7 +161,7 @@ const MobileSettingsCell: React.FC<MobileSettingsCellProps> = ({
   )
 
   const renderIcon = () => {
-    if (!cell.icon) return null
+    if (!cell.icon) { return null }
 
     return (
       <div className="mr-3 flex-shrink-0">
@@ -209,8 +209,8 @@ const MobileSettingsCell: React.FC<MobileSettingsCellProps> = ({
             {cell.rightContent && (
               <div className="ml-3 flex-shrink-0">{cell.rightContent}</div>
             )}
-            {(cell.showDisclosure ||
-              (!cell.rightContent && cell.showDisclosure !== false)) && (
+            {(cell.showDisclosure
+              || (!cell.rightContent && cell.showDisclosure !== false)) && (
               <div className="ml-2 flex-shrink-0">
                 <i className="i-mingcute-arrow-right-line text-text-tertiary text-sm" />
               </div>
@@ -260,7 +260,7 @@ const MobileSettingsCell: React.FC<MobileSettingsCellProps> = ({
               <div className="flex-1 min-w-0">
                 <Input
                   value={cell.value}
-                  onChange={(e) => cell.onChange(e.target.value)}
+                  onChange={e => cell.onChange(e.target.value)}
                   placeholder={cell.placeholder}
                   type={cell.inputType || 'text'}
                   disabled={cell.disabled}
@@ -398,7 +398,7 @@ export const createMobileSettingsSection = (
   props: Omit<MobileSettingsSection, 'id'> & { id?: string },
 ): MobileSettingsSection => ({
   id:
-    props.id ||
-    `section_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+    props.id
+    || `section_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
   ...props,
 })

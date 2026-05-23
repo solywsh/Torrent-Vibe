@@ -14,7 +14,7 @@ export const GlobalDropProvider = () => {
   useEffect(() => {
     const handleDragEnter = (event: DragEvent) => {
       const hasAnyModalOpen = jotaiStore.get(modalItemsAtom).length > 0
-      if (hasAnyModalOpen) return
+      if (hasAnyModalOpen) { return }
 
       const types = event.dataTransfer?.types
       const hasFiles = types
@@ -39,7 +39,7 @@ export const GlobalDropProvider = () => {
     const handleDragOver = (event: DragEvent) => {
       const hasAnyModalOpen = jotaiStore.get(modalItemsAtom).length > 0
 
-      if (hasAnyModalOpen) return
+      if (hasAnyModalOpen) { return }
 
       const types = event.dataTransfer?.types
       const hasFiles = types
@@ -50,7 +50,7 @@ export const GlobalDropProvider = () => {
         event.preventDefault()
 
         if (dragDropState.isDragging) {
-          setDragDropState((prev) => ({
+          setDragDropState(prev => ({
             ...prev,
             isDragOver: true,
           }))
@@ -60,7 +60,7 @@ export const GlobalDropProvider = () => {
 
     const handleDragLeave = (_event: DragEvent) => {
       const hasAnyModalOpen = jotaiStore.get(modalItemsAtom).length > 0
-      if (hasAnyModalOpen) return
+      if (hasAnyModalOpen) { return }
 
       dragCounterRef.current--
 
@@ -75,9 +75,10 @@ export const GlobalDropProvider = () => {
             hasValidFiles: false,
           })
         }, 100)
-      } else {
+      }
+      else {
         // 仍在拖拽区域内，但不在当前元素上
-        setDragDropState((prev) => ({
+        setDragDropState(prev => ({
           ...prev,
           isDragOver: false,
         }))
@@ -86,7 +87,7 @@ export const GlobalDropProvider = () => {
 
     const handleDrop = (event: DragEvent) => {
       const { dataTransfer } = event
-      if (!dataTransfer) return
+      if (!dataTransfer) { return }
 
       // 重置拖拽状态
       dragCounterRef.current = 0
@@ -102,14 +103,13 @@ export const GlobalDropProvider = () => {
 
       const files = Array.from(dataTransfer.files || [])
 
-      const torrentFiles = files.filter((f) =>
-        f.name.toLowerCase().endsWith('.torrent'),
-      )
+      const torrentFiles = files.filter(f =>
+        f.name.toLowerCase().endsWith('.torrent'))
 
-      if (torrentFiles.length === 0) return
+      if (torrentFiles.length === 0) { return }
 
       const hasAnyModalOpen = jotaiStore.get(modalItemsAtom).length > 0
-      if (hasAnyModalOpen) return
+      if (hasAnyModalOpen) { return }
 
       event.preventDefault()
       event.stopPropagation()

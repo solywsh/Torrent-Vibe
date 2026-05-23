@@ -22,12 +22,12 @@ export const generateMetadata = ({
   entries,
   releaseDate = new Date().toISOString(),
 }) => {
-  if (!version) throw new Error('version is required')
+  if (!version) { throw new Error('version is required') }
 
   for (const entry of entries) {
-    if (!entry?.path) continue
+    if (!entry?.path) { continue }
     const metadataPath = resolveMetadataPath(entry)
-    if (!metadataPath) continue
+    if (!metadataPath) { continue }
     const yaml = buildLatestYaml({
       version,
       releaseDate,
@@ -51,12 +51,12 @@ export const collectArtifacts = (outDir, overrides = {}) => {
 
   for (const platform of SUPPORTED_PLATFORMS) {
     const base = lookup[platform]
-    if (!base) continue
+    if (!base) { continue }
     const baseDir = resolve(outDir, base)
-    if (!existsSync(baseDir)) continue
+    if (!existsSync(baseDir)) { continue }
     for (const arch of readdirSync(baseDir)) {
       const archDir = join(baseDir, arch)
-      if (!isDirectory(archDir)) continue
+      if (!isDirectory(archDir)) { continue }
 
       if (platform === 'darwin') {
         const latestZip = findLatestFile(archDir, '.zip')
@@ -69,8 +69,8 @@ export const collectArtifacts = (outDir, overrides = {}) => {
       const files = readdirSync(archDir)
       for (const file of files) {
         const absPath = join(archDir, file)
-        if (!isFile(absPath)) continue
-        if (!isSupportedArtifact(platform, file)) continue
+        if (!isFile(absPath)) { continue }
+        if (!isSupportedArtifact(platform, file)) { continue }
         entries.push({ platform, arch, path: absPath })
       }
     }
@@ -83,9 +83,9 @@ export const dedupeArtifacts = (entries) => {
   const seen = new Set()
   const unique = []
   for (const entry of entries) {
-    if (!entry) continue
+    if (!entry) { continue }
     const key = `${entry.platform}:${entry.arch}:${entry.path}`
-    if (seen.has(key)) continue
+    if (seen.has(key)) { continue }
     seen.add(key)
     unique.push(entry)
   }
@@ -131,8 +131,8 @@ const buildLatestYaml = ({ version, releaseDate, artifactPath, platform }) => {
     `    size: ${size}`,
   ]
 
-  if (platform === 'darwin') lines.push('    type: zip')
-  if (platform === 'linux') lines.push('    type: AppImage')
+  if (platform === 'darwin') { lines.push('    type: zip') }
+  if (platform === 'linux') { lines.push('    type: AppImage') }
 
   lines.push(
     `path: ${name}`,
@@ -144,16 +144,17 @@ const buildLatestYaml = ({ version, releaseDate, artifactPath, platform }) => {
 }
 
 const isSupportedArtifact = (platform, fileName) => {
-  if (platform === 'win32') return fileName.endsWith('.exe')
-  if (platform === 'darwin') return fileName.endsWith('.zip')
-  if (platform === 'linux') return fileName.endsWith('.AppImage')
+  if (platform === 'win32') { return fileName.endsWith('.exe') }
+  if (platform === 'darwin') { return fileName.endsWith('.zip') }
+  if (platform === 'linux') { return fileName.endsWith('.AppImage') }
   return false
 }
 
 const isDirectory = (p) => {
   try {
     return statSync(p).isDirectory()
-  } catch {
+  }
+  catch {
     return false
   }
 }
@@ -161,7 +162,8 @@ const isDirectory = (p) => {
 const isFile = (p) => {
   try {
     return statSync(p).isFile()
-  } catch {
+  }
+  catch {
     return false
   }
 }
@@ -169,16 +171,17 @@ const isFile = (p) => {
 const findLatestFile = (dir, ext) => {
   try {
     const matches = readdirSync(dir)
-      .filter((file) => file.toLowerCase().endsWith(ext.toLowerCase()))
-      .map((file) => ({
+      .filter(file => file.toLowerCase().endsWith(ext.toLowerCase()))
+      .map(file => ({
         file,
         mtime: statSync(join(dir, file)).mtimeMs,
       }))
       .sort((a, b) => b.mtime - a.mtime)
-    if (matches.length === 0) return
+    if (matches.length === 0) { return }
     return join(dir, matches[0].file)
-  } catch {
-    return
+  }
+  catch {
+
   }
 }
 
@@ -187,10 +190,10 @@ const parseArtifactSpec = (spec) => {
   const result = {}
   for (const part of parts) {
     const [key, value] = part.split('=')
-    if (!key || value === undefined) continue
+    if (!key || value === undefined) { continue }
     result[key.trim()] = value.trim()
   }
-  if (!result.path || !result.platform) return null
+  if (!result.path || !result.platform) { return null }
   return {
     path: result.path,
     platform: result.platform,
@@ -200,7 +203,7 @@ const parseArtifactSpec = (spec) => {
 
 const isCli = () => {
   const entry = process.argv[1]
-  if (!entry) return false
+  if (!entry) { return false }
   return pathToFileURL(entry).href === import.meta.url
 }
 
@@ -223,7 +226,7 @@ if (isCli()) {
       const spec = args[++i]
       if (spec) {
         const parsed = parseArtifactSpec(spec)
-        if (parsed) artifacts.push(parsed)
+        if (parsed) { artifacts.push(parsed) }
       }
       continue
     }

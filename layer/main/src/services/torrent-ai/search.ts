@@ -32,15 +32,15 @@ export type SearchParams = {
   safe?: boolean
 }
 
-export type SearchResponse =
+export type SearchResponse
+  = | {
+    ok: true
+    results: SearchResult[]
+  }
   | {
-      ok: true
-      results: SearchResult[]
-    }
-  | {
-      ok: false
-      error: string
-    }
+    ok: false
+    error: string
+  }
 
 export type SearchExtractor = () => SearchResult[]
 
@@ -74,8 +74,8 @@ const googleExtractor: SearchExtractor = () => {
   const out: SearchResult[] = []
 
   const decodeGoogleUrl = (href: string) => {
-    const base =
-      typeof window !== 'undefined' && window.location !== undefined
+    const base
+      = typeof window !== 'undefined' && window.location !== undefined
         ? window.location.origin
         : 'https://www.google.com'
     try {
@@ -87,21 +87,23 @@ const googleExtractor: SearchExtractor = () => {
         }
       }
       return url.href
-    } catch {
+    }
+    catch {
       return href
     }
   }
 
   const getSiteNameFromHref = (href: string) => {
-    const base =
-      typeof window !== 'undefined' && window.location !== undefined
+    const base
+      = typeof window !== 'undefined' && window.location !== undefined
         ? window.location.origin
         : 'https://www.google.com'
     try {
       const url = new URL(href, base)
       const host = url.hostname || ''
       return host.replace(/^www\./, '')
-    } catch {
+    }
+    catch {
       return null
     }
   }
@@ -145,19 +147,20 @@ const googleExtractor: SearchExtractor = () => {
     )
 
     // Find a nearby container and snippet
-    const container =
-      anchor.closest('div[data-hveid]') ||
-      anchor.closest('#search') ||
-      anchor.parentElement
+    const container
+      = anchor.closest('div[data-hveid]')
+        || anchor.closest('#search')
+        || anchor.parentElement
 
     let snippet: string | null = null
-    const snippetNode =
-      (container &&
-        (container.querySelector('div[data-sncf]') as HTMLElement | null)) ||
-      null
+    const snippetNode
+      = (container
+        && (container.querySelector('div[data-sncf]') as HTMLElement | null))
+      || null
     if (snippetNode) {
       snippet = snippetNode.textContent || ''
-    } else if (container) {
+    }
+    else if (container) {
       // Fallback: choose a nearby text block with reasonable length
       const candidates = Array.from(
         container.querySelectorAll<HTMLElement>('p, span, div'),
@@ -190,8 +193,8 @@ const googleExtractor: SearchExtractor = () => {
       const title = heading.textContent || ''
       // Try to find a sibling snippet near the heading
       let snippet: string | null = null
-      const container =
-        anchor.closest('div[data-hveid]') || anchor.parentElement
+      const container
+        = anchor.closest('div[data-hveid]') || anchor.parentElement
       if (container) {
         const candidate = container.querySelector(
           'div[data-sncf]',
@@ -220,8 +223,8 @@ const duckduckgoExtractor: SearchExtractor = () => {
 
   const decodeDuckDuckGoUrl = (href: string) => {
     try {
-      const base =
-        typeof window !== 'undefined' && window.location !== undefined
+      const base
+        = typeof window !== 'undefined' && window.location !== undefined
           ? window.location.origin
           : 'https://duckduckgo.com'
       const url = new URL(href, base)
@@ -233,21 +236,23 @@ const duckduckgoExtractor: SearchExtractor = () => {
         }
       }
       return url.href
-    } catch {
+    }
+    catch {
       return href
     }
   }
 
   const getSiteNameFromHref = (href: string) => {
     try {
-      const base =
-        typeof window !== 'undefined' && window.location !== undefined
+      const base
+        = typeof window !== 'undefined' && window.location !== undefined
           ? window.location.origin
           : 'https://duckduckgo.com'
       const url = new URL(href, base)
       const host = url.hostname || ''
       return host.replace(/^www\./, '')
-    } catch {
+    }
+    catch {
       return null
     }
   }
@@ -285,21 +290,21 @@ const duckduckgoExtractor: SearchExtractor = () => {
       const href = decodeDuckDuckGoUrl(
         anchor.getAttribute('href') || anchor.href || '',
       )
-      const title =
-        anchor.textContent || anchor.querySelector('h2')?.textContent || ''
+      const title
+        = anchor.textContent || anchor.querySelector('h2')?.textContent || ''
 
       // Try to find a nearby snippet
       let snippet: string | null = null
-      const container =
-        anchor.closest(
+      const container
+        = anchor.closest(
           'article,[data-testid="result"],[data-nrn="result"],li[data-layout="organic"]',
         ) || anchor.parentElement
-      let snippetNode =
-        (container &&
-          (container.querySelector(
+      let snippetNode
+        = (container
+          && (container.querySelector(
             '[data-result="snippet"]',
-          ) as HTMLElement | null)) ||
-        null
+          ) as HTMLElement | null))
+          || null
       if (!snippetNode && container) {
         snippetNode = container.querySelector(
           '[data-testid="result-snippet"], .result__snippet, p',
@@ -316,7 +321,7 @@ const duckduckgoExtractor: SearchExtractor = () => {
       document.querySelectorAll<HTMLAnchorElement>('a[href] h2'),
     )
       .slice(0, 20)
-      .map((h) => h.closest('a') as HTMLAnchorElement | null)
+      .map(h => h.closest('a') as HTMLAnchorElement | null)
       .filter(Boolean) as HTMLAnchorElement[]
     for (const a of fallbackAnchors) {
       const href = decodeDuckDuckGoUrl(a.getAttribute('href') || a.href || '')
@@ -428,11 +433,11 @@ export const executeHeadlessSearch = async (
   params: SearchParams,
   preferredLanguage?: string,
 ): Promise<SearchResponse> => {
-  const resolvedLanguage =
-    config.normalizeLanguage?.(params.language, preferredLanguage) ||
-    params.language ||
-    preferredLanguage ||
-    config.defaultLanguage
+  const resolvedLanguage
+    = config.normalizeLanguage?.(params.language, preferredLanguage)
+      || params.language
+      || preferredLanguage
+      || config.defaultLanguage
 
   const num = Math.min(Math.max(params.maxResults, 1), config.maxResultsLimit)
 
@@ -478,7 +483,8 @@ export const executeHeadlessSearch = async (
 
       return { ok: true, results: results.slice(0, num) }
     })
-  } catch (error) {
+  }
+  catch (error) {
     log.error(`[${config.logScope}] search failed`, {
       query: params.query,
       error,
@@ -583,18 +589,18 @@ export const resolveSearchOption = (
     | 'native'
     | 'headless'
     | {
-        mode?: 'native' | 'headless'
-        engines?: SearchEngine[]
-      }
+      mode?: 'native' | 'headless'
+      engines?: SearchEngine[]
+    }
     | undefined,
 ):
   | {
-      mode: 'native'
-    }
+    mode: 'native'
+  }
   | {
-      mode: 'headless'
-      engines: SearchEngine[]
-    }
+    mode: 'headless'
+    engines: SearchEngine[]
+  }
   | undefined => {
   if (!searchOption) {
     return undefined
@@ -609,8 +615,8 @@ export const resolveSearchOption = (
   if (mode === 'native') {
     return { mode: 'native' }
   }
-  const engines =
-    searchOption.engines && searchOption.engines.length > 0
+  const engines
+    = searchOption.engines && searchOption.engines.length > 0
       ? searchOption.engines
       : DEFAULT_SEARCH_ENGINES
   return { mode: 'headless', engines }

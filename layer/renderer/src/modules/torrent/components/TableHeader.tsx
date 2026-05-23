@@ -55,8 +55,8 @@ const SortableHeaderCell: React.FC<SortableHeaderProps> = ({
     zIndex: isDragging ? 50 : 'auto',
     // backdropFilter: 'blur(30px) brightness(1.02)',
   }
-  const stickyStyle: React.CSSProperties | undefined =
-    typeof stickyLeft === 'number'
+  const stickyStyle: React.CSSProperties | undefined
+    = typeof stickyLeft === 'number'
       ? {
           position: 'sticky',
           left: stickyLeft,
@@ -134,24 +134,28 @@ const SortableHeaderCell: React.FC<SortableHeaderProps> = ({
         <div className="absolute left-0 top-0 w-1 h-full bg-accent animate-pulse" />
       )}
 
-      {header.isPlaceholder ? null : (
-        <div
-          className={`absolute inset-0 transition-all duration-200 ${
-            isDragging ? 'scale-95' : 'scale-100'
-          }`}
-        >
-          {flexRender(header.column.columnDef.header, header.getContext())}
-        </div>
-      )}
+      {header.isPlaceholder
+        ? null
+        : (
+            <div
+              className={`absolute inset-0 transition-all duration-200 ${
+                isDragging ? 'scale-95' : 'scale-100'
+              }`}
+            >
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </div>
+          )}
 
-      {colDef.enableResizing ? (
-        <div
-          data-resizer="true"
-          onMouseDown={handleResizeStart}
-          onTouchStart={handleResizeStart}
-          className="absolute top-0 right-[-2px] h-full w-[4px] z-[1] cursor-col-resize hover:bg-accent/40 hover:backdrop-blur-3xl active:bg-accent transition-colors duration-200"
-        />
-      ) : null}
+      {colDef.enableResizing
+        ? (
+            <div
+              data-resizer="true"
+              onMouseDown={handleResizeStart}
+              onTouchStart={handleResizeStart}
+              className="absolute top-0 right-[-2px] h-full w-[4px] z-[1] cursor-col-resize hover:bg-accent/40 hover:backdrop-blur-3xl active:bg-accent transition-colors duration-200"
+            />
+          )
+        : null}
     </div>
   )
 }
@@ -174,7 +178,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
       className="sticky top-0 z-10 border-b border-border bg-background"
       style={{ minWidth: minTableWidth, width: '100%' }}
     >
-      {table.getHeaderGroups().map((headerGroup) => (
+      {table.getHeaderGroups().map(headerGroup => (
         <SortableContext
           key={headerGroup.id}
           items={columnOrder}
@@ -188,8 +192,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
             {headerGroup.headers.map((header) => {
               const colId = header.column.id
               const allColumns = getAllColumns()
-              const colDef = allColumns.find((c) => c.id === colId)
-              if (!colDef) return null
+              const colDef = allColumns.find(c => c.id === colId)
+              if (!colDef) { return null }
               const isReorderable = colId !== 'select'
               const isSticky = colId === 'name' || colId === 'select'
               return (

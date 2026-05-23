@@ -27,7 +27,7 @@ interface FloatingUpdatePillProps {
 }
 
 const formatProgress = (progress?: number) => {
-  if (progress === undefined) return ''
+  if (progress === undefined) { return '' }
   return `${Math.round(progress)}%`
 }
 
@@ -59,7 +59,10 @@ const DownloadingState = ({
 }) => (
   <div className="flex items-center gap-3">
     <i className="i-mingcute-download-line text-accent" />
-    <span className="text-sm text-text">Updating to {version}</span>
+    <span className="text-sm text-text">
+      Updating to
+      {version}
+    </span>
     <ProgressBar progress={progress} />
     <span className="text-xs text-text-secondary">
       {formatProgress(progress)}
@@ -86,7 +89,12 @@ const ReadyState = ({
 }) => (
   <div className="flex items-center gap-3">
     <i className="i-mingcute-check-circle-line text-green" />
-    <span className="text-sm text-text">Update {version} ready</span>
+    <span className="text-sm text-text">
+      Update
+      {version}
+      {' '}
+      ready
+    </span>
     <div className="flex items-center gap-2">
       <Button
         variant="primary"
@@ -123,7 +131,10 @@ const ErrorState = ({
 }) => (
   <div className="flex items-center gap-3">
     <i className="i-mingcute-alert-circle-line text-red" />
-    <span className="text-sm text-text">Update failed: {errorMessage}</span>
+    <span className="text-sm text-text">
+      Update failed:
+      {errorMessage}
+    </span>
     <div className="flex items-center gap-2">
       {downloadUrl && (
         <Button
@@ -214,9 +225,7 @@ export const FloatingUpdatePill = ({
       <AnimatePresence>
         {content && (
           <m.div
-            className={
-              'pointer-events-none fixed bottom-5 left-5 z-50 bg-material-medium backdrop-blur'
-            }
+            className="pointer-events-none fixed bottom-5 left-5 z-50 bg-material-medium backdrop-blur"
             initial={{ opacity: 0, x: -100, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -100, scale: 0.9 }}

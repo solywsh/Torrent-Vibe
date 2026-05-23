@@ -15,7 +15,7 @@ export function useFocusScope<T>(
   useEffect(() => {
     const element = elementState || elementRef.current
 
-    if (!element) return
+    if (!element) { return }
 
     // Set scope identifier on element
     element.dataset.hotkeyScope = scopeId
@@ -36,7 +36,7 @@ export function useFocusScope<T>(
       priority: options.priority || 0,
       strategy: options.strategy || ScopeActivationStrategy.UNION,
       hotkeyInheritance: options.inheritFrom
-        ? options.inheritFrom.map((fromScope) => ({
+        ? options.inheritFrom.map(fromScope => ({
             fromScope,
             combos: '*',
             mode: 'inherit' as const,

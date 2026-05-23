@@ -50,13 +50,13 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
 }) => {
   const { t } = useTranslation('setting')
   const mappings = usePathMappings()
-  const servers = useMultiServerStore((state) => state.servers)
-  const order = useMultiServerStore((state) => state.order)
+  const servers = useMultiServerStore(state => state.servers)
+  const order = useMultiServerStore(state => state.order)
   const isElectron = typeof ELECTRON !== 'undefined' && ELECTRON
 
   const mapping = useMemo(() => {
-    if (mode !== 'edit' || !mappingId) return null
-    return mappings.find((item) => item.id === mappingId) ?? null
+    if (mode !== 'edit' || !mappingId) { return null }
+    return mappings.find(item => item.id === mappingId) ?? null
   }, [mode, mappingId, mappings])
 
   useEffect(() => {
@@ -84,14 +84,14 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
   }, [initialState])
 
   const serverOptions = useMemo(() => {
-    const options = order.map((id) => ({
+    const options = order.map(id => ({
       id,
       name: servers[id]?.name || id,
     }))
 
     if (
-      formState.serverId !== 'all' &&
-      !options.some((option) => option.id === formState.serverId)
+      formState.serverId !== 'all'
+      && !options.some(option => option.id === formState.serverId)
     ) {
       options.push({ id: formState.serverId, name: formState.serverId })
     }
@@ -99,9 +99,9 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
     return options
   }, [order, servers, formState.serverId])
 
-  const canSave =
-    Boolean(formState.remoteBasePath.trim()) &&
-    Boolean(formState.localBasePath.trim())
+  const canSave
+    = Boolean(formState.remoteBasePath.trim())
+      && Boolean(formState.localBasePath.trim())
 
   const [selectingLocalPath, setSelectingLocalPath] = useState(false)
 
@@ -119,21 +119,23 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
       })
 
       if (!result?.canceled && result.path) {
-        setFormState((prev) => ({
+        setFormState(prev => ({
           ...prev,
           localBasePath: result.path ?? '',
         }))
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to select local path', error)
       toast.error(t('servers.pathMapping.selectLocalPathFailed'))
-    } finally {
+    }
+    finally {
       setSelectingLocalPath(false)
     }
   }, [formState.localBasePath, isElectron, t])
 
   const handleSave = () => {
-    if (!canSave) return
+    if (!canSave) { return }
 
     const payload = {
       remoteBasePath: formState.remoteBasePath.trim(),
@@ -144,15 +146,16 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
 
     if (mode === 'edit' && mappingId) {
       updatePathMapping(mappingId, payload)
-    } else {
+    }
+    else {
       addPathMapping({ ...payload, enabled: true })
     }
 
     dismiss()
   }
 
-  const title =
-    mode === 'edit'
+  const title
+    = mode === 'edit'
       ? t('servers.pathMapping.modal.editTitle')
       : t('servers.pathMapping.modal.createTitle')
 
@@ -175,14 +178,13 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
             id="mapping-local"
             value={formState.localBasePath}
             placeholder="\\\\nas\\\\downloads or smb://nas/downloads"
-            onChange={(event) =>
-              setFormState((prev) => ({
+            onChange={event =>
+              setFormState(prev => ({
                 ...prev,
                 localBasePath: event.target.value,
-              }))
-            }
+              }))}
             endAdornmentVisibility="always"
-            endAdornment={
+            endAdornment={(
               <Button
                 type="button"
                 variant="ghost"
@@ -193,16 +195,18 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
                 aria-label={t('servers.pathMapping.selectLocalPath')}
                 title={t('servers.pathMapping.selectLocalPath')}
               >
-                {selectingLocalPath ? (
-                  <i className="i-mingcute-loading-3-line animate-spin" />
-                ) : (
-                  <i className="i-mingcute-folder-open-line text-lg" />
-                )}
+                {selectingLocalPath
+                  ? (
+                      <i className="i-mingcute-loading-3-line animate-spin" />
+                    )
+                  : (
+                      <i className="i-mingcute-folder-open-line text-lg" />
+                    )}
                 <span className="sr-only">
                   {t('servers.pathMapping.selectLocalPath')}
                 </span>
               </Button>
-            }
+            )}
           />
         </div>
 
@@ -218,12 +222,11 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
             id="mapping-remote"
             value={formState.remoteBasePath}
             placeholder="/downloads"
-            onChange={(event) =>
-              setFormState((prev) => ({
+            onChange={event =>
+              setFormState(prev => ({
                 ...prev,
                 remoteBasePath: event.target.value,
-              }))
-            }
+              }))}
           />
         </div>
 
@@ -237,12 +240,11 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
           </Label>
           <Select
             value={formState.serverId}
-            onValueChange={(value) =>
-              setFormState((prev) => ({
+            onValueChange={value =>
+              setFormState(prev => ({
                 ...prev,
                 serverId: value,
-              }))
-            }
+              }))}
           >
             <SelectTrigger id="mapping-server">
               <SelectValue placeholder={t('servers.pathMapping.serverAny')} />
@@ -251,7 +253,7 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
               <SelectItem value="all">
                 {t('servers.pathMapping.serverAny')}
               </SelectItem>
-              {serverOptions.map((option) => (
+              {serverOptions.map(option => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.name}
                 </SelectItem>
@@ -271,12 +273,11 @@ export const PathMappingModal: ModalComponent<PathMappingModalProps> = ({
           </div>
           <Switch
             checked={formState.caseSensitive}
-            onCheckedChange={(checked) =>
-              setFormState((prev) => ({
+            onCheckedChange={checked =>
+              setFormState(prev => ({
                 ...prev,
                 caseSensitive: Boolean(checked),
-              }))
-            }
+              }))}
           />
         </div>
       </div>

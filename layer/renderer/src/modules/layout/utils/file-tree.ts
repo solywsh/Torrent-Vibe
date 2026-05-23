@@ -51,7 +51,8 @@ export function buildFileTree(files: TorrentFile[]): FileTreeNode[] {
           node.index = file.index
           // initialize selection from priority: 0 -> unselected (skip), others selected
           node.isSelected = (file.priority ?? 1) !== 0
-        } else {
+        }
+        else {
           node.children = []
         }
 
@@ -124,19 +125,21 @@ export function updateSelectionState(node: FileTreeNode): void {
     }
 
     const selectedCount = node.children.filter(
-      (child) => child.isSelected,
+      child => child.isSelected,
     ).length
     const partialCount = node.children.filter(
-      (child) => child.isPartiallySelected,
+      child => child.isPartiallySelected,
     ).length
 
     if (selectedCount === node.children.length) {
       node.isSelected = true
       node.isPartiallySelected = false
-    } else if (selectedCount > 0 || partialCount > 0) {
+    }
+    else if (selectedCount > 0 || partialCount > 0) {
       node.isSelected = false
       node.isPartiallySelected = true
-    } else {
+    }
+    else {
       node.isSelected = false
       node.isPartiallySelected = false
     }
@@ -161,16 +164,15 @@ export function toggleNodeSelection(
 
       // Update all children
       if (updatedNode.children) {
-        updatedNode.children = updatedNode.children.map((child) =>
-          setNodeAndChildrenSelection(child, selected),
-        )
+        updatedNode.children = updatedNode.children.map(child =>
+          setNodeAndChildrenSelection(child, selected))
       }
 
       return updatedNode
     }
 
     if (node.children) {
-      const updatedChildren = node.children.map((child) => updateNode(child))
+      const updatedChildren = node.children.map(child => updateNode(child))
       const updatedNode = { ...node, children: updatedChildren }
 
       // Update this node's selection state based on children
@@ -182,7 +184,7 @@ export function toggleNodeSelection(
     return node
   }
 
-  const newTree = tree.map((node) => updateNode(node))
+  const newTree = tree.map(node => updateNode(node))
   for (const node of newTree) {
     updateSelectionState(node)
   }
@@ -203,9 +205,8 @@ function setNodeAndChildrenSelection(
   }
 
   if (updatedNode.children) {
-    updatedNode.children = updatedNode.children.map((child) =>
-      setNodeAndChildrenSelection(child, selected),
-    )
+    updatedNode.children = updatedNode.children.map(child =>
+      setNodeAndChildrenSelection(child, selected))
   }
 
   return updatedNode
@@ -250,13 +251,13 @@ export function setAllExpanded(
     }
 
     if (node.children) {
-      updatedNode.children = node.children.map((child) => updateNode(child))
+      updatedNode.children = node.children.map(child => updateNode(child))
     }
 
     return updatedNode
   }
 
-  return tree.map((node) => updateNode(node))
+  return tree.map(node => updateNode(node))
 }
 
 /**
@@ -274,14 +275,14 @@ export function toggleNodeExpansion(
     if (node.children) {
       return {
         ...node,
-        children: node.children.map((child) => updateNode(child)),
+        children: node.children.map(child => updateNode(child)),
       }
     }
 
     return node
   }
 
-  return tree.map((node) => updateNode(node))
+  return tree.map(node => updateNode(node))
 }
 
 /**
@@ -292,7 +293,7 @@ export function mergeExpansionState(
   previousTree: FileTreeNode[],
   nextTree: FileTreeNode[],
 ): FileTreeNode[] {
-  if (!previousTree || previousTree.length === 0) return nextTree
+  if (!previousTree || previousTree.length === 0) { return nextTree }
 
   const expandedByPath = new Map<string, boolean>()
 
@@ -301,7 +302,7 @@ export function mergeExpansionState(
       expandedByPath.set(node.fullPath, !!node.isExpanded)
     }
     if (node.children) {
-      for (const child of node.children) collectExpanded(child)
+      for (const child of node.children) { collectExpanded(child) }
     }
   }
 
@@ -316,14 +317,15 @@ export function mergeExpansionState(
         cloned.isExpanded = expandedByPath.get(node.fullPath) === true
       }
       if (node.children) {
-        cloned.children = node.children.map((child) => applyExpanded(child))
+        cloned.children = node.children.map(child => applyExpanded(child))
       }
-    } else if (node.children) {
+    }
+    else if (node.children) {
       // Defensive: files generally don't have children, but preserve shape if present
-      cloned.children = node.children.map((child) => applyExpanded(child))
+      cloned.children = node.children.map(child => applyExpanded(child))
     }
     return cloned
   }
 
-  return nextTree.map((node) => applyExpanded(node))
+  return nextTree.map(node => applyExpanded(node))
 }

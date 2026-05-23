@@ -10,7 +10,7 @@ const adapters: AiProviderAdapter[] = [
 ]
 
 const adapterMap = new Map<AiProviderId, AiProviderAdapter>(
-  adapters.map((adapter) => [adapter.id, adapter]),
+  adapters.map(adapter => [adapter.id, adapter]),
 )
 
 export const getRegisteredProviders = (): readonly AiProviderAdapter[] =>

@@ -18,13 +18,13 @@ export const UploadedCell = ({ rowIndex }: UploadedCellProps) => {
 
   const uploaded = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentUploaded(state, deferredRowIndex),
+      state => selectTorrentUploaded(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   return (
-    <div className="flex items-center justify-end px-2 py-4 text-sm text-text tabular-nums">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text tabular-nums">
       {formatBytes(uploaded)}
     </div>
   )

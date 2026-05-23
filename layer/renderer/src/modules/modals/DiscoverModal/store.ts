@@ -75,10 +75,12 @@ export const discoverModalStore = {
     if (typeof updater === 'function') {
       if (replace) {
         useDiscoverModalStore.setState(updater, true)
-      } else {
+      }
+      else {
         useDiscoverModalStore.setState(updater)
       }
-    } else {
+    }
+    else {
       useDiscoverModalStore.setState(updater, true)
     }
   },

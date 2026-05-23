@@ -16,9 +16,9 @@ export const useSyncAccentPreference = () => {
 
   useEffect(() => {
     const root = document.documentElement
-    const preset =
-      ACCENT_COLOR_PRESET_MAP[accent || DEFAULT_ACCENT_COLOR] ||
-      ACCENT_COLOR_PRESET_MAP[DEFAULT_ACCENT_COLOR]
+    const preset
+      = ACCENT_COLOR_PRESET_MAP[accent || DEFAULT_ACCENT_COLOR]
+        || ACCENT_COLOR_PRESET_MAP[DEFAULT_ACCENT_COLOR]
 
     const accentColor = isDark ? preset.darkColor : preset.lightColor
 

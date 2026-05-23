@@ -14,7 +14,8 @@ const resolveAppTitle = (): string => {
   try {
     const name = app.getName()
     return name && name.trim().length > 0 ? name : DEFAULT_TITLE
-  } catch {
+  }
+  catch {
     return DEFAULT_TITLE
   }
 }

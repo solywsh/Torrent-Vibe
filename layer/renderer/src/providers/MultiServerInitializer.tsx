@@ -13,7 +13,7 @@ import {
 
 export const MultiServerInitializer = () => {
   useEffect(() => {
-    if (!ELECTRON) return
+    if (!ELECTRON) { return }
     const existing = loadMultiServerConfig()
     const cfg = existing.servers.length > 0 ? existing : migrateToMultiServer()
     multiServerStoreSetters.replaceAll(cfg)
@@ -25,11 +25,11 @@ export const MultiServerInitializer = () => {
     // Pre-configure client to active server before auth init
     ;(async () => {
       const active = cfg.activeServerId
-        ? cfg.servers.find((s) => s.id === cfg.activeServerId)
+        ? cfg.servers.find(s => s.id === cfg.activeServerId)
         : undefined
       if (active) {
-        const password =
-          (await loadServerPassword(active.id)) ?? active.config.password
+        const password
+          = (await loadServerPassword(active.id)) ?? active.config.password
         QBittorrentClient.configure({
           ...active.config,
           password: password ?? '',

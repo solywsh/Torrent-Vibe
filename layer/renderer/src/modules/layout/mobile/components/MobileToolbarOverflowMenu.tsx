@@ -56,7 +56,7 @@ export const OverflowMenuButton = ({
       const menuItems = [
         // Sort options - show current sort with checkmark
         ...SORT_OPTIONS.map(
-          (option) =>
+          option =>
             new MenuItemText({
               label: `Sort by ${option.label}`,
               icon: <i className={cn(option.icon, 'text-text-secondary')} />,

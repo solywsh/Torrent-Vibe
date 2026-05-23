@@ -26,8 +26,8 @@ export const selectHeaderCheckboxState = (state: TorrentStore) => {
   return {
     isAllSelected: selectedTorrents.length === sortedTorrents.length,
     isIndeterminate:
-      selectedTorrents.length > 0 &&
-      selectedTorrents.length < sortedTorrents.length,
+      selectedTorrents.length > 0
+      && selectedTorrents.length < sortedTorrents.length,
   }
 }
 
@@ -231,7 +231,7 @@ export const selectIsTorrentSticky = (
 ): boolean => {
   const now = Date.now()
   return state.stickyFilterEntries.some(
-    (entry) =>
+    entry =>
       entry.hash === hash && now - entry.operationTime < STICKY_FILTER_DURATION,
   )
 }
@@ -242,14 +242,14 @@ export const selectTorrentStickyStatusByIndex = (
   rowIndex: number,
 ) => {
   const torrent = state.sortedTorrents[rowIndex]
-  if (!torrent) return { isSticky: false, remainingTime: 0 }
+  if (!torrent) { return { isSticky: false, remainingTime: 0 } }
 
   const now = Date.now()
   const stickyEntry = state.stickyFilterEntries.find(
-    (entry) => entry.hash === torrent.hash,
+    entry => entry.hash === torrent.hash,
   )
 
-  if (!stickyEntry) return { isSticky: false, remainingTime: 0 }
+  if (!stickyEntry) { return { isSticky: false, remainingTime: 0 } }
 
   const elapsed = now - stickyEntry.operationTime
   const remainingTime = Math.max(0, STICKY_FILTER_DURATION - elapsed)

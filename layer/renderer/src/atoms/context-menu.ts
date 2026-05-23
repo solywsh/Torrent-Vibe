@@ -5,11 +5,11 @@ import { createAtomHooks } from '~/lib/jotai'
 
 // Atom
 
-type ContextMenuState =
-  | { open: false }
-  | {
+type ContextMenuState
+  = | { open: false }
+    | {
       open: true
-      position: { x: number; y: number }
+      position: { x: number, y: number }
       menuItems: FollowMenuItem[]
       // Just for abort callback
       // Also can be optimized by using the `atomWithListeners`
@@ -60,10 +60,10 @@ export type MenuItemInput = MenuItemText | MenuItemSeparator | NilValue
 function filterNullableMenuItems(items: MenuItemInput[]): FollowMenuItem[] {
   return items
     .filter(
-      (item) =>
+      item =>
         item !== null && item !== undefined && item !== false && item !== '',
     )
-    .filter((item) => !item.hide)
+    .filter(item => !item.hide)
     .map((item) => {
       if (item instanceof MenuItemSeparator) {
         return MENU_ITEM_SEPARATOR
@@ -141,6 +141,7 @@ export class BaseMenuItemText {
   public get onClick() {
     return this.click
   }
+
   public get icon() {
     return this.configs.icon
   }

@@ -6,7 +6,7 @@ import settingZhCn from '@locales/setting/zh-CN.json'
 import type { MainSupportedLanguages, ns } from './constants'
 
 export const resources = {
-  en: {
+  'en': {
     app: en,
     setting: settingEn,
   },

@@ -32,11 +32,10 @@ export const ListeningPortSection = ({
           <Input
             type="number"
             value={prefs.listen_port || 47050}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 listen_port: Number.parseInt(e.target.value) || 47050,
-              })
-            }
+              })}
             min={1024}
             max={65535}
             className="w-24"
@@ -50,7 +49,7 @@ export const ListeningPortSection = ({
         id="upnp"
         label={t('connection.port.upnp')}
         checked={Boolean(prefs.upnp)}
-        onCheckedChange={(v) => onPrefsChange({ upnp: Boolean(v) })}
+        onCheckedChange={v => onPrefsChange({ upnp: Boolean(v) })}
       />
     </SettingSectionCard>
   )

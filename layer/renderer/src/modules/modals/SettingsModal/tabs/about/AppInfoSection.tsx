@@ -16,7 +16,10 @@ export const AppInfoSection: React.FC<AppInfoSectionProps> = ({ appInfo }) => {
     <div className="space-y-2 mb-6 font-mono text-sm">
       {appInfoItems.map(({ label, value, isCommand }) => (
         <div key={label} className="flex">
-          <span className="text-text-secondary w-64 shrink-0">{label}:</span>
+          <span className="text-text-secondary w-64 shrink-0">
+            {label}
+            :
+          </span>
           <span className={isCommand ? 'text-accent font-medium' : 'text-text'}>
             {value}
           </span>

@@ -20,14 +20,16 @@ export const AppSettingsExportModal: ModalComponent = ({ dismiss }) => {
     const run = async () => {
       try {
         const json = await exportAppSettingsAsString()
-        if (!active) return
+        if (!active) { return }
         setExportJson(json)
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to export settings', error)
         toast.error(getI18n().t('messages.settingsExportFailed'))
         dismiss()
-      } finally {
-        if (active) setLoading(false)
+      }
+      finally {
+        if (active) { setLoading(false) }
       }
     }
 
@@ -38,17 +40,18 @@ export const AppSettingsExportModal: ModalComponent = ({ dismiss }) => {
   }, [dismiss])
 
   const handleCopy = async () => {
-    if (!exportJson) return
+    if (!exportJson) { return }
     try {
       await navigator.clipboard.writeText(exportJson)
       toast.success(getI18n().t('messages.copiedToClipboard'))
-    } catch {
+    }
+    catch {
       toast.error(getI18n().t('messages.copyFailed'))
     }
   }
 
   const handleSaveToDisk = async () => {
-    if (!exportJson) return
+    if (!exportJson) { return }
     setSaving(true)
     try {
       const timestamp = new Date().toISOString().replaceAll(':', '-')
@@ -72,7 +75,8 @@ export const AppSettingsExportModal: ModalComponent = ({ dismiss }) => {
         if (!result || result.canceled) {
           return
         }
-      } else {
+      }
+      else {
         // Web environment - use download attribute
         const blob = new Blob([exportJson], { type: 'application/json' })
         const url = URL.createObjectURL(blob)
@@ -86,10 +90,12 @@ export const AppSettingsExportModal: ModalComponent = ({ dismiss }) => {
       }
 
       toast.success(getI18n().t('messages.settingsExportSaved'))
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to save settings export', error)
       toast.error(getI18n().t('messages.settingsExportSaveFailed'))
-    } finally {
+    }
+    finally {
       setSaving(false)
     }
   }
@@ -102,19 +108,21 @@ export const AppSettingsExportModal: ModalComponent = ({ dismiss }) => {
       <p className="text-sm text-text-secondary">
         {t('general.dataManagement.exportModal.description')}
       </p>
-      {isLoading ? (
-        <div className="flex items-center justify-center rounded-md border border-dashed border-border py-12 text-sm text-text-secondary">
-          <i className="i-mingcute-loading-3-line mr-2 animate-spin" />
-          {t('general.dataManagement.loading')}
-        </div>
-      ) : (
-        <textarea
-          className="relative resize-none font-mono block w-full appearance-none rounded-md border px-2.5 py-2 shadow-xs outline-hidden transition sm:text-sm border-border text-text placeholder:text-placeholder-text bg-background"
-          rows={14}
-          readOnly
-          value={exportJson}
-        />
-      )}
+      {isLoading
+        ? (
+            <div className="flex items-center justify-center rounded-md border border-dashed border-border py-12 text-sm text-text-secondary">
+              <i className="i-mingcute-loading-3-line mr-2 animate-spin" />
+              {t('general.dataManagement.loading')}
+            </div>
+          )
+        : (
+            <textarea
+              className="relative resize-none font-mono block w-full appearance-none rounded-md border px-2.5 py-2 shadow-xs outline-hidden transition sm:text-sm border-border text-text placeholder:text-placeholder-text bg-background"
+              rows={14}
+              readOnly
+              value={exportJson}
+            />
+          )}
       <div className="flex justify-end gap-2">
         <Button
           size="sm"

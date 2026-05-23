@@ -101,7 +101,8 @@ export const extractReadableFromUrl = async (
         data,
       }
     })
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(`extraction failed`, { url, error })
     if (error instanceof AgentBrowserNotFoundError) {
       return { ok: false, error: 'ai.webExtract.agentBrowserNotFound' }

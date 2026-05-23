@@ -9,7 +9,8 @@ import { TooltipContent, TooltipTrigger } from '../tooltip/Tooltip'
 const isTextOverflowed = (element: HTMLElement, dir: 'h' | 'v') => {
   if (dir === 'h') {
     return element.offsetWidth < element.scrollWidth
-  } else {
+  }
+  else {
     return element.offsetHeight < element.scrollHeight
   }
 }
@@ -27,7 +28,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
   const [isOverflowed, setIsOverflowed] = useState(false)
 
   const judgment = () => {
-    if (!textElRef) return
+    if (!textElRef) { return }
 
     setIsOverflowed(isTextOverflowed(textElRef, dir))
   }
@@ -36,7 +37,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
   }, [textElRef, children])
 
   useEffect(() => {
-    if (!textElRef) return
+    if (!textElRef) { return }
     const resizeObserver = new ResizeObserver(() => {
       judgment()
     })
@@ -63,7 +64,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
     </span>
   )
 
-  if (!isOverflowed || disabled) return Content
+  if (!isOverflowed || disabled) { return Content }
   return (
     <Tooltip>
       <TooltipTrigger asChild>{Content}</TooltipTrigger>
@@ -71,7 +72,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
       <TooltipContent>
         <span
           className="whitespace-pre-line break-all"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {children}
         </span>

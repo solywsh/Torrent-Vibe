@@ -27,10 +27,10 @@ export const useDiscoverProviders = () => {
       .map((entry) => {
         const [id, providerConfig] = entry
         const implementation = getDiscoverProvider(id)
-        if (!implementation) return null
+        if (!implementation) { return null }
 
-        const typedImplementation =
-          implementation as DiscoverProviderEntry['implementation']
+        const typedImplementation
+          = implementation as DiscoverProviderEntry['implementation']
 
         return {
           id,
@@ -47,7 +47,7 @@ export const useEnabledDiscoverProviders = () => {
   const providers = useDiscoverProviders()
   return useMemo(
     () =>
-      providers.filter((provider) => provider.config.enabled && provider.ready),
+      providers.filter(provider => provider.config.enabled && provider.ready),
     [providers],
   )
 }

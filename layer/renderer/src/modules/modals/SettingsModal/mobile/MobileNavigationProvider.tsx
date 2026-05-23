@@ -31,11 +31,11 @@ interface MobileNavigationProviderProps {
 export const MobileNavigationProvider: React.FC<
   MobileNavigationProviderProps
 > = ({ children, initialScreen, onBackAction }) => {
-  const push = useMobileNavigationStore((state) => state.push)
-  const pop = useMobileNavigationStore((state) => state.pop)
-  const screens = useMobileNavigationStore((state) => state.screens)
+  const push = useMobileNavigationStore(state => state.push)
+  const pop = useMobileNavigationStore(state => state.pop)
+  const screens = useMobileNavigationStore(state => state.screens)
   const setIsNavigating = useMobileNavigationStore(
-    (state) => state.setIsNavigating,
+    state => state.setIsNavigating,
   )
 
   // Initialize navigation stack with root screen
@@ -110,7 +110,7 @@ export const MobileNavigationProvider: React.FC<
   // Prevent navigation during animations
   useEffect(() => {
     const unsubscribe = useMobileNavigationStore.subscribe(
-      (state) => state.isNavigating,
+      state => state.isNavigating,
       (isNavigating) => {
         if (isNavigating) {
           // Disable browser back button during navigation
@@ -167,7 +167,7 @@ export const NavigationUtils = {
   // Get navigation breadcrumb
   getBreadcrumb: () => {
     const state = useMobileNavigationStore.getState()
-    return state.screens.map((screen) => ({
+    return state.screens.map(screen => ({
       title: screen.title,
       screenId: screen.screenId,
     }))

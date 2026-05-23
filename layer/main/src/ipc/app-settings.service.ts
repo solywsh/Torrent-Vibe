@@ -40,7 +40,8 @@ export class AppSettingsIPCService extends IpcService {
         if (!stat.isFile()) {
           return { ok: false, error: 'notFile' as const }
         }
-      } catch (error) {
+      }
+      catch (error) {
         return {
           ok: false,
           error: 'notAccessible' as const,

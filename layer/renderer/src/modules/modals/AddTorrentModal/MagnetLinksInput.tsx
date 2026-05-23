@@ -31,12 +31,11 @@ export const MagnetLinksInput = ({
         id="magnet-links"
         placeholder="Enter one or more magnet links (one per line):&#10;magnet:?xt=urn:btih:...&#10;magnet:?xt=urn:btih:..."
         value={formData.magnetLinks}
-        onChange={(e) =>
-          handlers.setFormData((prev) => ({
+        onChange={e =>
+          handlers.setFormData(prev => ({
             ...prev,
             magnetLinks: e.target.value,
-          }))
-        }
+          }))}
         className="font-mono -mt-3 text-sm min-h-[180px] resize-none h-0 grow"
         rows={6}
       />

@@ -24,17 +24,19 @@ export const DesktopFeaturesSection = () => {
               const res = await ipcServices?.fileAssociation.repair()
               if (res?.ok) {
                 toast.success(
-                  t('desktop.fileAssociation.success') +
-                    (res.message ? `: ${res.message}` : ''),
+                  t('desktop.fileAssociation.success')
+                  + (res.message ? `: ${res.message}` : ''),
                 )
-              } else {
+              }
+              else {
                 toast.error(
                   `${t(
                     'desktop.fileAssociation.failed',
                   )}: ${res?.message || t('desktop.fileAssociation.unknownError')}`,
                 )
               }
-            } catch (e: unknown) {
+            }
+            catch (e: unknown) {
               const error = e as Error
               toast.error(
                 `${t('desktop.fileAssociation.failed')}: ${String(

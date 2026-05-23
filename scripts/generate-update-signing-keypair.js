@@ -14,8 +14,8 @@ if (!existsSync(outDir)) {
 
 // If keypair is exist, do nothing;
 if (
-  existsSync(join(outDir, 'update_pubkey.pem')) &&
-  existsSync(join(outDir, 'update_privkey.pem'))
+  existsSync(join(outDir, 'update_pubkey.pem'))
+  && existsSync(join(outDir, 'update_privkey.pem'))
 ) {
   console.info('[update-sign] keypair already exists')
   process.exit(0)

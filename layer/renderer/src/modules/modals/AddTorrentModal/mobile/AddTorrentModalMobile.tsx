@@ -50,10 +50,10 @@ export const AddTorrentModalMobile = ({
   ]
 
   // Check if step 1 (input) is valid
-  const isStep1Valid =
-    (formData.magnetLinks.trim() !== '' &&
-      formData.magnetLinks.includes('magnet:')) ||
-    formData.files.length > 0
+  const isStep1Valid
+    = (formData.magnetLinks.trim() !== ''
+      && formData.magnetLinks.includes('magnet:'))
+    || formData.files.length > 0
 
   // Step navigation functions
   const goToNextStep = () => {

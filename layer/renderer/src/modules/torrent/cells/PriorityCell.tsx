@@ -16,7 +16,7 @@ export const PriorityCell = ({ rowIndex }: PriorityCellProps) => {
 
   const priority = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentPriority(state, deferredRowIndex),
+      state => selectTorrentPriority(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
@@ -45,7 +45,7 @@ export const PriorityCell = ({ rowIndex }: PriorityCellProps) => {
   }
 
   return (
-    <div className="flex items-center justify-center px-2 py-2 text-sm text-text">
+    <div className="flex items-center justify-start px-2 py-2 text-sm text-text">
       {getPriorityText(priority)}
     </div>
   )

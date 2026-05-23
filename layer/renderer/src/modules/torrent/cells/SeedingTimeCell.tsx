@@ -16,13 +16,13 @@ export const SeedingTimeCell = ({ rowIndex }: SeedingTimeCellProps) => {
 
   const seedingTime = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentSeedingTime(state, deferredRowIndex),
+      state => selectTorrentSeedingTime(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   const formatDuration = (seconds: number) => {
-    if (seconds === 0) return '-'
+    if (seconds === 0) { return '-' }
 
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
@@ -30,15 +30,17 @@ export const SeedingTimeCell = ({ rowIndex }: SeedingTimeCellProps) => {
 
     if (days > 0) {
       return `${days}d ${hours}h`
-    } else if (hours > 0) {
+    }
+    else if (hours > 0) {
       return `${hours}h ${minutes}m`
-    } else {
+    }
+    else {
       return `${minutes}m`
     }
   }
 
   return (
-    <div className="flex items-center justify-end px-2 py-4 text-sm text-text tabular-nums">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text tabular-nums">
       {formatDuration(seedingTime)}
     </div>
   )

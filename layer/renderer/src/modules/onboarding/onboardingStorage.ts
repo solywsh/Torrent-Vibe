@@ -21,7 +21,8 @@ export const saveFormFieldToStorage = (
     const data = existingData ? JSON.parse(existingData) : {}
     data[field] = value
     localStorage.setItem(ONBOARDING_FORM_STORAGE_KEY, JSON.stringify(data))
-  } catch (error) {
+  }
+  catch (error) {
     console.warn(`${getI18n().t('messages.preferencesSaveFailed')}:`, error)
   }
 }
@@ -30,7 +31,8 @@ export const loadFormDataFromStorage = (): Partial<OnboardingFormData> => {
   try {
     const data = localStorage.getItem(ONBOARDING_FORM_STORAGE_KEY)
     return data ? JSON.parse(data) : {}
-  } catch (error) {
+  }
+  catch (error) {
     console.warn(`${getI18n().t('messages.preferencesLoadFailed')}:`, error)
     return {}
   }
@@ -39,7 +41,8 @@ export const loadFormDataFromStorage = (): Partial<OnboardingFormData> => {
 export const clearFormDataFromStorage = () => {
   try {
     localStorage.removeItem(ONBOARDING_FORM_STORAGE_KEY)
-  } catch (error) {
+  }
+  catch (error) {
     console.warn(`${getI18n().t('messages.preferencesLoadFailed')}:`, error)
   }
 }

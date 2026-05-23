@@ -86,14 +86,16 @@ export const AgentBrowserSection = () => {
       setCurrentPath(normalized)
       toast.success(t('desktop.agentBrowser.messages.saved'))
       return true
-    } catch (error) {
+    }
+    catch (error) {
       toast.error(
         t('desktop.agentBrowser.messages.saveFailedWithReason', {
           reason: String((error as Error)?.message ?? error),
         }),
       )
       return false
-    } finally {
+    }
+    finally {
       setSaving(false)
     }
   }
@@ -108,8 +110,8 @@ export const AgentBrowserSection = () => {
     }
     setDetecting(true)
     try {
-      const { agentBrowserPath } =
-        (await ipcServices?.appSettings.detectAgentBrowser()) ?? {}
+      const { agentBrowserPath }
+        = (await ipcServices?.appSettings.detectAgentBrowser()) ?? {}
       if (agentBrowserPath) {
         setCurrentPath(agentBrowserPath)
         toast.success(
@@ -117,16 +119,19 @@ export const AgentBrowserSection = () => {
             path: agentBrowserPath,
           }),
         )
-      } else {
+      }
+      else {
         toast.error(t('desktop.agentBrowser.messages.detectFailed'))
       }
-    } catch (error) {
+    }
+    catch (error) {
       toast.error(
         t('desktop.agentBrowser.messages.detectFailedWithReason', {
           reason: String((error as Error)?.message ?? error),
         }),
       )
-    } finally {
+    }
+    finally {
       setDetecting(false)
     }
   }
@@ -183,10 +188,10 @@ export const AgentBrowserSection = () => {
             variant="ghost"
             size="sm"
             disabled={
-              !ELECTRON ||
-              loading ||
-              saving ||
-              (!trimmedCurrentPath && !trimmedInitialPath)
+              !ELECTRON
+              || loading
+              || saving
+              || (!trimmedCurrentPath && !trimmedInitialPath)
             }
             onClick={handleClear}
           >

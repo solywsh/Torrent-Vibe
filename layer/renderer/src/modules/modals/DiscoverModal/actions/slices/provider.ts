@@ -52,7 +52,7 @@ export const createProviderSlice = (context: DiscoverActionContext) => {
     descriptionRenderer?: ConfigureProviderOptions['descriptionRenderer']
   }) => {
     context.setState((draft) => {
-      if (draft.activeProviderId !== meta.providerId) return
+      if (draft.activeProviderId !== meta.providerId) { return }
       draft.providerReady = meta.providerReady
       draft.pageSize = meta.pageSize
       if (meta.descriptionRenderer) {

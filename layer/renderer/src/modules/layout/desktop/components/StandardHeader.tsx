@@ -42,7 +42,7 @@ export const StandardHeader = ({
 
   // Torrent action handler
   const handleTorrentAction = async (action: 'pause' | 'resume' | 'delete') => {
-    if (!canInteract) return
+    if (!canInteract) { return }
 
     const hashes = hasSelection
       ? useTorrentDataStore.getState().selectedTorrents
@@ -66,7 +66,8 @@ export const StandardHeader = ({
           break
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Failed to ${action} torrents:`, error)
     }
   }
@@ -74,13 +75,15 @@ export const StandardHeader = ({
   const toggleTheme = () => {
     if (theme === 'system') {
       setTheme(isDark ? 'light' : 'dark')
-    } else {
+    }
+    else {
       const systemIsDark = window.matchMedia(
         '(prefers-color-scheme: dark)',
       ).matches
       if (theme === 'dark') {
         setTheme(systemIsDark ? 'light' : 'system')
-      } else if (theme === 'light') {
+      }
+      else if (theme === 'light') {
         setTheme(systemIsDark ? 'system' : 'dark')
       }
     }

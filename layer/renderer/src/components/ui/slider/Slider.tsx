@@ -13,8 +13,8 @@ export const Slider = ({
 } & {
   ref?: React.Ref<
     | (React.ElementRef<typeof SliderPrimitive.Root> & {
-        variant?: 'primary' | 'secondary'
-      })
+      variant?: 'primary' | 'secondary'
+    })
     | null
   >
 }) => (

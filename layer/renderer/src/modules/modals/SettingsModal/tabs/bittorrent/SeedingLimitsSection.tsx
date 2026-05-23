@@ -24,17 +24,15 @@ export const SeedingLimitsSection = ({
       <SettingToggleField
         label={t('bittorrent.seeding.ratioReaches')}
         enabled={prefs.max_ratio_enabled ?? false}
-        onEnabledChange={(checked) =>
-          onPrefsChange({ max_ratio_enabled: Boolean(checked) })
-        }
+        onEnabledChange={checked =>
+          onPrefsChange({ max_ratio_enabled: Boolean(checked) })}
       >
         <Input
           type="number"
           step="0.1"
           value={prefs.max_ratio ?? 1}
-          onChange={(e) =>
-            onPrefsChange({ max_ratio: Number.parseFloat(e.target.value) || 1 })
-          }
+          onChange={e =>
+            onPrefsChange({ max_ratio: Number.parseFloat(e.target.value) || 1 })}
           min={0}
           className="w-20"
         />
@@ -43,19 +41,17 @@ export const SeedingLimitsSection = ({
       <SettingToggleField
         label={t('bittorrent.seeding.seedingTimeReaches')}
         enabled={prefs.max_seeding_time_enabled ?? false}
-        onEnabledChange={(checked) =>
-          onPrefsChange({ max_seeding_time_enabled: Boolean(checked) })
-        }
+        onEnabledChange={checked =>
+          onPrefsChange({ max_seeding_time_enabled: Boolean(checked) })}
       >
         <div className="flex items-center gap-2">
           <Input
             type="number"
             value={prefs.max_seeding_time ?? 1440}
-            onChange={(e) =>
+            onChange={e =>
               onPrefsChange({
                 max_seeding_time: Number.parseInt(e.target.value) || 1440,
-              })
-            }
+              })}
             min={1}
             className="w-24"
           />

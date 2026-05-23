@@ -62,7 +62,7 @@ export class TorrentAiDatabase {
       if (!parsedRow.success) {
         logger.warn('Invalid torrent AI metadata row encountered, deleting', {
           key,
-          issues: parsedRow.error.issues.map((issue) => ({
+          issues: parsedRow.error.issues.map(issue => ({
             path: issue.path.join('.'),
             message: issue.message,
             code: issue.code,
@@ -91,7 +91,8 @@ export class TorrentAiDatabase {
           metadata: parsedMetadata,
           createdAt,
         }
-      } catch (error) {
+      }
+      catch (error) {
         logger.warn(
           'Failed to parse cached torrent AI metadata, deleting entry',
           {
@@ -102,7 +103,8 @@ export class TorrentAiDatabase {
         await this.delete(key)
         return undefined
       }
-    } catch (error) {
+    }
+    catch (error) {
       logger.error('Failed to read torrent AI metadata from database', error)
       return undefined
     }
@@ -144,7 +146,8 @@ export class TorrentAiDatabase {
           created_at = excluded.created_at`,
         [key, JSON.stringify(metadataToStore), provider, model, createdAt],
       )
-    } catch (error) {
+    }
+    catch (error) {
       logger.error('Failed to persist torrent AI metadata', { key, error })
       return
     }
@@ -162,7 +165,8 @@ export class TorrentAiDatabase {
              )`,
           [limit],
         )
-      } catch (error) {
+      }
+      catch (error) {
         logger.warn(
           'Failed to trim torrent AI metadata entries to limit',
           error,
@@ -176,7 +180,8 @@ export class TorrentAiDatabase {
 
     try {
       await exec(this.sqlite, `DELETE FROM ${TORRENT_AI_METADATA_TABLE_NAME}`)
-    } catch (error) {
+    }
+    catch (error) {
       logger.error('Failed to clear torrent AI metadata table', error)
     }
   }
@@ -190,7 +195,8 @@ export class TorrentAiDatabase {
         `DELETE FROM ${TORRENT_AI_METADATA_TABLE_NAME} WHERE key = ?`,
         [key],
       )
-    } catch (error) {
+    }
+    catch (error) {
       logger.error('Failed to delete torrent AI metadata entry', { key, error })
     }
   }

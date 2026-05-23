@@ -118,9 +118,9 @@ export const buildAiTools = (options: {
     | 'native'
     | 'headless'
     | {
-        mode?: 'native' | 'headless'
-        engines?: SearchEngine[]
-      }
+      mode?: 'native' | 'headless'
+      engines?: SearchEngine[]
+    }
   webExtract?: boolean
 }): ToolMap | undefined => {
   const tools: ToolMap = {}
@@ -133,7 +133,8 @@ export const buildAiTools = (options: {
   if (resolvedSearch) {
     if (resolvedSearch.mode === 'native') {
       Object.assign(tools, openai.tools.webSearch({}))
-    } else {
+    }
+    else {
       Object.assign(
         tools,
         createSearchTools(resolvedSearch.engines, i18n.language),

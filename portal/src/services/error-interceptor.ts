@@ -33,10 +33,10 @@ export function createServiceError(
 
 export function isServiceError(error: unknown): error is ServiceError {
   return (
-    !!error &&
-    typeof error === 'object' &&
-    'code' in (error as Record<string, unknown>) &&
-    typeof (error as { code: unknown }).code === 'string'
+    !!error
+    && typeof error === 'object'
+    && 'code' in (error as Record<string, unknown>)
+    && typeof (error as { code: unknown }).code === 'string'
   )
 }
 
@@ -60,30 +60,31 @@ export function mapUnknownError(
   // Axios-like HTTP errors
   if (e && e.response && typeof e.response.status === 'number') {
     const { status } = e.response
-    const remoteMessage =
-      e.response.data?.message || e.response.statusText || fallbackMessage
-    if (status === 404)
-      return createServiceError(ErrorCode.NOT_FOUND, remoteMessage, status)
-    if (status === 403)
+    const remoteMessage
+      = e.response.data?.message || e.response.statusText || fallbackMessage
+    if (status === 404) { return createServiceError(ErrorCode.NOT_FOUND, remoteMessage, status) }
+    if (status === 403) {
       return createServiceError(
         ErrorCode.PERMISSION_DENIED,
         remoteMessage,
         status,
       )
-    if (status === 409)
-      return createServiceError(ErrorCode.ALREADY_EXISTS, remoteMessage, status)
-    if (status === 422)
+    }
+    if (status === 409) { return createServiceError(ErrorCode.ALREADY_EXISTS, remoteMessage, status) }
+    if (status === 422) {
       return createServiceError(
         ErrorCode.VALIDATION_ERROR,
         remoteMessage,
         status,
       )
-    if (status >= 500)
+    }
+    if (status >= 500) {
       return createServiceError(
         ErrorCode.EXTERNAL_API_ERROR,
         remoteMessage,
         status,
       )
+    }
     return createServiceError(
       ErrorCode.EXTERNAL_API_ERROR,
       remoteMessage,
@@ -98,8 +99,8 @@ export function mapUnknownError(
     return createServiceError(ErrorCode.TIMEOUT, msg)
   }
   if (
-    /ENOTFOUND|ECONNRESET|EAI_AGAIN|network/i.test(code) ||
-    /network/i.test(msg)
+    /ENOTFOUND|ECONNRESET|EAI_AGAIN|network/i.test(code)
+    || /network/i.test(msg)
   ) {
     return createServiceError(ErrorCode.NETWORK_ERROR, msg)
   }
@@ -135,8 +136,8 @@ export function mapGitHubApiError(
         status,
       )
     }
-    const message =
-      e.response.data?.message || e.response.statusText || 'GitHub API error'
+    const message
+      = e.response.data?.message || e.response.statusText || 'GitHub API error'
     return createServiceError(
       ErrorCode.EXTERNAL_API_ERROR,
       `GitHub API error: ${status} - ${message}`,

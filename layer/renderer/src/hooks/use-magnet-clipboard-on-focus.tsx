@@ -11,10 +11,10 @@ export const useMagnetClipboardOnFocus = () => {
   const lastHandled = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!ELECTRON) return
+    if (!ELECTRON) { return }
 
     const extractMagnets = (text: string): string[] => {
-      if (!text) return []
+      if (!text) { return [] }
       const matches = text.match(/magnet:\S+/gi) || []
       // Deduplicate while preserving order
       const seen = new Set<string>()
@@ -32,10 +32,10 @@ export const useMagnetClipboardOnFocus = () => {
       try {
         const txt = (await navigator.clipboard?.readText?.()) || ''
         const magnets = extractMagnets(txt)
-        if (magnets.length === 0) return
+        if (magnets.length === 0) { return }
 
         const payload = magnets.join('\n')
-        if (lastHandled.current === payload) return
+        if (lastHandled.current === payload) { return }
 
         Prompt.prompt({
           title: 'Detected magnet links from clipboard',
@@ -51,7 +51,8 @@ export const useMagnetClipboardOnFocus = () => {
         })
 
         lastHandled.current = payload
-      } catch {
+      }
+      catch {
         // Ignore clipboard read errors silently
       }
     }

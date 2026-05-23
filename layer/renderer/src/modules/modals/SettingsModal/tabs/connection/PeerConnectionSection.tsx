@@ -29,8 +29,8 @@ export const PeerConnectionSection = ({
               : 'forced'
         }
         onValueChange={(value) => {
-          const encryptionValue =
-            value === 'disabled' ? 0 : value === 'enabled' ? 1 : 2
+          const encryptionValue
+            = value === 'disabled' ? 0 : value === 'enabled' ? 1 : 2
           onPrefsChange({ encryption: encryptionValue })
         }}
         options={[
@@ -47,9 +47,8 @@ export const PeerConnectionSection = ({
         id="anonymous_mode"
         label={t('connection.peer.anonymousMode')}
         checked={Boolean(prefs.anonymous_mode)}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ anonymous_mode: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ anonymous_mode: Boolean(checked) })}
       />
       <div className="text-xs text-text-secondary ml-6">
         {t('connection.peer.anonymousDescription')}

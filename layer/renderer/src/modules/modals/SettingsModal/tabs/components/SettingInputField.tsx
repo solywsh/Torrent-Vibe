@@ -25,7 +25,7 @@ export const SettingInputField = ({
       <Input
         id={id}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         {...rest}
       />
     </SettingField>

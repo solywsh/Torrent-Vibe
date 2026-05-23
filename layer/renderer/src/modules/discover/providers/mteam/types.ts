@@ -115,7 +115,7 @@ export interface MTeamDetailResponseBody {
     descr?: string
     mediainfo?: string
     description?: string
-    fileList?: Array<{ name: string; size: number | string }>
+    fileList?: Array<{ name: string, size: number | string }>
     screenshotUrls?: string[]
     [key: string]: unknown
   }

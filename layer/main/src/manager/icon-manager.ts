@@ -26,7 +26,8 @@ export class IconManager {
         'Application icons configured for platform:',
         process.platform,
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set application icons:', error)
     }
   }

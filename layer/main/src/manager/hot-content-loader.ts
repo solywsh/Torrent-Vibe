@@ -22,12 +22,15 @@ export class HotUpdateContentLoader implements WindowContentLoader {
   get isDevelopment() {
     return this.fallback.isDevelopment
   }
+
   get devServerPort() {
     return this.fallback.devServerPort
   }
+
   get devServerHost() {
     return this.fallback.devServerHost
   }
+
   getPreloadPath() {
     return this.fallback.getPreloadPath()
   }
@@ -40,26 +43,27 @@ export class HotUpdateContentLoader implements WindowContentLoader {
       this.logger.debug('Updates directory exists, scanning for versions')
 
       const dirs = readdirSync(updatesDir, { withFileTypes: true })
-        .filter((d) => d.isDirectory())
-        .map((d) => d.name)
+        .filter(d => d.isDirectory())
+        .map(d => d.name)
 
       this.logger.debug('Found directories in updates folder', {
         directories: dirs,
       })
 
       // Prefer semver sorting if names look like semver; otherwise fall back to latest mtime
-      const semverish = dirs.filter((v) => semver.valid(semver.coerce(v) || ''))
+      const semverish = dirs.filter(v => semver.valid(semver.coerce(v) || ''))
       let latest: string | undefined
       if (semverish.length > 0) {
         const sorted = semverish
-          .map((v) => semver.coerce(v)?.version || v)
+          .map(v => semver.coerce(v)?.version || v)
           .sort(semver.compare)
         latest = sorted.at(-1) as string | undefined
         this.logger.debug('Using semver to select latest', {
           latest,
           candidates: semverish,
         })
-      } else {
+      }
+      else {
         // Fallback by directory mtime
         const withTimes = dirs
           .map((name) => {
@@ -67,7 +71,8 @@ export class HotUpdateContentLoader implements WindowContentLoader {
             try {
               const stat = statSync(p)
               return { name, mtime: stat.mtimeMs }
-            } catch {
+            }
+            catch {
               return { name, mtime: 0 }
             }
           })
@@ -89,7 +94,8 @@ export class HotUpdateContentLoader implements WindowContentLoader {
             indexPath,
           })
           return indexPath
-        } else {
+        }
+        else {
           this.logger.warn(
             'Latest version index.html not found, falling back',
             {
@@ -98,10 +104,12 @@ export class HotUpdateContentLoader implements WindowContentLoader {
             },
           )
         }
-      } else {
+      }
+      else {
         this.logger.debug('No valid versions found in updates directory')
       }
-    } else {
+    }
+    else {
       this.logger.debug('Updates directory does not exist, using fallback')
     }
 

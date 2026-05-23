@@ -19,7 +19,8 @@ export class DeeplinkManager {
       if (typeof url === 'string' && url.toLowerCase().startsWith('magnet:')) {
         if (app.isReady()) {
           void this.handleMagnetOpens([url])
-        } else {
+        }
+        else {
           this.pendingMagnetOpens.push(url)
         }
       }
@@ -36,7 +37,8 @@ export class DeeplinkManager {
       if (app.isPackaged) {
         app.setAsDefaultProtocolClient?.('magnet')
       }
-    } catch (e) {
+    }
+    catch (e) {
       console.warn('registerProtocolClient failed:', e)
     }
   }
@@ -66,14 +68,14 @@ export class DeeplinkManager {
   }
 
   private async flushPendingMagnetOpens(): Promise<void> {
-    if (this.pendingMagnetOpens.length === 0) return
+    if (this.pendingMagnetOpens.length === 0) { return }
     const links = [...this.pendingMagnetOpens]
     this.pendingMagnetOpens = []
     await this.handleMagnetOpens(links)
   }
 
   private flushPendingMagnetPayloads(): void {
-    if (this.pendingMagnetPayloads.length === 0) return
+    if (this.pendingMagnetPayloads.length === 0) { return }
     for (const payload of this.pendingMagnetPayloads) {
       BridgeService.shared.broadcast('deeplink:magnet', payload)
     }
@@ -81,18 +83,18 @@ export class DeeplinkManager {
   }
 
   async handleMagnetOpens(links: string[]): Promise<void> {
-    if (!links || links.length === 0) return
+    if (!links || links.length === 0) { return }
     await WindowManager.getInstance().showMainWindow()
 
     const normalized = Array.from(
       new Set(
         links
           .filter(Boolean)
-          .map((l) => l.trim())
-          .filter((l) => l.toLowerCase().startsWith('magnet:')),
+          .map(l => l.trim())
+          .filter(l => l.toLowerCase().startsWith('magnet:')),
       ),
     )
-    if (normalized.length === 0) return
+    if (normalized.length === 0) { return }
 
     const payload = { links: normalized }
     if (!RendererLifecycleManager.instance.isReady()) {

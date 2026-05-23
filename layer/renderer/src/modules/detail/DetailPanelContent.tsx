@@ -96,7 +96,7 @@ export const DetailPanelContent = () => {
         <div className="px-2 py-2 @container">
           <SegmentTab
             value={activeTab}
-            onChange={(value) => setActiveTab(value as typeof activeTab)}
+            onChange={value => setActiveTab(value as typeof activeTab)}
             items={[
               {
                 value: 'general' as const,

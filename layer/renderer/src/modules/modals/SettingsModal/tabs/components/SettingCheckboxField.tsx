@@ -29,7 +29,7 @@ export const SettingCheckboxField = ({
           id={id}
           checked={checked}
           disabled={disabled}
-          onCheckedChange={(v) => onCheckedChange(Boolean(v))}
+          onCheckedChange={v => onCheckedChange(Boolean(v))}
         />
         {id ? <Label htmlFor={id} className="text-xs text-text" /> : null}
       </div>

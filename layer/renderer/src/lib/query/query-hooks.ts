@@ -132,11 +132,11 @@ export const useQBMutation = {
     create: (): UseMutationResult<
       void,
       Error,
-      { name: string; savePath: string },
+      { name: string, savePath: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { name: string; savePath: string }) => {
+        mutationFn: async (params: { name: string, savePath: string }) => {
           await QBittorrentClient.shared.createCategory(
             params.name,
             params.savePath,
@@ -168,11 +168,11 @@ export const useQBMutation = {
     edit: (): UseMutationResult<
       void,
       Error,
-      { name: string; savePath: string },
+      { name: string, savePath: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { name: string; savePath: string }) => {
+        mutationFn: async (params: { name: string, savePath: string }) => {
           await QBittorrentClient.shared.editCategory(
             params.name,
             params.savePath,
@@ -222,7 +222,7 @@ export const useQBMutation = {
     add: (): UseMutationResult<
       void,
       Error,
-      { torrent: string | Uint8Array; options?: Partial<AddTorrentOptions> },
+      { torrent: string | Uint8Array, options?: Partial<AddTorrentOptions> },
       unknown
     > => {
       return useMutation({
@@ -241,7 +241,7 @@ export const useQBMutation = {
     delete: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; deleteFiles?: boolean },
+      { hashes: string[], deleteFiles?: boolean },
       unknown
     > => {
       return useMutation({
@@ -308,11 +308,11 @@ export const useQBMutation = {
     setCategory: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; category: string },
+      { hashes: string[], category: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; category: string }) => {
+        mutationFn: async (params: { hashes: string[], category: string }) => {
           await QBittorrentClient.shared.setTorrentCategory(
             params.hashes,
             params.category,
@@ -330,11 +330,11 @@ export const useQBMutation = {
     addTags: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; tags: string[] },
+      { hashes: string[], tags: string[] },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; tags: string[] }) => {
+        mutationFn: async (params: { hashes: string[], tags: string[] }) => {
           await QBittorrentClient.shared.addTorrentTags(
             params.hashes,
             params.tags.join(','),
@@ -352,11 +352,11 @@ export const useQBMutation = {
     removeTags: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; tags: string[] },
+      { hashes: string[], tags: string[] },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; tags: string[] }) => {
+        mutationFn: async (params: { hashes: string[], tags: string[] }) => {
           await QBittorrentClient.shared.removeTorrentTags(
             params.hashes,
             params.tags.join(','),
@@ -374,11 +374,11 @@ export const useQBMutation = {
     setLocation: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; location: string },
+      { hashes: string[], location: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; location: string }) => {
+        mutationFn: async (params: { hashes: string[], location: string }) => {
           await QBittorrentClient.shared.setTorrentLocation(
             params.hashes,
             params.location,
@@ -396,11 +396,11 @@ export const useQBMutation = {
     rename: (): UseMutationResult<
       void,
       Error,
-      { hash: string; name: string },
+      { hash: string, name: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hash: string; name: string }) => {
+        mutationFn: async (params: { hash: string, name: string }) => {
           await QBittorrentClient.shared.setTorrentName(
             params.hash,
             params.name,
@@ -501,11 +501,11 @@ export const useQBMutation = {
     setAutoManagement: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; enable: boolean },
+      { hashes: string[], enable: boolean },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; enable: boolean }) => {
+        mutationFn: async (params: { hashes: string[], enable: boolean }) => {
           await QBittorrentClient.shared.requestSetAutoManagement(
             params.hashes,
             params.enable,
@@ -523,11 +523,11 @@ export const useQBMutation = {
     setSuperSeeding: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; enable: boolean },
+      { hashes: string[], enable: boolean },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; enable: boolean }) => {
+        mutationFn: async (params: { hashes: string[], enable: boolean }) => {
           await QBittorrentClient.shared.requestSetSuperSeeding(
             params.hashes,
             params.enable,
@@ -545,11 +545,11 @@ export const useQBMutation = {
     setForceStart: (): UseMutationResult<
       void,
       Error,
-      { hashes: string[]; enable: boolean },
+      { hashes: string[], enable: boolean },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hashes: string[]; enable: boolean }) => {
+        mutationFn: async (params: { hashes: string[], enable: boolean }) => {
           await QBittorrentClient.shared.requestSetForceStart(
             params.hashes,
             params.enable,
@@ -595,7 +595,7 @@ export const useQBMutation = {
     setFilePriority: (): UseMutationResult<
       void,
       Error,
-      { hash: string; fileIds: number[] | string; priority: 0 | 1 | 6 | 7 },
+      { hash: string, fileIds: number[] | string, priority: 0 | 1 | 6 | 7 },
       unknown
     > => {
       return useMutation({
@@ -622,11 +622,11 @@ export const useQBMutation = {
     addTrackers: (): UseMutationResult<
       void,
       Error,
-      { hash: string; urls: string },
+      { hash: string, urls: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hash: string; urls: string }) => {
+        mutationFn: async (params: { hash: string, urls: string }) => {
           await QBittorrentClient.shared.requestAddTrackers(
             params.hash,
             params.urls,
@@ -644,7 +644,7 @@ export const useQBMutation = {
     editTrackers: (): UseMutationResult<
       void,
       Error,
-      { hash: string; origUrl: string; newUrl: string },
+      { hash: string, origUrl: string, newUrl: string },
       unknown
     > => {
       return useMutation({
@@ -671,11 +671,11 @@ export const useQBMutation = {
     removeTrackers: (): UseMutationResult<
       void,
       Error,
-      { hash: string; urls: string },
+      { hash: string, urls: string },
       unknown
     > => {
       return useMutation({
-        mutationFn: async (params: { hash: string; urls: string }) => {
+        mutationFn: async (params: { hash: string, urls: string }) => {
           await QBittorrentClient.shared.requestRemoveTrackers(
             params.hash,
             params.urls,
@@ -693,7 +693,7 @@ export const useQBMutation = {
     renameFile: (): UseMutationResult<
       void,
       Error,
-      { hash: string; oldPath: string; newPath: string },
+      { hash: string, oldPath: string, newPath: string },
       unknown
     > => {
       return useMutation({
@@ -720,7 +720,7 @@ export const useQBMutation = {
     renameFolder: (): UseMutationResult<
       void,
       Error,
-      { hash: string; oldPath: string; newPath: string },
+      { hash: string, oldPath: string, newPath: string },
       unknown
     > => {
       return useMutation({
@@ -857,8 +857,8 @@ export type MutationGroups = keyof typeof useQBMutation
 /**
  * Helper type to get all available actions for a specific group
  */
-export type MutationActions<TGroup extends MutationGroups> =
-  keyof (typeof useQBMutation)[TGroup]
+export type MutationActions<TGroup extends MutationGroups>
+  = keyof (typeof useQBMutation)[TGroup]
 
 /**
  * Convenience type aliases for commonly used mutation parameters

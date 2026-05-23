@@ -26,8 +26,8 @@ interface Props {
 }
 
 export function OnboardingFields(props: Props) {
-  const { control, getValues, useCurrentPath, showUseCurrentPath, validation } =
-    props
+  const { control, getValues, useCurrentPath, showUseCurrentPath, validation }
+    = props
   const { t } = useTranslation()
 
   return (
@@ -36,7 +36,7 @@ export function OnboardingFields(props: Props) {
         <div className="flex items-center gap-2">
           <Controller
             control={control}
-            name={'useCurrentPath'}
+            name="useCurrentPath"
             render={({ field }) => (
               <Checkbox
                 id="useCurrentPath"
@@ -59,12 +59,12 @@ export function OnboardingFields(props: Props) {
         <Label htmlFor="host">{t('onboarding.fields.host.label')}</Label>
         <Controller
           control={control}
-          name={'host'}
+          name="host"
           rules={{
             validate: (v: string) =>
-              getValues('useCurrentPath') ||
-              v.trim() !== '' ||
-              validation.hostMessage,
+              getValues('useCurrentPath')
+              || v.trim() !== ''
+              || validation.hostMessage,
           }}
           render={({ field, fieldState }) => (
             <Input
@@ -73,7 +73,7 @@ export function OnboardingFields(props: Props) {
               disabled={useCurrentPath}
               aria-invalid={Boolean(fieldState.error)}
               value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
+              onChange={e => field.onChange(e.target.value)}
               onBlur={(e) => {
                 field.onBlur()
                 saveFormFieldToStorage('host', e.target.value.trim())
@@ -87,15 +87,14 @@ export function OnboardingFields(props: Props) {
         <Label htmlFor="port">{t('onboarding.fields.port.label')}</Label>
         <Controller
           control={control}
-          name={'port'}
+          name="port"
           rules={{
             validate: (v: any) => {
-              if (getValues('useCurrentPath')) return true
-              if (v === undefined || v === null) return validation.portMessage
+              if (getValues('useCurrentPath')) { return true }
+              if (v === undefined || v === null) { return validation.portMessage }
               const n = Number(v)
-              if (Number.isNaN(n)) return validation.portMessage
-              if (n < validation.portMin || n > validation.portMax)
-                return validation.portMessage
+              if (Number.isNaN(n)) { return validation.portMessage }
+              if (n < validation.portMin || n > validation.portMax) { return validation.portMessage }
               return true
             },
           }}
@@ -132,7 +131,7 @@ export function OnboardingFields(props: Props) {
         </Label>
         <Controller
           control={control}
-          name={'username'}
+          name="username"
           rules={{
             validate: (v: string) =>
               v.trim() !== '' || validation.usernameMessage,
@@ -143,7 +142,7 @@ export function OnboardingFields(props: Props) {
               placeholder={t('onboarding.fields.username.placeholder')}
               aria-invalid={Boolean(fieldState.error)}
               value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
+              onChange={e => field.onChange(e.target.value)}
               onBlur={(e) => {
                 field.onBlur()
                 saveFormFieldToStorage('username', e.target.value.trim())
@@ -159,13 +158,13 @@ export function OnboardingFields(props: Props) {
         </Label>
         <Controller
           control={control}
-          name={'password'}
+          name="password"
           render={({ field }) => (
             <Input
               id="password"
               type="password"
               value={field.value}
-              onChange={(e) => field.onChange(e.target.value)}
+              onChange={e => field.onChange(e.target.value)}
               onBlur={(e) => {
                 field.onBlur()
                 saveFormFieldToStorage('password', e.target.value)
@@ -178,15 +177,15 @@ export function OnboardingFields(props: Props) {
       <div className="flex items-center gap-2">
         <Controller
           control={control}
-          name={'useHttps'}
+          name="useHttps"
           render={({ field }) => (
             <Checkbox
               id="useHttps"
               disabled={
-                (typeof window !== 'undefined' &&
-                  window.location.protocol === 'https:') ||
-                Boolean(useCurrentPath) ||
-                useCurrentPath
+                (typeof window !== 'undefined'
+                  && window.location.protocol === 'https:')
+                || Boolean(useCurrentPath)
+                || useCurrentPath
               }
               checked={Boolean(field.value)}
               onCheckedChange={(v) => {
@@ -204,7 +203,7 @@ export function OnboardingFields(props: Props) {
       <div className="flex items-center gap-2">
         <Controller
           control={control}
-          name={'rememberPassword'}
+          name="rememberPassword"
           render={({ field }) => (
             <Checkbox
               id="rememberPassword"

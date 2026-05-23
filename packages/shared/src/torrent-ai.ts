@@ -21,7 +21,7 @@ export interface TorrentAISeriesInfo {
   /**
    * Compact range representation for multi-episode packs (e.g., { from: 1, to: 2 } for E01–E02)
    */
-  episodeRange?: { from: number; to: number } | null
+  episodeRange?: { from: number, to: number } | null
   /**
    * Total episodes in the season when it can be inferred (optional)
    */

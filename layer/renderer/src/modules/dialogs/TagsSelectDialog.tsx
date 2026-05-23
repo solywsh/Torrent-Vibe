@@ -29,7 +29,7 @@ export const TagsSelectDialog: ModalComponent<TagsSelectDialogProps> = ({
   dismiss,
 }) => {
   const { t } = useTranslation()
-  const tags = useTorrentDataStore((state) => state.tags)
+  const tags = useTorrentDataStore(state => state.tags)
   const [selectedTags, setSelectedTags] = useState<string[]>(currentTags)
   const dialogTitle = title || t('dialogs.tags.title')
 
@@ -50,7 +50,7 @@ export const TagsSelectDialog: ModalComponent<TagsSelectDialogProps> = ({
   }, [currentTags, dismiss, onClose])
 
   const handleRemoveTag = useCallback((tag: string) => {
-    setSelectedTags((prev) => prev.filter((t) => t !== tag))
+    setSelectedTags(prev => prev.filter(t => t !== tag))
   }, [])
 
   return (
@@ -68,7 +68,7 @@ export const TagsSelectDialog: ModalComponent<TagsSelectDialogProps> = ({
           {/* Selected tags display */}
           {selectedTags.length > 0 && (
             <div className="mb-1.5 flex flex-wrap gap-1">
-              {selectedTags.map((tag) => (
+              {selectedTags.map(tag => (
                 <span
                   key={tag}
                   className="bg-fill text-text border border-border inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium"

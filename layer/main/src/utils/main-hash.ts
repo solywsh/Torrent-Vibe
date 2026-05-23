@@ -11,13 +11,14 @@ function listFilesRecursive(rootDir: string): string[] {
     let entries: Dirent[]
     try {
       entries = readdirSync(dir, { withFileTypes: true }) as Dirent[]
-    } catch {
+    }
+    catch {
       continue
     }
     for (const ent of entries) {
       const full = join(dir, ent.name)
-      if (ent.isDirectory()) stack.push(full)
-      else files.push(full)
+      if (ent.isDirectory()) { stack.push(full) }
+      else { files.push(full) }
     }
   }
   files.sort()
@@ -43,8 +44,8 @@ export function computeHashFromRoots(
 ): string {
   const all: string[] = []
   for (const r of roots) {
-    if (existsSync(r)) all.push(...listFilesRecursive(r))
+    if (existsSync(r)) { all.push(...listFilesRecursive(r)) }
   }
-  if (all.length === 0) return ''
+  if (all.length === 0) { return '' }
   return computeHashForFiles(all, baseDir)
 }

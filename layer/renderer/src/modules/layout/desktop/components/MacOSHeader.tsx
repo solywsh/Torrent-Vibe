@@ -32,7 +32,7 @@ export const MacOSHeader = ({
 
   // Torrent action handler
   const handleTorrentAction = async (action: 'pause' | 'resume' | 'delete') => {
-    if (!canInteract) return
+    if (!canInteract) { return }
 
     const hashes = hasSelection
       ? useTorrentDataStore.getState().selectedTorrents
@@ -56,12 +56,13 @@ export const MacOSHeader = ({
           break
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Failed to ${action} torrents:`, error)
     }
   }
   const providers = useDiscoverProviders()
-  const hasReadyProviders = providers.some((provider) => provider.ready)
+  const hasReadyProviders = providers.some(provider => provider.ready)
   const { t } = useTranslation()
   return (
     <header

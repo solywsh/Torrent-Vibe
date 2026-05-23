@@ -50,7 +50,7 @@ export const ResizableLayout = ({
   }, [])
 
   const onSeparatorMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!resizablePanel?.isVisible) return
+    if (!resizablePanel?.isVisible) { return }
 
     event.preventDefault()
     event.stopPropagation()

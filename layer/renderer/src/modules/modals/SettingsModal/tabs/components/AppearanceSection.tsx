@@ -69,7 +69,7 @@ const getReadableTextColor = (hexColor: string) => {
     const scaled = channel / 255
     return scaled <= 0.03928
       ? scaled / 12.92
-      : Math.pow((scaled + 0.055) / 1.055, 2.4)
+      : ((scaled + 0.055) / 1.055) ** 2.4
   }
 
   const luminance = 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
@@ -109,23 +109,27 @@ export const AppearanceSection = () => {
 
   const colorStyleItems: SegmentTabItem<AppColorStyle>[] = useMemo(
     () =>
-      COLOR_STYLE_OPTIONS.map((option) => ({
+      COLOR_STYLE_OPTIONS.map(option => ({
         value: option.id,
         label: t(option.labelKey),
         icon:
-          option.id === 'default' ? (
-            <i className="i-lucide-palette" />
-          ) : option.id === 'low' ? (
-            <i className="i-lucide-ice-cream" />
-          ) : (
-            <i className="i-lucide-contrast" />
-          ),
+          option.id === 'default'
+            ? (
+                <i className="i-lucide-palette" />
+              )
+            : option.id === 'low'
+              ? (
+                  <i className="i-lucide-ice-cream" />
+                )
+              : (
+                  <i className="i-lucide-contrast" />
+                ),
       })),
     [t],
   )
 
   const selectedColorStyle = COLOR_STYLE_OPTIONS.find(
-    (option) => option.id === colorStyle,
+    option => option.id === colorStyle,
   )
 
   return (
@@ -140,7 +144,7 @@ export const AppearanceSection = () => {
             variant="compact"
             items={appearanceItems}
             value={theme as ThemeMode}
-            onChange={(mode) => setTheme(mode)}
+            onChange={mode => setTheme(mode)}
           />
         </SettingField>
 
@@ -165,8 +169,8 @@ export const AppearanceSection = () => {
                   className={cn(
                     'relative size-7 rounded-full border border-border shadow-sm transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent',
                     'hover:scale-105',
-                    isSelected &&
-                      'ring-2 ring-offset-2 ring-accent scale-105 border-transparent',
+                    isSelected
+                    && 'ring-2 ring-offset-2 ring-accent scale-105 border-transparent',
                   )}
                   style={{ background: gradient }}
                   onClick={() => setAccentColor(preset.id)}
@@ -174,14 +178,16 @@ export const AppearanceSection = () => {
                   title={t(preset.labelKey)}
                 >
                   <span className="sr-only">{t(preset.labelKey)}</span>
-                  {isSelected ? (
-                    <span
-                      className="absolute inset-0 flex items-center justify-center text-sm"
-                      style={{ color: foreground }}
-                    >
-                      <i className="i-mingcute-check-fill" />
-                    </span>
-                  ) : null}
+                  {isSelected
+                    ? (
+                        <span
+                          className="absolute inset-0 flex items-center justify-center text-sm"
+                          style={{ color: foreground }}
+                        >
+                          <i className="i-mingcute-check-fill" />
+                        </span>
+                      )
+                    : null}
                 </button>
               )
             })}
@@ -199,33 +205,33 @@ export const AppearanceSection = () => {
               variant="compact"
               items={colorStyleItems}
               value={colorStyle}
-              onChange={(style) => setColorStyle(style)}
+              onChange={style => setColorStyle(style)}
               containerClassName="w-full"
               className="shadow-sm"
             />
-            {selectedColorStyle ? (
-              <p className="text-xs text-text-secondary">
-                {t(selectedColorStyle.descriptionKey)}
-              </p>
-            ) : null}
+            {selectedColorStyle
+              ? (
+                  <p className="text-xs text-text-secondary">
+                    {t(selectedColorStyle.descriptionKey)}
+                  </p>
+                )
+              : null}
           </div>
         </SettingField>
 
         <SettingSelectField
           label={t('general.appearance.language.label')}
           value={currentLanguage}
-          onValueChange={(language) =>
-            changeLanguage(language as MainSupportedLanguages)
-          }
+          onValueChange={language =>
+            changeLanguage(language as MainSupportedLanguages)}
           renderItems={() =>
-            supportedLanguages.map((lang) => (
+            supportedLanguages.map(lang => (
               <SelectItem key={lang} value={lang}>
                 <div className="flex items-center gap-2">
                   {t(`general.appearance.language.${lang}`)}
                 </div>
               </SelectItem>
-            ))
-          }
+            ))}
         />
       </SettingSectionCard>
     </div>

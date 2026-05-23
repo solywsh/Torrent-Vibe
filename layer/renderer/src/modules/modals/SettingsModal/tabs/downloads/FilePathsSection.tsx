@@ -18,21 +18,20 @@ export const FilePathsSection = ({
       <SettingInputField
         label={t('downloads.paths.defaultSavePath')}
         value={prefs.save_path ?? ''}
-        onChange={(v) => onPrefsChange({ save_path: v })}
+        onChange={v => onPrefsChange({ save_path: v })}
         placeholder="/downloads"
       />
 
       <SettingSectionCard
         title={t('downloads.paths.keepIncomplete')}
         enabled={Boolean(prefs.temp_path_enabled)}
-        onToggleEnabled={(v) =>
-          onPrefsChange({ temp_path_enabled: Boolean(v) })
-        }
+        onToggleEnabled={v =>
+          onPrefsChange({ temp_path_enabled: Boolean(v) })}
       >
         <SettingInputField
-          label={'Path'}
+          label="Path"
           value={prefs.temp_path ?? ''}
-          onChange={(v) => onPrefsChange({ temp_path: v })}
+          onChange={v => onPrefsChange({ temp_path: v })}
           placeholder="/downloads-temp"
         />
       </SettingSectionCard>
@@ -40,21 +39,20 @@ export const FilePathsSection = ({
       <SettingInputField
         label={t('downloads.paths.copyTorrentFiles')}
         value={prefs.export_dir ?? ''}
-        onChange={(v) => onPrefsChange({ export_dir: v })}
+        onChange={v => onPrefsChange({ export_dir: v })}
         placeholder="/downloads/.torrents"
       />
 
       <SettingSectionCard
         title={t('downloads.paths.copyFinishedFiles')}
         enabled={Boolean(prefs.export_dir_fin)}
-        onToggleEnabled={(v) =>
-          onPrefsChange({ export_dir_fin: v ? '/downloads/torrents' : '' })
-        }
+        onToggleEnabled={v =>
+          onPrefsChange({ export_dir_fin: v ? '/downloads/torrents' : '' })}
       >
         <SettingInputField
-          label={'Path'}
+          label="Path"
           value={prefs.export_dir_fin ?? ''}
-          onChange={(v) => onPrefsChange({ export_dir_fin: v })}
+          onChange={v => onPrefsChange({ export_dir_fin: v })}
           placeholder="/downloads/torrents"
         />
       </SettingSectionCard>

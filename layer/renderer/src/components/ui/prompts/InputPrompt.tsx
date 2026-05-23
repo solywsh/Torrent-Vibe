@@ -50,7 +50,8 @@ export const InputPrompt: ModalComponent<InputPromptOptions> = ({
   const handleCancel = async () => {
     try {
       await onCancel?.()
-    } finally {
+    }
+    finally {
       dismiss()
     }
   }
@@ -59,7 +60,8 @@ export const InputPrompt: ModalComponent<InputPromptOptions> = ({
     try {
       setSubmitting(true)
       await onConfirm?.(inputValue)
-    } finally {
+    }
+    finally {
       setSubmitting(false)
       Modal.dismiss(modalId)
     }
@@ -69,7 +71,8 @@ export const InputPrompt: ModalComponent<InputPromptOptions> = ({
     if (e.key === 'Enter') {
       e.preventDefault()
       handleConfirm()
-    } else if (e.key === 'Escape') {
+    }
+    else if (e.key === 'Escape') {
       e.preventDefault()
       handleCancel()
     }
@@ -79,16 +82,18 @@ export const InputPrompt: ModalComponent<InputPromptOptions> = ({
     <div>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
-        {description ? (
-          <DialogDescription className="text-text-secondary">
-            {description}
-          </DialogDescription>
-        ) : null}
+        {description
+          ? (
+              <DialogDescription className="text-text-secondary">
+                {description}
+              </DialogDescription>
+            )
+          : null}
       </DialogHeader>
       <div className="mt-4">
         <Input
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={e => setInputValue(e.target.value)}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
           autoFocus

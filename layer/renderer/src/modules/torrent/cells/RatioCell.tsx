@@ -8,7 +8,7 @@ interface RatioCellProps {
 }
 
 const formatRatio = (ratio: number): string => {
-  if (ratio < 0) return '∞'
+  if (ratio < 0) { return '∞' }
   return ratio.toFixed(2)
 }
 
@@ -18,13 +18,13 @@ export const RatioCell = ({ rowIndex }: RatioCellProps) => {
   // Use granular selector for just the ratio data we need
   const ratio = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentRatio(state, deferredRowIndex).ratio,
+      state => selectTorrentRatio(state, deferredRowIndex).ratio,
       [deferredRowIndex],
     ),
   )
 
   return (
-    <div className="flex items-center justify-end px-2 absolute inset-x-4 top-4">
+    <div className="flex items-center justify-start px-2 absolute inset-x-4 top-4">
       <span className="text-sm tabular-nums text-text">
         {formatRatio(ratio)}
       </span>

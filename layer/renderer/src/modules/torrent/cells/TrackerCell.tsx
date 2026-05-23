@@ -16,23 +16,24 @@ export const TrackerCell = ({ rowIndex }: TrackerCellProps) => {
 
   const tracker = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentTracker(state, deferredRowIndex),
+      state => selectTorrentTracker(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
 
   const getTrackerDomain = (url: string) => {
-    if (!url) return '-'
+    if (!url) { return '-' }
     try {
       const domain = new URL(url).hostname
       return domain.replace(/^www\./, '')
-    } catch {
+    }
+    catch {
       return url.length > 20 ? `${url.slice(0, 17)}...` : url
     }
   }
 
   return (
-    <div className="flex items-center px-2 py-4 text-sm text-text truncate">
+    <div className="flex items-center justify-start px-2 py-4 text-sm text-text truncate">
       <span title={tracker}>{getTrackerDomain(tracker)}</span>
     </div>
   )

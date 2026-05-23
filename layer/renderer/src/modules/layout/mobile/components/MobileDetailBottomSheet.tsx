@@ -24,14 +24,15 @@ const MobileDetailContent: BottomSheetComponent<MobileDetailContentProps> = ({
 }) => {
   const selectedCard = useAtomValue(selectedCardAtom)
   const setActiveTorrentHash = useTorrentTableStore(
-    (state) => state.setActiveTorrentHash,
+    state => state.setActiveTorrentHash,
   )
 
   // Sync the torrent table store when card selection changes
   useEffect(() => {
     if (selectedCard) {
       setActiveTorrentHash(selectedCard)
-    } else {
+    }
+    else {
       setActiveTorrentHash(null)
     }
   }, [selectedCard, setActiveTorrentHash])

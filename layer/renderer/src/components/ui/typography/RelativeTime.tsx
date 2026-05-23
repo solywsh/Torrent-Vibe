@@ -11,14 +11,14 @@ export interface RelativeTimeProps {
   className?: string
 }
 
-type RelativeUnit =
-  | 'second'
-  | 'minute'
-  | 'hour'
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'year'
+type RelativeUnit
+  = | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | 'week'
+    | 'month'
+    | 'year'
 
 interface RelativeComputationResult {
   value: number
@@ -49,22 +49,28 @@ function computeRelative(
   if (absSeconds < MINUTE) {
     unit = 'second'
     unitSeconds = SECOND
-  } else if (absSeconds < HOUR) {
+  }
+  else if (absSeconds < HOUR) {
     unit = 'minute'
     unitSeconds = MINUTE
-  } else if (absSeconds < DAY) {
+  }
+  else if (absSeconds < DAY) {
     unit = 'hour'
     unitSeconds = HOUR
-  } else if (absSeconds < WEEK) {
+  }
+  else if (absSeconds < WEEK) {
     unit = 'day'
     unitSeconds = DAY
-  } else if (absSeconds < MONTH) {
+  }
+  else if (absSeconds < MONTH) {
     unit = 'week'
     unitSeconds = WEEK
-  } else if (absSeconds < YEAR) {
+  }
+  else if (absSeconds < YEAR) {
     unit = 'month'
     unitSeconds = MONTH
-  } else {
+  }
+  else {
     unit = 'year'
     unitSeconds = YEAR
   }
@@ -105,7 +111,7 @@ export function RelativeTime({
   }, [isValid, nowMs, timestampSeconds])
 
   useEffect(() => {
-    if (!isValid) return
+    if (!isValid) { return }
     const id = setTimeout(() => setNowMs(Date.now()), nextUpdateInMs)
     return () => clearTimeout(id)
   }, [isValid, nextUpdateInMs])
@@ -121,12 +127,13 @@ export function RelativeTime({
         style,
         numeric,
       })
-    } catch {
+    }
+    catch {
       return new Intl.RelativeTimeFormat('en', { style, numeric })
     }
   }, [i18n.language, numeric, style])
 
-  if (!isValid) return <span className={className}>-</span>
+  if (!isValid) { return <span className={className}>-</span> }
 
   return <span className={className}>{formatter.format(value, unit)}</span>
 }

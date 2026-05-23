@@ -26,7 +26,7 @@ export const ServerItem = memo(({ server, isActive }: ServerItemProps) => {
   const { t } = useTranslation()
   const { switchTo } = useServerSwitching()
 
-  const health = useServerHealthStore((s) => s.results[server.id])
+  const health = useServerHealthStore(s => s.results[server.id])
   const remembered = hasServerPassword(server.id)
 
   const handleActivate = async () => {
@@ -74,7 +74,7 @@ export const ServerItem = memo(({ server, isActive }: ServerItemProps) => {
   }
 
   const getStatusTitle = () => {
-    if (!health) return t('servers.status.unknown')
+    if (!health) { return t('servers.status.unknown') }
     return `${health.status} · ${health.responseTime}ms${health.version ? ` · v${health.version}` : ''}`
   }
 
@@ -98,11 +98,21 @@ export const ServerItem = memo(({ server, isActive }: ServerItemProps) => {
         </div>
         <span className="text-xs text-text-secondary mt-1">
           <span>
-            {server.config.baseUrl ||
-              `${server.config.useHttps ? 'https' : 'http'}://${server.config.host}:${server.config.port}`}
+            {server.config.baseUrl
+              || `${server.config.useHttps ? 'https' : 'http'}://${server.config.host}:${server.config.port}`}
           </span>
-          <span> · {server.config.username}</span>
-          {remembered && <span> · {t('servers.status.passwordSaved')}</span>}
+          <span>
+            {' '}
+            ·
+            {server.config.username}
+          </span>
+          {remembered && (
+            <span>
+              {' '}
+              ·
+              {t('servers.status.passwordSaved')}
+            </span>
+          )}
         </span>
       </div>
 

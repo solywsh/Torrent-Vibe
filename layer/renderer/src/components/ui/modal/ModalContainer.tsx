@@ -20,7 +20,7 @@ export const ModalContainer = () => {
   return (
     <div id="global-modal-container">
       <AnimatePresence initial={false}>
-        {items.map((item) => (
+        {items.map(item => (
           <ModalWrapper key={item.id} item={item} />
         ))}
       </AnimatePresence>
@@ -56,7 +56,7 @@ const ModalWrapper = ({ item }: { item: ModalItem }) => {
       const items = jotaiStore.get(modalItemsAtom)
       jotaiStore.set(
         modalItemsAtom,
-        items.filter((m) => m.id !== item.id),
+        items.filter(m => m.id !== item.id),
       )
     }
   })
@@ -124,7 +124,7 @@ const ModalWrapper = ({ item }: { item: ModalItem }) => {
       <DialogContent
         ref={modalRef}
         onInteractOutside={(e) => {
-          if (disableOverlayClickToClose) e.preventDefault()
+          if (disableOverlayClickToClose) { e.preventDefault() }
         }}
         dragElastic={0}
         dragListener={false}

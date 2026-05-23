@@ -15,7 +15,7 @@ export const ServerDropdownOption: React.FC<ServerDropdownOptionProps> = ({
   serverName,
   hostLabel,
 }) => {
-  const serverHealth = useServerHealthStore((s) => s.results[serverId])
+  const serverHealth = useServerHealthStore(s => s.results[serverId])
 
   const variant = healthToVariant(serverHealth)
   const title = healthToTitle(serverHealth)

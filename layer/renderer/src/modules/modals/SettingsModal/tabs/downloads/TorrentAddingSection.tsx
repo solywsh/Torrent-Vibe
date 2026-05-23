@@ -21,21 +21,20 @@ export const TorrentAddingSection = ({
         id="create_subfolder_enabled"
         label={t('downloads.torrentAdding.createSubfolder')}
         checked={Boolean(prefs.create_subfolder_enabled)}
-        onCheckedChange={(v) =>
-          onPrefsChange({ create_subfolder_enabled: Boolean(v) })
-        }
+        onCheckedChange={v =>
+          onPrefsChange({ create_subfolder_enabled: Boolean(v) })}
       />
       <SettingSwitchField
         id="start-automatically"
         label={t('downloads.torrentAdding.startAutomatically')}
         checked={startAutomatically}
-        onCheckedChange={(v) => onPrefsChange({ start_paused_enabled: !v })}
+        onCheckedChange={v => onPrefsChange({ start_paused_enabled: !v })}
       />
       <SettingSwitchField
         id="auto_delete_mode"
         label={t('downloads.torrentAdding.deleteTorrentFiles')}
         checked={Boolean(prefs.auto_delete_mode)}
-        onCheckedChange={(v) => onPrefsChange({ auto_delete_mode: v ? 1 : 0 })}
+        onCheckedChange={v => onPrefsChange({ auto_delete_mode: v ? 1 : 0 })}
       />
     </SettingSectionCard>
   )

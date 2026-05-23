@@ -40,8 +40,8 @@ class ElectronBootstrap {
     app.commandLine.appendSwitch('disable-web-security')
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
-    this.isDevelopment =
-      process.env.NODE_ENV === 'development' || !app.isPackaged
+    this.isDevelopment
+      = process.env.NODE_ENV === 'development' || !app.isPackaged
 
     this.options = {
       devServerPort: 5173, // Default Vite dev server port
@@ -127,11 +127,12 @@ class ElectronBootstrap {
       if (this.isDevelopment && this.options.enableDevTools) {
         try {
           // Dynamic import so build does not fail if dependency is missing in production
-          const { default: installExtension, REACT_DEVELOPER_TOOLS } =
-            await import('electron-devtools-installer')
+          const { default: installExtension, REACT_DEVELOPER_TOOLS }
+            = await import('electron-devtools-installer')
           await installExtension(REACT_DEVELOPER_TOOLS)
           console.info('React DevTools installed')
-        } catch (e) {
+        }
+        catch (e) {
           // Non-fatal if not installed or fails
           console.warn('Failed to install React DevTools:', e)
         }
@@ -172,13 +173,15 @@ class ElectronBootstrap {
       // Cleanup stale update resources at startup (best-effort)
       try {
         await UpdateService.shared.cleanup(2)
-      } catch (e) {
+      }
+      catch (e) {
         console.warn('Startup cleanup encountered issues:', e)
       }
 
       // Prioritized update flow: renderer hot-update first, then app updater
       await services.app.checkForUpdate()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to initialize Electron application:', error)
       await this.showErrorDialog('Initialization Error', String(error))
       app.quit()

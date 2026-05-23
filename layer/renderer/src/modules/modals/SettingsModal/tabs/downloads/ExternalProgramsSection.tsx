@@ -27,8 +27,8 @@ export const ExternalProgramsSection = ({
         onCheckedChange={() => {}}
       />
       <SettingInputField
-        label={'Command'}
-        value={''}
+        label="Command"
+        value=""
         onChange={() => {}}
         placeholder="/path/to/program --args"
         disabled
@@ -42,12 +42,12 @@ export const ExternalProgramsSection = ({
       <SettingSectionCard
         title={t('downloads.programs.onComplete')}
         enabled={Boolean(prefs.autorun_enabled)}
-        onToggleEnabled={(v) => onPrefsChange({ autorun_enabled: Boolean(v) })}
+        onToggleEnabled={v => onPrefsChange({ autorun_enabled: Boolean(v) })}
       >
         <SettingInputField
-          label={'Command'}
+          label="Command"
           value={prefs.autorun_program ?? ''}
-          onChange={(v) => onPrefsChange({ autorun_program: v })}
+          onChange={v => onPrefsChange({ autorun_program: v })}
           placeholder="/path/to/program --args"
         />
       </SettingSectionCard>

@@ -13,8 +13,8 @@ type UseQBittorrentPreferencesOptions = {
 export function useQBittorrentPreferences(
   options?: UseQBittorrentPreferencesOptions,
 ) {
-  const { data, isLoading, error, refetch } =
-    useQBQuery.qbittorrentPreferences()
+  const { data, isLoading, error, refetch }
+    = useQBQuery.qbittorrentPreferences()
   const mutation = useQBMutation.qbittorrent.setPreferences()
 
   useEffect(() => {
@@ -34,7 +34,8 @@ export function useQBittorrentPreferences(
     try {
       await mutation.mutateAsync(newPrefs)
       options?.onSaveSuccess?.()
-    } catch (err) {
+    }
+    catch (err) {
       options?.onSaveError?.(err)
       throw err
     }

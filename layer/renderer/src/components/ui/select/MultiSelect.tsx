@@ -43,7 +43,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
   const handleToggleOption = useCallback(
     (option: string) => {
       const newValue = value.includes(option)
-        ? value.filter((v) => v !== option)
+        ? value.filter(v => v !== option)
         : [...value, option]
       onChange?.(newValue)
     },
@@ -69,9 +69,9 @@ export const MultiSelect: FC<MultiSelectProps> = ({
 
   // Close when clicking outside
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) { return }
     const handlePointerDown = (e: MouseEvent) => {
-      if (!containerRef.current) return
+      if (!containerRef.current) { return }
       if (!containerRef.current.contains(e.target as Node)) {
         setIsOpen(false)
       }
@@ -91,7 +91,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
       {/* Trigger button (aligned with SelectTrigger) */}
       <button
         type="button"
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={() => setIsOpen(v => !v)}
         disabled={disabled}
         className={cn(
           'flex w-full items-center justify-between whitespace-nowrap rounded-lg bg-transparent',
@@ -140,7 +140,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                   <div className="flex gap-1">
                     <Input
                       value={customValue}
-                      onChange={(e) => setCustomValue(e.target.value)}
+                      onChange={e => setCustomValue(e.target.value)}
                       onKeyDown={handleKeyDown}
                       placeholder="Add custom tag..."
                       inputClassName="bg-transparent border-transparent appearance-none shadow-none h-7 px-0 !ring-0 !border-0"
@@ -152,8 +152,8 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                       className="rounded-md h-7"
                       onClick={handleAddCustom}
                       disabled={
-                        !customValue.trim() ||
-                        value.includes(customValue.trim())
+                        !customValue.trim()
+                        || value.includes(customValue.trim())
                       }
                     >
                       Add
@@ -164,37 +164,39 @@ export const MultiSelect: FC<MultiSelectProps> = ({
 
               {/* Options */}
               <div className="py-0.5">
-                {options.length === 0 ? (
-                  <div className="px-2 py-1.5 text-sm text-text-secondary">
-                    No tags available
-                  </div>
-                ) : (
-                  options.map((option) => {
-                    const selected = value.includes(option)
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => handleToggleOption(option)}
-                        className={cn(
-                          'cursor-menu focus:bg-accent focus:text-white relative flex w-full select-none items-center rounded-[5px] px-2.5 py-1 text-left text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-                          'focus-within:outline-transparent',
-                          'h-[28px]',
-                          selected
-                            ? 'bg-accent text-white'
-                            : 'hover:bg-accent hover:text-white',
-                        )}
-                      >
-                        <span className="pr-5">{option}</span>
-                        {selected && (
-                          <span className="absolute right-2 flex size-3.5 items-center justify-center">
-                            <i className="i-mingcute-check-fill size-3" />
-                          </span>
-                        )}
-                      </button>
+                {options.length === 0
+                  ? (
+                      <div className="px-2 py-1.5 text-sm text-text-secondary">
+                        No tags available
+                      </div>
                     )
-                  })
-                )}
+                  : (
+                      options.map((option) => {
+                        const selected = value.includes(option)
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => handleToggleOption(option)}
+                            className={cn(
+                              'cursor-menu focus:bg-accent focus:text-white relative flex w-full select-none items-center rounded-[5px] px-2.5 py-1 text-left text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+                              'focus-within:outline-transparent',
+                              'h-[28px]',
+                              selected
+                                ? 'bg-accent text-white'
+                                : 'hover:bg-accent hover:text-white',
+                            )}
+                          >
+                            <span className="pr-5">{option}</span>
+                            {selected && (
+                              <span className="absolute right-2 flex size-3.5 items-center justify-center">
+                                <i className="i-mingcute-check-fill size-3" />
+                              </span>
+                            )}
+                          </button>
+                        )
+                      })
+                    )}
               </div>
             </div>
           </m.div>

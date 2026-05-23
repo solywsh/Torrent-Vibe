@@ -24,7 +24,7 @@ const mapTorrentToTorrentInfo = (torrent: Torrent): TorrentInfo => ({
   seq_dl: torrent.seq_dl || false,
   super_seeding: false,
   time_active: 0,
-  // eslint-disable-next-line unicorn/explicit-length-check
+
   total_size: torrent.total_size || torrent.size,
   tracker: '',
   isPrivate: false,
@@ -124,7 +124,7 @@ export class TorrentActions {
 
   async fetchTorrents(): Promise<TorrentInfo[]> {
     const result = await QBittorrentClient.shared.listTorrents()
-    const torrents = result.map((torrent) => mapTorrentToTorrentInfo(torrent))
+    const torrents = result.map(torrent => mapTorrentToTorrentInfo(torrent))
 
     torrentDataStoreSetters.setTorrents(torrents)
     torrentDataStoreSetters.updateLastFetched()
@@ -166,16 +166,16 @@ export class TorrentActions {
   async pauseTorrents(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
 
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       // Optimistic update
       useTorrentDataStore.setState((state) => {
         targetHashes.forEach((hash) => {
-          const torrent = state.torrents.find((t) => t.hash === hash)
+          const torrent = state.torrents.find(t => t.hash === hash)
           if (
-            torrent &&
-            !['pausedDL', 'stoppedDL', 'stoppedUP'].includes(torrent.state)
+            torrent
+            && !['pausedDL', 'stoppedDL', 'stoppedUP'].includes(torrent.state)
           ) {
             torrent.state = 'pausedDL'
           }
@@ -192,7 +192,8 @@ export class TorrentActions {
       toast.success(
         t('messages.torrentsPaused', { count: targetHashes.length }),
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to pause torrents:', error)
     }
   }
@@ -200,16 +201,16 @@ export class TorrentActions {
   async resumeTorrents(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
 
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       // Optimistic update
       useTorrentDataStore.setState((state) => {
         targetHashes.forEach((hash) => {
-          const torrent = state.torrents.find((t) => t.hash === hash)
+          const torrent = state.torrents.find(t => t.hash === hash)
           if (
-            torrent &&
-            ['pausedDL', 'stoppedDL', 'stoppedUP'].includes(torrent.state)
+            torrent
+            && ['pausedDL', 'stoppedDL', 'stoppedUP'].includes(torrent.state)
           ) {
             torrent.state = torrent.progress < 1 ? 'downloading' : 'uploading'
           }
@@ -226,7 +227,8 @@ export class TorrentActions {
       toast.success(
         t('messages.torrentsResumed', { count: targetHashes.length }),
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to resume torrents:', error)
     }
   }
@@ -234,20 +236,21 @@ export class TorrentActions {
   async deleteTorrents(hashes?: string[], deleteFiles = false): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
 
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       // Optimistic update - remove from local state
       useTorrentDataStore.setState((state) => {
         state.torrents = state.torrents.filter(
-          (t) => !targetHashes.includes(t.hash),
+          t => !targetHashes.includes(t.hash),
         )
       })
 
       await QBittorrentClient.shared.removeTorrent(targetHashes, deleteFiles)
       // Clear selection after delete since torrents no longer exist
       torrentDataStoreSetters.clearSelection()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to delete torrents:', error)
     }
   }
@@ -256,7 +259,8 @@ export class TorrentActions {
     try {
       const categories = await QBittorrentClient.shared.requestCategories()
       torrentDataStoreSetters.setCategories(categories)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to fetch categories:', error)
     }
   }
@@ -269,7 +273,7 @@ export class TorrentActions {
 
   async forceResumeTorrents(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       // Use force start API which is specifically designed for forcing torrents to start
@@ -285,7 +289,8 @@ export class TorrentActions {
       )
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to force resume torrents:', error)
     }
   }
@@ -295,14 +300,15 @@ export class TorrentActions {
     location?: string,
   ): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || !location) return
+    if (targetHashes.length === 0 || !location) { return }
 
     try {
       await QBittorrentClient.shared.setTorrentLocation(targetHashes, location)
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set torrent location:', error)
     }
   }
@@ -312,7 +318,8 @@ export class TorrentActions {
       await QBittorrentClient.shared.setTorrentName(hash, newName)
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to rename torrent:', error)
     }
   }
@@ -326,7 +333,8 @@ export class TorrentActions {
       await QBittorrentClient.shared.renameFile(hash, oldPath, newPath)
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to rename file:', error)
     }
   }
@@ -336,21 +344,22 @@ export class TorrentActions {
     category?: string,
   ): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.setTorrentCategory(targetHashes, category)
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set torrent category:', error)
     }
   }
 
   async addTorrentTags(hashes?: string[], tags?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || !tags || tags.length === 0) return
+    if (targetHashes.length === 0 || !tags || tags.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.addTorrentTags(
@@ -360,14 +369,15 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to add torrent tags:', error)
     }
   }
 
   async removeTorrentTags(hashes?: string[], tags?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       const tagsToRemove = tags && tags.length > 0 ? tags.join(',') : undefined
@@ -378,7 +388,8 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to remove torrent tags:', error)
     }
   }
@@ -388,7 +399,7 @@ export class TorrentActions {
     limit?: number,
   ): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || limit === undefined) return
+    if (targetHashes.length === 0 || limit === undefined) { return }
 
     try {
       await QBittorrentClient.shared.setTorrentDownloadLimit(
@@ -398,7 +409,8 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set torrent download limit:', error)
     }
   }
@@ -408,60 +420,64 @@ export class TorrentActions {
     limit?: number,
   ): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || limit === undefined) return
+    if (targetHashes.length === 0 || limit === undefined) { return }
 
     try {
       await QBittorrentClient.shared.setTorrentUploadLimit(targetHashes, limit)
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set torrent upload limit:', error)
     }
   }
 
   async recheckTorrents(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.recheckTorrent(targetHashes)
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to recheck torrents:', error)
     }
   }
 
   async reannounceTorrents(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.reannounceTorrent(targetHashes)
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to reannounce torrents:', error)
     }
   }
 
   async copyMagnetLink(hash: string): Promise<void> {
     try {
-      const torrent = this.state.torrents.find((t) => t.hash === hash)
+      const torrent = this.state.torrents.find(t => t.hash === hash)
       if (torrent?.magnet_uri) {
         await navigator.clipboard?.writeText(torrent.magnet_uri)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to copy magnet link:', error)
     }
   }
 
   async setSuperSeeding(hashes?: string[], enabled?: boolean): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || enabled === undefined) return
+    if (targetHashes.length === 0 || enabled === undefined) { return }
 
     try {
       await QBittorrentClient.shared.requestSetSuperSeeding(
@@ -471,35 +487,38 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set super seeding:', error)
     }
   }
 
   async toggleSequentialDownload(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.requestToggleSequentialDownload(
         targetHashes,
       )
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to toggle sequential download:', error)
     }
   }
 
   async toggleFirstLastPiecePriority(hashes?: string[]): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.requestToggleFirstLastPiecePriority(
         targetHashes,
       )
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to toggle first/last piece priority:', error)
     }
   }
@@ -511,7 +530,7 @@ export class TorrentActions {
     inactiveSeedingTimeLimit?: number,
   ): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0) return
+    if (targetHashes.length === 0) { return }
 
     try {
       await QBittorrentClient.shared.requestSetShareLimits(
@@ -523,14 +542,15 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set share limits:', error)
     }
   }
 
   async setAutoManagement(hashes?: string[], enabled?: boolean): Promise<void> {
     const targetHashes = hashes || this.state.selectedTorrents
-    if (targetHashes.length === 0 || enabled === undefined) return
+    if (targetHashes.length === 0 || enabled === undefined) { return }
 
     try {
       await QBittorrentClient.shared.requestSetAutoManagement(
@@ -540,7 +560,8 @@ export class TorrentActions {
       // Don't clear selection to maintain user context
       // Refresh data
       await this.fetchTorrents()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to set auto management:', error)
     }
   }

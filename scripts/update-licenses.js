@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-empty */
 
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -57,7 +56,8 @@ async function checkLicenseDataExists() {
       `Found existing license data with ${licenseData.totalLibraries} libraries`,
     )
     return true
-  } catch (error) {
+  }
+  catch (error) {
     logError(`Failed to parse existing license data: ${error.message}`)
     return false
   }
@@ -67,7 +67,7 @@ function createTempScript(targetLabel) {
   const checkLicensesPath = path.join(PROJECT_ROOT, 'scripts/check-licenses.js')
   const originalScript = fs.readFileSync(checkLicensesPath, 'utf8')
   let modifiedScript = originalScript.replace(
-    "const OUTPUT_DIR = 'docs/licenses'",
+    'const OUTPUT_DIR = \'docs/licenses\'',
     `const OUTPUT_DIR = '${path.join(PROJECT_ROOT, 'docs/licenses')}'`,
   )
 
@@ -75,20 +75,20 @@ function createTempScript(targetLabel) {
     // Change all output file names to electron-specific variants to avoid overwriting renderer files
     modifiedScript = modifiedScript
       .replace(
-        "const COMPLIANCE_FILE = path.join(OUTPUT_DIR, 'LICENSE_COMPLIANCE.md')",
-        "const COMPLIANCE_FILE = path.join(OUTPUT_DIR, 'LICENSE_COMPLIANCE-electron.md')",
+        'const COMPLIANCE_FILE = path.join(OUTPUT_DIR, \'LICENSE_COMPLIANCE.md\')',
+        'const COMPLIANCE_FILE = path.join(OUTPUT_DIR, \'LICENSE_COMPLIANCE-electron.md\')',
       )
       .replace(
-        "const APP_DISPLAY_FILE = path.join(OUTPUT_DIR, 'OPEN_SOURCE_LICENSES.md')",
-        "const APP_DISPLAY_FILE = path.join(OUTPUT_DIR, 'OPEN_SOURCE_LICENSES-electron.md')",
+        'const APP_DISPLAY_FILE = path.join(OUTPUT_DIR, \'OPEN_SOURCE_LICENSES.md\')',
+        'const APP_DISPLAY_FILE = path.join(OUTPUT_DIR, \'OPEN_SOURCE_LICENSES-electron.md\')',
       )
       .replace(
-        "const JSON_FILE = path.join(OUTPUT_DIR, 'licenses.json')",
-        "const JSON_FILE = path.join(OUTPUT_DIR, 'licenses-electron.json')",
+        'const JSON_FILE = path.join(OUTPUT_DIR, \'licenses.json\')',
+        'const JSON_FILE = path.join(OUTPUT_DIR, \'licenses-electron.json\')',
       )
       .replace(
-        "const APP_JSON_FILE = path.join(OUTPUT_DIR, 'app-licenses.json')",
-        "const APP_JSON_FILE = path.join(OUTPUT_DIR, 'app-licenses-electron.json')",
+        'const APP_JSON_FILE = path.join(OUTPUT_DIR, \'app-licenses.json\')',
+        'const APP_JSON_FILE = path.join(OUTPUT_DIR, \'app-licenses-electron.json\')',
       )
   }
 
@@ -136,15 +136,18 @@ async function runLicenseCheck() {
     console.info(outMain)
 
     return true
-  } catch (error) {
+  }
+  catch (error) {
     logError(`License check failed: ${error.message}`)
-    if (error.stdout) console.info('STDOUT:', error.stdout)
-    if (error.stderr) console.info('STDERR:', error.stderr)
+    if (error.stdout) { console.info('STDOUT:', error.stdout) }
+    if (error.stderr) { console.info('STDERR:', error.stderr) }
     return false
-  } finally {
+  }
+  finally {
     try {
       process.chdir(originalCwd)
-    } catch {}
+    }
+    catch {}
   }
 }
 
@@ -174,16 +177,16 @@ async function validateLicenseData() {
     }
 
     if (
-      !Array.isArray(licenseData.licenses) ||
-      licenseData.licenses.length === 0
+      !Array.isArray(licenseData.licenses)
+      || licenseData.licenses.length === 0
     ) {
       logError('No licenses found in license data')
       return false
     }
 
     if (
-      !Array.isArray(licenseData.licenseGroups) ||
-      licenseData.licenseGroups.length === 0
+      !Array.isArray(licenseData.licenseGroups)
+      || licenseData.licenseGroups.length === 0
     ) {
       logError('No license groups found in license data')
       return false
@@ -211,7 +214,8 @@ async function validateLicenseData() {
       })
 
     return true
-  } catch (error) {
+  }
+  catch (error) {
     logError(`Failed to validate license data: ${error.message}`)
     return false
   }
@@ -252,7 +256,8 @@ async function validateElectronLicenseData() {
     logInfo(`  - Total libraries: ${licenseData.totalLibraries}`)
     logInfo(`  - License types: ${licenseData.licenseGroups.length}`)
     return true
-  } catch (error) {
+  }
+  catch (error) {
     logError(`Failed to validate Electron license data: ${error.message}`)
     return false
   }
@@ -306,7 +311,8 @@ async function checkAboutTabIntegration() {
       `License data usage found in AboutTab component (${usageFound} patterns matched)`,
     )
     return true
-  } catch (error) {
+  }
+  catch (error) {
     logError(`Failed to check AboutTab integration: ${error.message}`)
     return false
   }
@@ -355,7 +361,8 @@ async function main() {
   logInfo('  ✅ License data generated and validated')
   if (integrationSuccess) {
     logInfo('  ✅ AboutTab component integration verified')
-  } else {
+  }
+  else {
     logWarning('  ⚠️ AboutTab integration requires attention (see logs above)')
   }
   logInfo('  📄 License files updated in docs/licenses/')

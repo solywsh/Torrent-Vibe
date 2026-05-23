@@ -26,31 +26,38 @@ export const HeaderCell = ({
 }: HeaderCellProps) => {
   const { t } = useTranslation()
   const handleSort = () => {
-    if (!onSort || !sortable || columnKey === 'select') return
+    if (!onSort || !sortable || columnKey === 'select') { return }
 
-    const newDirection =
-      sortKey === columnKey && sortDirection === 'asc' ? 'desc' : 'asc'
+    const newDirection
+      = sortKey === columnKey && sortDirection === 'asc' ? 'desc' : 'asc'
     onSort(columnKey as keyof TorrentInfo, newDirection)
   }
 
   const getSortIcon = () => {
-    if (!sortable || columnKey === 'select') return null
+    if (!sortable || columnKey === 'select') { return null }
 
-    if (sortKey !== columnKey) {
-      return null
-    }
-    return sortDirection === 'asc' ? (
-      <i className="i-mingcute-arrow-up-line !text-accent shrink-0" />
-    ) : (
-      <i className="i-mingcute-arrow-down-line !text-accent shrink-0" />
+    const isActive = sortKey === columnKey
+    const iconClass
+      = isActive && sortDirection === 'desc'
+        ? 'i-mingcute-arrow-down-line'
+        : 'i-mingcute-arrow-up-line'
+
+    return (
+      <i
+        aria-hidden={!isActive}
+        className={clsxm(
+          iconClass,
+          'shrink-0 !text-accent',
+          !isActive && 'invisible',
+        )}
+      />
     )
   }
 
-  const alignmentClass = {
-    left: 'justify-start',
-    center: 'justify-center',
-    right: 'justify-end',
-  }[align]
+  // Headers are always centered regardless of the cell content alignment.
+  // The `align` prop is preserved on the API but intentionally ignored here.
+  void align
+  const alignmentClass = 'justify-center'
 
   return (
     <div
@@ -59,20 +66,22 @@ export const HeaderCell = ({
         cellClassName,
       )}
     >
-      {sortable && onSort ? (
-        <button
-          type="button"
-          onClick={handleSort}
-          className={`flex items-center w-full ${alignmentClass} gap-2 text-sm font-semibold text-text-secondary hover:text-accent transition-colors`}
-        >
-          <span>{t(label)}</span>
-          {getSortIcon()}
-        </button>
-      ) : (
-        <span className="text-sm font-semibold text-text-secondary">
-          {t(label)}
-        </span>
-      )}
+      {sortable && onSort
+        ? (
+            <button
+              type="button"
+              onClick={handleSort}
+              className={`flex items-center w-full ${alignmentClass} gap-2 text-sm font-semibold text-text-secondary hover:text-accent transition-colors`}
+            >
+              <span>{t(label)}</span>
+              {getSortIcon()}
+            </button>
+          )
+        : (
+            <span className="text-sm font-semibold text-text-secondary">
+              {t(label)}
+            </span>
+          )}
     </div>
   )
 }

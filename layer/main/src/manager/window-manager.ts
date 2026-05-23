@@ -36,6 +36,7 @@ export class WindowManager implements IWindowManager {
     onWindowReady?: (window: BrowserWindow) => void
     onWindowClosed?: () => void
   }
+
   private isInitialized = false
 
   private currentRendererInfo: {
@@ -57,8 +58,8 @@ export class WindowManager implements IWindowManager {
     this.baseContentLoader = defaultLoader
 
     // Detect if we're using HotUpdateContentLoader
-    this.isUsingHotUpdateLoader =
-      this.contentLoader instanceof HotUpdateContentLoader
+    this.isUsingHotUpdateLoader
+      = this.contentLoader instanceof HotUpdateContentLoader
     const isMacOS = process.platform === 'darwin'
     this.useLiquidGlass = isMacOS && liquidGlass.isGlassSupported()
 
@@ -108,7 +109,8 @@ export class WindowManager implements IWindowManager {
   static getInstance(options?: WindowManagerOptions): WindowManager {
     if (!WindowManager.instance) {
       WindowManager.instance = new WindowManager(options)
-    } else if (options && !WindowManager.instance.isInitialized) {
+    }
+    else if (options && !WindowManager.instance.isInitialized) {
       // If instance exists but not initialized, reinitialize with new options
       WindowManager.instance = new WindowManager(options)
     }
@@ -149,7 +151,8 @@ export class WindowManager implements IWindowManager {
       windowOptions.height = bounds.height
       // Apply maximized state after creation below
       ;(windowOptions as any).__shouldMaximize = isMaximized
-    } catch (e) {
+    }
+    catch (e) {
       console.warn('Failed to restore window state; using defaults.', e)
     }
     if (iconPath && process.platform !== 'darwin') {
@@ -163,7 +166,7 @@ export class WindowManager implements IWindowManager {
 
     // Handle window ready-to-show
     this.mainWindow.once('ready-to-show', () => {
-      if (!this.mainWindow) return
+      if (!this.mainWindow) { return }
 
       if (this.options.enableDevTools && this.contentLoader.isDevelopment) {
         this.mainWindow.webContents.openDevTools()
@@ -184,7 +187,7 @@ export class WindowManager implements IWindowManager {
     const shouldMaximize = (windowOptions as any).__shouldMaximize === true
     if (shouldMaximize) {
       this.mainWindow.once('ready-to-show', () => {
-        if (!this.mainWindow) return
+        if (!this.mainWindow) { return }
         this.mainWindow.maximize()
       })
     }
@@ -214,7 +217,8 @@ export class WindowManager implements IWindowManager {
 
     if (this.contentLoader.isDevelopment) {
       await this.loadDebugWindowContent()
-    } else {
+    }
+    else {
       await this.loadWindowContent()
     }
     return this.mainWindow
@@ -251,7 +255,8 @@ export class WindowManager implements IWindowManager {
     if (this.mainWindow) {
       this.mainWindow.show()
       // this.floatManager.hideFloatWindow()
-    } else {
+    }
+    else {
       const win = await this.createMainWindow()
       win.show()
       win.focus()
@@ -305,7 +310,8 @@ export class WindowManager implements IWindowManager {
     if (this.mainWindow) {
       if (this.mainWindow.isMaximized()) {
         this.mainWindow.unmaximize()
-      } else {
+      }
+      else {
         this.mainWindow.maximize()
       }
     }
@@ -357,7 +363,7 @@ export class WindowManager implements IWindowManager {
       // Perform cleanup before quitting
       console.info('Application is quitting...')
       const windows = BrowserWindow.getAllWindows()
-      windows.forEach((window) => window.destroy())
+      windows.forEach(window => window.destroy())
 
       if (isDevelopment) {
         console.info('Clean app cache...')
@@ -371,14 +377,14 @@ export class WindowManager implements IWindowManager {
   }
 
   private applyLiquidGlass(win: BrowserWindow): void {
-    if (process.platform !== 'darwin' || !this.useLiquidGlass) return
+    if (process.platform !== 'darwin' || !this.useLiquidGlass) { return }
 
     let hasApplied = false
     const apply = () => {
-      if (hasApplied || win.isDestroyed()) return
+      if (hasApplied || win.isDestroyed()) { return }
       hasApplied = true
 
-      if (win.isDestroyed()) return
+      if (win.isDestroyed()) { return }
 
       try {
         const glassId = liquidGlass.addView(win.getNativeWindowHandle())
@@ -391,7 +397,8 @@ export class WindowManager implements IWindowManager {
         console.warn(
           'Liquid glass returned invalid view id; window remains in transparent mode.',
         )
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to apply liquid glass effect:', error)
       }
     }
@@ -428,7 +435,7 @@ export class WindowManager implements IWindowManager {
    * Load content into the main window based on environment
    */
   private async loadWindowContent(): Promise<void> {
-    if (!this.mainWindow) return
+    if (!this.mainWindow) { return }
 
     try {
       if (this.contentLoader.isDevelopment) {
@@ -448,7 +455,8 @@ export class WindowManager implements IWindowManager {
           version: null,
           pathOrUrl: devUrl,
         }
-      } else {
+      }
+      else {
         // Production: Load from dist directory
         const indexPath = this.contentLoader.getProductionIndexPath()
         console.info(`Loading production build: ${indexPath}`)
@@ -465,7 +473,8 @@ export class WindowManager implements IWindowManager {
             version: ver,
             pathOrUrl: indexPath,
           }
-        } else {
+        }
+        else {
           this.currentRendererInfo = {
             source: 'bundled',
             version: null,
@@ -473,7 +482,8 @@ export class WindowManager implements IWindowManager {
           }
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to load window content:', error)
       await this.showErrorDialog(
         'Loading Error',
@@ -481,11 +491,12 @@ export class WindowManager implements IWindowManager {
       )
     }
   }
+
   /**
    * Load content into the main window based on environment
    */
   private async loadDebugWindowContent(): Promise<void> {
-    if (!this.mainWindow) return
+    if (!this.mainWindow) { return }
 
     if (!this.contentLoader.isDevelopment) {
       console.error(
@@ -511,14 +522,16 @@ export class WindowManager implements IWindowManager {
             version: ver,
             pathOrUrl: indexPath,
           }
-        } else {
+        }
+        else {
           this.currentRendererInfo = {
             source: 'bundled',
             version: null,
             pathOrUrl: indexPath,
           }
         }
-      } else {
+      }
+      else {
         // Development: Load from Vite dev server
         const devUrl = (
           this.contentLoader as DefaultWindowContentLoader
@@ -531,7 +544,8 @@ export class WindowManager implements IWindowManager {
           pathOrUrl: devUrl,
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to load window content:', error)
       await this.showErrorDialog(
         'Loading Error',
@@ -569,8 +583,8 @@ export class WindowManager implements IWindowManager {
 
       // Update window options with new preload path
       if (this.mainWindow && this.options.windowOptions.webPreferences) {
-        this.options.windowOptions.webPreferences.preload =
-          newLoader.getPreloadPath()
+        this.options.windowOptions.webPreferences.preload
+          = newLoader.getPreloadPath()
       }
 
       // Reload the window content with new loader
@@ -581,7 +595,8 @@ export class WindowManager implements IWindowManager {
         : 'DefaultWindowContentLoader'
 
       console.info(`Switched to ${loaderType}`)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to switch content loader:', error)
     }
   }
@@ -598,10 +613,12 @@ export class WindowManager implements IWindowManager {
     try {
       if (this.contentLoader.isDevelopment) {
         await this.loadDebugWindowContent()
-      } else {
+      }
+      else {
         await this.loadWindowContent()
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to reload window content:', error)
       // Fallback to simple reload if loadWindowContent fails
       this.mainWindow.reload()

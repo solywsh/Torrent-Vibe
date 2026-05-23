@@ -46,15 +46,15 @@ interface MobileToolbarProps {
   compact?: boolean
 }
 
-type FilterSelectValue =
-  | 'all'
-  | 'downloading'
-  | 'seeding'
-  | 'completed'
-  | 'paused'
-  | 'error'
-  | `category:${string}`
-  | `tag:${string}`
+type FilterSelectValue
+  = | 'all'
+    | 'downloading'
+    | 'seeding'
+    | 'completed'
+    | 'paused'
+    | 'error'
+    | `category:${string}`
+    | `tag:${string}`
 
 export const MobileToolbar = ({
   className,
@@ -142,17 +142,17 @@ export const MobileToolbar = ({
   // Get display text for current filter
   const currentFilterDisplay = useMemo(() => {
     if (typeof filterState === 'string') {
-      const statusFilter = statusFilters.find((f) => f.key === filterState)
+      const statusFilter = statusFilters.find(f => f.key === filterState)
       return statusFilter
         ? `${statusFilter.label} (${statusFilter.count})`
         : 'All Torrents'
     }
     if (filterState.type === 'category') {
-      const category = categories.find((c) => c.name === filterState.value)
+      const category = categories.find(c => c.name === filterState.value)
       return `${filterState.value} (${category?.count || 0})`
     }
     if (filterState.type === 'tag') {
-      const tag = tags.find((t) => t.name === filterState.value)
+      const tag = tags.find(t => t.name === filterState.value)
       return `#${filterState.value} (${tag?.count || 0})`
     }
     return 'All Torrents'
@@ -162,10 +162,12 @@ export const MobileToolbar = ({
     if (value.startsWith('category:')) {
       const categoryName = value.replace('category:', '')
       setFilter({ type: 'category', value: categoryName })
-    } else if (value.startsWith('tag:')) {
+    }
+    else if (value.startsWith('tag:')) {
       const tagName = value.replace('tag:', '')
       setFilter({ type: 'tag', value: tagName })
-    } else {
+    }
+    else {
       setFilter(value as TorrentFilterState)
     }
   }
@@ -185,7 +187,8 @@ export const MobileToolbar = ({
           name: result.trim(),
           savePath: '',
         })
-      } catch (error) {
+      }
+      catch (error) {
         console.error(`${getI18n().t('messages.torrentsAddFailed')}:`, error)
       }
     }
@@ -203,7 +206,8 @@ export const MobileToolbar = ({
     if (result && result.trim()) {
       try {
         await createTagMutation.mutateAsync([result.trim()])
-      } catch (error) {
+      }
+      catch (error) {
         console.error(`${getI18n().t('messages.torrentsAddFailed')}:`, error)
       }
     }
@@ -290,7 +294,7 @@ export const MobileToolbar = ({
               {/* Status Filters */}
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
-                {statusFilters.map((filter) => (
+                {statusFilters.map(filter => (
                   <SelectItem
                     key={filter.key as string}
                     value={filter.key as string}
@@ -315,7 +319,7 @@ export const MobileToolbar = ({
                   <SelectSeparator />
                   <SelectGroup>
                     <SelectLabel>Categories</SelectLabel>
-                    {categories.map((category) => (
+                    {categories.map(category => (
                       <SelectItem
                         key={category.name}
                         value={`category:${category.name}`}
@@ -342,7 +346,7 @@ export const MobileToolbar = ({
                   <SelectSeparator />
                   <SelectGroup>
                     <SelectLabel>Tags</SelectLabel>
-                    {tags.map((tag) => (
+                    {tags.map(tag => (
                       <SelectItem
                         key={tag.name}
                         value={`tag:${tag.name}`}
@@ -351,7 +355,10 @@ export const MobileToolbar = ({
                         <div className="flex items-center justify-between w-full">
                           <div className="flex items-center gap-2">
                             <i className="i-mingcute-hashtag-line text-green" />
-                            <span>#{tag.name}</span>
+                            <span>
+                              #
+                              {tag.name}
+                            </span>
                           </div>
                           <span className="text-xs text-text-secondary ml-2">
                             {tag.count}
@@ -450,11 +457,11 @@ export const MobileCompactToolbar = ({ className }: { className?: string }) => {
         return {
           label: 'All Torrents',
           count:
-            stats.downloading +
-            stats.seeding +
-            stats.paused +
-            stats.completed +
-            stats.error,
+            stats.downloading
+            + stats.seeding
+            + stats.paused
+            + stats.completed
+            + stats.error,
           icon: 'i-mingcute-folder-line',
           color: 'text-text-secondary',
         }

@@ -14,8 +14,8 @@ export const createFormSlice = (context: DiscoverActionContext) => {
       | ((prev: DiscoverFilterState) => DiscoverFilterState),
   ) => {
     context.setState((draft) => {
-      const nextFilters =
-        typeof updater === 'function'
+      const nextFilters
+        = typeof updater === 'function'
           ? (updater as (prev: DiscoverFilterState) => DiscoverFilterState)(
               draft.filters,
             )

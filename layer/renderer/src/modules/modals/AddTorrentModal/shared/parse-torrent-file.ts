@@ -24,7 +24,7 @@ const computeInfoHash = async (data: Uint8Array) => {
     throw new Error('Invalid torrent metadata')
   }
 
-  const {info} = (torrent as { info?: unknown })
+  const { info } = torrent as { info?: unknown }
   if (!info || typeof info !== 'object' || Array.isArray(info)) {
     throw new Error('Invalid torrent metadata')
   }
@@ -41,7 +41,7 @@ const computeInfoHash = async (data: Uint8Array) => {
   )
 
   return Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .map(byte => byte.toString(16).padStart(2, '0'))
     .join('')
     .toUpperCase()
 }

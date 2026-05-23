@@ -16,17 +16,17 @@ import { parseTorrentFile } from './parse-torrent-file'
 import type { AddTorrentModalProps } from './types'
 import { useEnsureTorrentCategories } from './useEnsureTorrentCategories'
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-type PreviewMeta =
-  | {
-      type: 'magnet'
-      hash: string
-      magnetUri: string
-      existed: boolean
-      finalized?: boolean
-    }
-  | { type: 'file'; infoHash: string; fileName: string; finalized?: boolean }
+type PreviewMeta
+  = | {
+    type: 'magnet'
+    hash: string
+    magnetUri: string
+    existed: boolean
+    finalized?: boolean
+  }
+  | { type: 'file', infoHash: string, fileName: string, finalized?: boolean }
 
 export const useAddTorrentLogic = ({
   initialFiles,
@@ -56,8 +56,8 @@ export const useAddTorrentLogic = ({
 
   // Prefill magnet links if provided
   useEffect(() => {
-    if (!initialMagnetLinks) return
-    setFormData((prev) => ({
+    if (!initialMagnetLinks) { return }
+    setFormData(prev => ({
       ...prev,
       method: 'magnet' as const,
       magnetLinks: initialMagnetLinks,
@@ -67,14 +67,15 @@ export const useAddTorrentLogic = ({
   const cleanupPreviewMagnet = useEventCallback(async () => {
     const meta = previewMetaRef.current
     if (
-      meta?.type === 'magnet' &&
-      !meta.existed &&
-      !meta.finalized &&
-      meta.hash
+      meta?.type === 'magnet'
+      && !meta.existed
+      && !meta.finalized
+      && meta.hash
     ) {
       try {
         await QBittorrentClient.shared.removeTorrent(meta.hash, false)
-      } catch (error) {
+      }
+      catch (error) {
         console.warn('Failed to clean up preview magnet:', error)
       }
     }
@@ -98,7 +99,7 @@ export const useAddTorrentLogic = ({
 
     try {
       const parsed = await parseTorrentFile(file)
-      if (previewRequestIdRef.current !== requestId) return
+      if (previewRequestIdRef.current !== requestId) { return }
 
       previewMetaRef.current = {
         type: 'file',
@@ -114,10 +115,11 @@ export const useAddTorrentLogic = ({
         totalSize: parsed.totalSize,
         files: parsed.files,
       })
-      setSelectedFileIndices(new Set(parsed.files.map((f) => f.index)))
-    } catch (error) {
+      setSelectedFileIndices(new Set(parsed.files.map(f => f.index)))
+    }
+    catch (error) {
       console.error('Failed to load file preview:', error)
-      if (previewRequestIdRef.current !== requestId) return
+      if (previewRequestIdRef.current !== requestId) { return }
 
       previewMetaRef.current = null
       setPreviewState({
@@ -137,14 +139,15 @@ export const useAddTorrentLogic = ({
     const primary = formData.files[0]
     if (primary) {
       await loadFilePreview(primary)
-    } else {
+    }
+    else {
       await clearPreview()
     }
   })
 
   const handleFilesSelected = useEventCallback(async (files: File[]) => {
-    const torrentFiles = files.filter((file) => file.name.endsWith('.torrent'))
-    if (torrentFiles.length === 0) return
+    const torrentFiles = files.filter(file => file.name.endsWith('.torrent'))
+    if (torrentFiles.length === 0) { return }
 
     await clearPreview()
 
@@ -160,7 +163,8 @@ export const useAddTorrentLogic = ({
 
     if (merged.length > 0) {
       await loadFilePreview(merged[0])
-    } else {
+    }
+    else {
       await clearPreview()
     }
   })
@@ -177,7 +181,8 @@ export const useAddTorrentLogic = ({
 
     if (remaining.length > 0) {
       await loadFilePreview(remaining[0])
-    } else {
+    }
+    else {
       await clearPreview()
     }
   })
@@ -216,7 +221,7 @@ export const useAddTorrentLogic = ({
 
     try {
       const result = await QBittorrentClient.shared.previewMagnet(magnetUri)
-      if (previewRequestIdRef.current !== requestId) return
+      if (previewRequestIdRef.current !== requestId) { return }
 
       previewMetaRef.current = {
         type: 'magnet',
@@ -225,7 +230,7 @@ export const useAddTorrentLogic = ({
         existed: result.existed,
       }
 
-      const files = result.files.map((file) => ({
+      const files = result.files.map(file => ({
         index: file.index,
         path: file.name,
         size: file.size,
@@ -239,9 +244,10 @@ export const useAddTorrentLogic = ({
         files,
         displayName: result.displayName,
       })
-      setSelectedFileIndices(new Set(files.map((f) => f.index)))
-    } catch (error) {
-      if (previewRequestIdRef.current !== requestId) return
+      setSelectedFileIndices(new Set(files.map(f => f.index)))
+    }
+    catch (error) {
+      if (previewRequestIdRef.current !== requestId) { return }
 
       previewMetaRef.current = null
       setPreviewState({
@@ -262,28 +268,29 @@ export const useAddTorrentLogic = ({
       setSelectedFileIndices((prev) => {
         const updated = new Set(prev)
         const shouldSelect = next ?? !prev.has(index)
-        if (shouldSelect) updated.add(index)
-        else updated.delete(index)
+        if (shouldSelect) { updated.add(index) }
+        else { updated.delete(index) }
         return updated
       })
     },
   )
 
   const toggleAllFileSelections = useEventCallback((select: boolean) => {
-    if (previewState.status !== 'ready') return
+    if (previewState.status !== 'ready') { return }
     if (select) {
       setSelectedFileIndices(
-        new Set(previewState.files.map((file) => file.index)),
+        new Set(previewState.files.map(file => file.index)),
       )
-    } else {
+    }
+    else {
       setSelectedFileIndices(new Set())
     }
   })
 
   const waitForTorrentPresence = useEventCallback(
     async (hash: string, timeoutMs?: number) => {
-      const effectiveTimeout =
-        typeof timeoutMs === 'number' && Number.isFinite(timeoutMs)
+      const effectiveTimeout
+        = typeof timeoutMs === 'number' && Number.isFinite(timeoutMs)
           ? timeoutMs
           : 20000
       const deadline = Date.now() + effectiveTimeout
@@ -292,8 +299,9 @@ export const useAddTorrentLogic = ({
           const [info] = await QBittorrentClient.shared.requestTorrentsInfo({
             hashes: hash,
           })
-          if (info) return
-        } catch {
+          if (info) { return }
+        }
+        catch {
           // ignore transient errors while waiting
         }
         await delay(750)
@@ -304,7 +312,7 @@ export const useAddTorrentLogic = ({
 
   const applyFilePriorities = useEventCallback(
     async (hash: string, deselected: number[]) => {
-      if (deselected.length === 0) return
+      if (deselected.length === 0) { return }
       await QBittorrentClient.shared.requestSetFilePriority(hash, deselected, 0)
     },
   )
@@ -321,14 +329,15 @@ export const useAddTorrentLogic = ({
       const category = formData.category?.trim()
       if (category) {
         await client.setTorrentCategory(hash, category)
-      } else if (!existed) {
+      }
+      else if (!existed) {
         await client.resetTorrentCategory(hash)
       }
 
       if (formData.tags?.trim()) {
         const tags = formData.tags
           .split(',')
-          .map((tag) => tag.trim())
+          .map(tag => tag.trim())
           .filter(Boolean)
         if (tags.length > 0) {
           await client.addTorrentTags(hash, tags.join(','))
@@ -349,43 +358,43 @@ export const useAddTorrentLogic = ({
         await client.requestSetShareLimits(hash, ratioLimit, seedingTimeLimit)
       }
 
-      const downloadLimit =
-        formData.limitDownloadKiBs !== ''
+      const downloadLimit
+        = formData.limitDownloadKiBs !== ''
           ? Number(formData.limitDownloadKiBs) * 1024
           : formData.dlLimit
       if (
-        downloadLimit !== undefined &&
-        !Number.isNaN(downloadLimit) &&
-        downloadLimit >= 0
+        downloadLimit !== undefined
+        && !Number.isNaN(downloadLimit)
+        && downloadLimit >= 0
       ) {
         await client.setTorrentDownloadLimit(hash, downloadLimit)
       }
 
-      const uploadLimit =
-        formData.limitUploadKiBs !== ''
+      const uploadLimit
+        = formData.limitUploadKiBs !== ''
           ? Number(formData.limitUploadKiBs) * 1024
           : formData.upLimit
       if (
-        uploadLimit !== undefined &&
-        !Number.isNaN(uploadLimit) &&
-        uploadLimit >= 0
+        uploadLimit !== undefined
+        && !Number.isNaN(uploadLimit)
+        && uploadLimit >= 0
       ) {
         await client.setTorrentUploadLimit(hash, uploadLimit)
       }
 
       const [info] = await client.requestTorrentsInfo({ hashes: hash })
       if (
-        info &&
-        formData.sequentialDownload !== undefined &&
-        Boolean(info.seq_dl) !== Boolean(formData.sequentialDownload)
+        info
+        && formData.sequentialDownload !== undefined
+        && Boolean(info.seq_dl) !== Boolean(formData.sequentialDownload)
       ) {
         await client.requestToggleSequentialDownload(hash)
       }
 
       if (
-        info &&
-        formData.firstLastPiecePrio !== undefined &&
-        Boolean(info.f_l_piece_prio) !== Boolean(formData.firstLastPiecePrio)
+        info
+        && formData.firstLastPiecePrio !== undefined
+        && Boolean(info.f_l_piece_prio) !== Boolean(formData.firstLastPiecePrio)
       ) {
         await client.requestToggleFirstLastPiecePriority(hash)
       }
@@ -402,8 +411,8 @@ export const useAddTorrentLogic = ({
       const previewReady = previewState.status === 'ready'
       const deselected = previewReady
         ? previewState.files
-            .filter((file) => !selectedFileIndices.has(file.index))
-            .map((file) => file.index)
+            .filter(file => !selectedFileIndices.has(file.index))
+            .map(file => file.index)
         : []
 
       if (previewMeta?.type === 'magnet' && previewReady) {
@@ -412,12 +421,14 @@ export const useAddTorrentLogic = ({
 
         if (formData.startTorrent) {
           await QBittorrentClient.shared.resumeTorrent(previewMeta.hash)
-        } else {
+        }
+        else {
           await QBittorrentClient.shared.pauseTorrent(previewMeta.hash)
         }
 
         previewMetaRef.current = { ...previewMeta, finalized: true }
-      } else {
+      }
+      else {
         const overrides: Partial<AddTorrentOptions> = {}
         if (previewMeta?.type === 'file' && previewReady) {
           overrides.stopped = true
@@ -434,7 +445,8 @@ export const useAddTorrentLogic = ({
 
           if (formData.startTorrent) {
             await QBittorrentClient.shared.resumeTorrent(hash)
-          } else {
+          }
+          else {
             await QBittorrentClient.shared.pauseTorrent(hash)
           }
 
@@ -449,10 +461,12 @@ export const useAddTorrentLogic = ({
 
       toast.success(getI18n().t('messages.torrentsAdded'))
       dismiss()
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`${getI18n().t('messages.torrentsAddFailed')}:`, error)
       toast.error(getI18n().t('messages.torrentsAddFailed'))
-    } finally {
+    }
+    finally {
       setIsLoading(false)
     }
   })
@@ -461,10 +475,10 @@ export const useAddTorrentLogic = ({
     return () => {
       const meta = previewMetaRef.current
       if (
-        meta?.type === 'magnet' &&
-        !meta.existed &&
-        !meta.finalized &&
-        meta.hash
+        meta?.type === 'magnet'
+        && !meta.existed
+        && !meta.finalized
+        && meta.hash
       ) {
         void QBittorrentClient.shared.removeTorrent(meta.hash, false)
       }
@@ -483,9 +497,9 @@ export const useAddTorrentLogic = ({
 
   useEffect(() => {
     if (
-      formData.files.length > 0 &&
-      previewState.status === 'idle' &&
-      !previewMetaRef.current
+      formData.files.length > 0
+      && previewState.status === 'idle'
+      && !previewMetaRef.current
     ) {
       void loadFilePreview(formData.files[0])
     }
@@ -495,12 +509,13 @@ export const useAddTorrentLogic = ({
     const meta = previewMetaRef.current
     if (meta?.type === 'file') {
       const stillPresent = formData.files.some(
-        (file) => file.name === meta.fileName,
+        file => file.name === meta.fileName,
       )
       if (!stillPresent) {
         if (formData.files.length > 0) {
           void loadFilePreview(formData.files[0])
-        } else {
+        }
+        else {
           void clearPreview()
         }
       }

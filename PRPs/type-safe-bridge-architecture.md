@@ -2,7 +2,8 @@
 
 ## Overview
 
-Implement a comprehensive type-safe, centralized bridge architecture for Electron main-to-renderer communication that addresses current fragmentation issues. The system will replace scattered `webContents.send()` calls with a unified, type-safe event broadcasting system while maintaining full compatibility with the existing `electron-ipc-decorator` pattern for request/response communication.
+Implement a comprehensive type-safe, centralized bridge architecture for Electron main-to-renderer communication that addresses current fragmentation issues.
+The system will replace scattered `webContents.send()` calls with a unified, type-safe event broadcasting system while maintaining full compatibility with the existing `electron-ipc-decorator` pattern for request/response communication.
 
 The implementation solves three critical issues: lack of centralized management, absence of type safety for events, and fragmented communication patterns across the codebase.
 
@@ -29,15 +30,17 @@ The implementation solves three critical issues: lack of centralized management,
    - **Issues**: No type safety, manual window management, no centralization
 
 **Existing Type Organization:**
+
 - Pattern: `/layer/main/src/@types/` - Shared type definitions
 - Example: `/layer/main/src/@types/constants.ts` - Language and namespace types
 - Convention: Types shared between main and renderer processes
 
 **Hook and Store Patterns:**
+
 - **Custom Hooks**: Return object interface with stable references
   - Pattern: `/layer/renderer/src/modules/multi-server/hooks/useServerConfigForm.ts`
   - Convention: `useCallback` for stability, clear return interface
-  
+
 - **Zustand Stores**: Centralized state with separate setter objects
   - Pattern: `/layer/renderer/src/modules/torrent/stores/torrent-table-store.ts`
   - Convention: `createWithEqualityFn`, `subscribeWithSelector`, separate setters
@@ -49,6 +52,7 @@ The implementation solves three critical issues: lack of centralized management,
 ### Key Dependencies Available
 
 **Core Libraries:**
+
 - `electron-ipc-decorator@0.2.0` - Current IPC service framework (custom/private library)
 - `zustand@5.0.7` - Primary state management with `subscribeWithSelector`
 - `jotai@2.13.1` - Secondary reactive atoms with custom `createAtomHooks`
@@ -56,6 +60,7 @@ The implementation solves three critical issues: lack of centralized management,
 - `react@19.1.1` - Latest React with modern patterns
 
 **Utility Libraries:**
+
 - `usehooks-ts@3.1.1` - Modern React hooks library
 - `es-toolkit@1.39.9` - Modern utility library (replaces lodash)
 - `immer@10.1.1` - Immutable updates in stores
@@ -64,12 +69,14 @@ The implementation solves three critical issues: lack of centralized management,
 ### External Research - Modern Electron IPC Patterns (2024)
 
 **Type-Safe Communication Best Practices:**
+
 - **Shared Type Definitions**: Central interface definitions accessible to both processes
 - **Schema-Based Validation**: Runtime validation with TypeScript compile-time checking
 - **Event-Driven Architecture**: Separation of events (push) vs RPC calls (request/response)
 - **Security-First Design**: Limited API exposure through contextBridge
 
 **Reference Documentation:**
+
 - [LogRocket Electron IPC TypeScript Guide 2024](https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/)
 - [Electron Official IPC Guide](https://www.electronjs.org/docs/latest/tutorial/ipc)
 - [TypeScript Safe Electron Communication Patterns](https://kishannirghin.medium.com/adding-typesafety-to-electron-ipc-with-typescript-d12ba589ea6a)
@@ -82,18 +89,18 @@ The implementation solves three critical issues: lack of centralized management,
 // layer/main/src/@types/bridge-events.ts
 export interface BridgeEventMap {
   // Update events
-  'update:ready': { version: string; prerelease: boolean }
-  'update:progress': { percent: number; transferred: number; total: number }
-  'update:error': { message: string; code?: string }
+  'update:ready': { version: string, prerelease: boolean }
+  'update:progress': { percent: number, transferred: number, total: number }
+  'update:error': { message: string, code?: string }
   'update:downloaded': { version: string }
-  
-  // Theme events  
+
+  // Theme events
   'theme:changed': { theme: 'light' | 'dark' | 'system' }
-  
+
   // System events
-  'system:low-memory': { available: number; total: number }
+  'system:low-memory': { available: number, total: number }
   'system:network-changed': { online: boolean }
-  
+
   // Application events
   'app:focus': { focused: boolean }
   'app:minimized': { minimized: boolean }
@@ -106,12 +113,13 @@ export type BridgeEventData<T extends BridgeEventName> = BridgeEventMap[T]
 ### 2. Main Process Bridge Service
 
 **Core Architecture:**
+
 ```typescript
 // layer/main/src/services/bridge-service.ts
 export class BridgeService {
   private static instance: BridgeService
   private windowManager: Set<BrowserWindow> = new Set()
-  
+
   static get shared(): BridgeService
   registerWindow(window: BrowserWindow): void
   broadcast<T extends BridgeEventName>(eventName: T, data: BridgeEventData<T>): void
@@ -121,6 +129,7 @@ export class BridgeService {
 ```
 
 **Integration Pattern:**
+
 - Follow existing singleton patterns: `UpdateService.shared`, `QBittorrentClient.shared`
 - Window management with automatic cleanup on `'closed'` event
 - Type-safe event broadcasting with compile-time validation
@@ -128,17 +137,19 @@ export class BridgeService {
 ### 3. IPC Service Integration
 
 **New Bridge IPC Service:**
+
 ```typescript
 // layer/main/src/ipc/bridge.service.ts
 export class BridgeIPCService extends IpcService {
   static override readonly groupName = 'bridge'
-  
+
   @IpcMethod()
   subscribeToEvents(context: IpcContext, events: BridgeEventName[]): void
 }
 ```
 
 **Service Registration:**
+
 ```typescript
 // layer/main/src/ipc/services.ts - Add to existing services array
 export const services = createServices([
@@ -152,12 +163,13 @@ export const services = createServices([
 ### 4. Renderer Bridge Client
 
 **Client Architecture:**
+
 ```typescript
 // layer/renderer/src/lib/bridge-client.ts
 export class BridgeClient {
   private static instance: BridgeClient
   private eventListeners = new Map<BridgeEventName, Set<EventListener<any>>>()
-  
+
   static get shared(): BridgeClient
   on<T extends BridgeEventName>(eventName: T, listener: EventListener<T>): UnsubscribeFn
   once<T extends BridgeEventName>(eventName: T, listener: EventListener<T>): UnsubscribeFn
@@ -170,6 +182,7 @@ export const bridgeClient = BridgeClient.shared
 ### 5. React Hook Integration
 
 **Following Existing Hook Patterns:**
+
 ```typescript
 // layer/renderer/src/hooks/use-bridge-event.ts
 export function useBridgeEvent<T extends BridgeEventName>(
@@ -186,6 +199,7 @@ export function useBridgeEventOnce<T extends BridgeEventName>(
 ```
 
 **Pattern Consistency:**
+
 - Follow `/layer/renderer/src/modules/multi-server/hooks/useServerConfigForm.ts` patterns
 - Use `useCallback` for listener stability
 - Automatic cleanup with `useEffect` return function
@@ -194,6 +208,7 @@ export function useBridgeEventOnce<T extends BridgeEventName>(
 ### 6. Enhanced Preload Script
 
 **Type-Safe Bridge API:**
+
 ```typescript
 // layer/main/preload/index.ts (convert from .js to .ts)
 const bridgeAPI = {
@@ -213,6 +228,7 @@ contextBridge.exposeInMainWorld('bridgeAPI', bridgeAPI)
 ## Implementation Tasks (Sequential Order)
 
 ### Phase 1: Foundation (Immediate)
+
 1. **Create Type Definitions**
    - Add `/layer/main/src/@types/bridge-events.ts`
    - Define `BridgeEventMap` interface with initial events
@@ -230,56 +246,62 @@ contextBridge.exposeInMainWorld('bridgeAPI', bridgeAPI)
    - Register in `/layer/main/src/ipc/services.ts`
 
 ### Phase 2: Client Implementation
-4. **Implement Renderer Bridge Client**
+
+1. **Implement Renderer Bridge Client**
    - Create `/layer/renderer/src/lib/bridge-client.ts`
    - Follow singleton patterns from existing codebase
    - Implement event listener management with type safety
 
-5. **Create React Hooks**
+2. **Create React Hooks**
    - Add `/layer/renderer/src/hooks/use-bridge-event.ts`
    - Follow patterns from existing hooks like `useServerConfigForm`
    - Implement automatic cleanup and dependency handling
 
-6. **Enhance Preload Script**
+3. **Enhance Preload Script**
    - Convert `/layer/main/preload/index.js` to TypeScript
    - Add `bridgeAPI` with security-conscious channel filtering
    - Update global type declarations
 
 ### Phase 3: Integration & Migration
-7. **Bootstrap Integration**
+
+1. **Bootstrap Integration**
    - Update `/layer/main/src/bootstrap.ts`
    - Register main window with `BridgeService.shared.registerWindow()`
    - Remove legacy `ipcMain.handle()` calls
 
-8. **Migrate Update Service**
+2. **Migrate Update Service**
    - Update `/layer/main/src/services/update-service.ts:257`
    - Replace `win.webContents.send('update:ready', updateInfo)` with type-safe broadcasting
    - Add error event broadcasting
 
-9. **Create Example Component**
+3. **Create Example Component**
    - Add `/layer/renderer/src/components/UpdateNotification.tsx`
    - Demonstrate `useBridgeEvent` usage patterns
    - Show type-safe event subscription
 
 ### Phase 4: Validation & Documentation
-10. **Add Event Definitions**
-    - Expand `BridgeEventMap` with additional events
-    - Document event patterns and usage
-    - Add JSDoc comments for type definitions
+
+1. **Add Event Definitions**
+   - Expand `BridgeEventMap` with additional events
+   - Document event patterns and usage
+   - Add JSDoc comments for type definitions
 
 ## Error Handling Strategy
 
 **Main Process Error Handling:**
+
 - Service-level error logging with `electron-log`
 - Graceful fallback for destroyed windows
 - Automatic cleanup of invalid window references
 
 **Renderer Process Error Handling:**
+
 - React error boundaries for hook failures
 - Graceful degradation when bridge API unavailable
 - Development vs production error messaging
 
 **Type Safety Guarantees:**
+
 - Compile-time validation for event names and payloads
 - Runtime validation for critical events (optional)
 - Clear error messages for type mismatches
@@ -308,6 +330,7 @@ pnpm electron:dev
 ## Migration Examples
 
 **Before (Current Problematic Pattern):**
+
 ```typescript
 // ❌ update-service.ts:257
 const win: BrowserWindow | null = BrowserWindow.getAllWindows()[0] ?? null
@@ -317,6 +340,7 @@ if (win && !win.isDestroyed()) {
 ```
 
 **After (New Type-Safe Pattern):**
+
 ```typescript
 // ✅ New implementation
 BridgeService.shared.broadcast('update:ready', {
@@ -326,6 +350,7 @@ BridgeService.shared.broadcast('update:ready', {
 ```
 
 **Renderer Usage:**
+
 ```typescript
 // ✅ Type-safe React component
 export const UpdateNotification: React.FC = () => {
@@ -345,21 +370,25 @@ export const UpdateNotification: React.FC = () => {
 ## Architecture Benefits
 
 **Type Safety:**
+
 - Compile-time validation for all events and payloads
 - IntelliSense support with auto-completion
 - Prevents typos in event names and data structures
 
 **Centralized Management:**
+
 - Single point of control for all window communication
 - Automatic window cleanup and management
 - Consistent broadcasting patterns
 
 **Developer Experience:**
+
 - Clean React hooks with automatic cleanup
 - Clear separation of concerns (events vs RPC)
 - Modern TypeScript patterns throughout
 
 **Performance & Security:**
+
 - Optimized window management with cleanup
 - Security-conscious preload API exposure
 - Efficient event listener management
@@ -380,6 +409,7 @@ export const UpdateNotification: React.FC = () => {
 ## Confidence Score: 9/10
 
 **Reasoning for High Confidence:**
+
 - **Clear Architecture**: Well-defined patterns from existing codebase analysis
 - **Type Safety**: Comprehensive TypeScript implementation with compile-time validation
 - **Proven Patterns**: Uses existing successful patterns (Zustand, hooks, services)
@@ -387,6 +417,7 @@ export const UpdateNotification: React.FC = () => {
 - **Comprehensive Context**: Detailed understanding of current implementation and constraints
 
 **Risk Mitigation:**
+
 - Phase-based implementation reduces integration complexity
 - Maintains backward compatibility during migration
 - Clear validation gates ensure quality at each step

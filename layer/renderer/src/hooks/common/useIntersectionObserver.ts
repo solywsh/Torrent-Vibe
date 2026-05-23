@@ -24,7 +24,7 @@ export const useIntersectionObserver = <T extends Element>(
 
   useEffect(() => {
     const node = nodeRef.current
-    if (!node) return
+    if (!node) { return }
 
     if (entry?.isIntersecting && freezeOnceVisible) {
       return

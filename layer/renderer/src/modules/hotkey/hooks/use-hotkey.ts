@@ -18,7 +18,7 @@ export function useHotkey(
   handlerRef.current = handler
 
   useEffect(() => {
-    if (typeof options.waitFor === 'function' && !options.waitFor()) return
+    if (typeof options.waitFor === 'function' && !options.waitFor()) { return }
     const stableHandler = (event: KeyboardEvent, context?: FocusContext) => {
       return handlerRef.current(event, context)
     }

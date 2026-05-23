@@ -16,13 +16,13 @@ export const DiscoverPreviewPanel: FC<HTMLMotionProps<'aside'>> = (props) => {
   const { t } = useTranslation('app')
   const actions = DiscoverModalActions.shared
   const { preview } = actions.slices
-  const previewId = useDiscoverModalStore((state) => state.previewId)
-  const previewDetail = useDiscoverModalStore((state) => state.previewDetail)
-  const items = useDiscoverModalStore((state) => state.items)
+  const previewId = useDiscoverModalStore(state => state.previewId)
+  const previewDetail = useDiscoverModalStore(state => state.previewDetail)
+  const items = useDiscoverModalStore(state => state.items)
 
   const previewTitle = t('discover.modal.previewTitle')
-  const previewSubtitle =
-    previewDetail?.title ?? items.find((item) => item.id === previewId)?.title
+  const previewSubtitle
+    = previewDetail?.title ?? items.find(item => item.id === previewId)?.title
 
   return (
     <AnimatePresence mode="popLayout">
@@ -41,11 +41,13 @@ export const DiscoverPreviewPanel: FC<HTMLMotionProps<'aside'>> = (props) => {
               <h3 className="text-sm font-semibold text-text">
                 {previewTitle}
               </h3>
-              {previewSubtitle ? (
-                <p className="text-xs text-text-tertiary line-clamp-2">
-                  {previewSubtitle}
-                </p>
-              ) : null}
+              {previewSubtitle
+                ? (
+                    <p className="text-xs text-text-tertiary line-clamp-2">
+                      {previewSubtitle}
+                    </p>
+                  )
+                : null}
             </div>
             <Button
               variant="ghost"

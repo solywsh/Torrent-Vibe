@@ -8,9 +8,9 @@ const PROTOCOL_REGEX = /^([a-z][a-z0-9+.-]*:\/\/)(.*)$/i
 const isUrl = (value: string) => PROTOCOL_REGEX.test(value.trim())
 
 const normalizeForMatch = (value: string): string => {
-  if (!value) return ''
+  if (!value) { return '' }
   const trimmed = value.trim()
-  if (!trimmed) return ''
+  if (!trimmed) { return '' }
 
   let working = trimmed
   let protocol = ''
@@ -20,8 +20,8 @@ const normalizeForMatch = (value: string): string => {
     working = protocolMatch[2]
   }
 
-  const hadLeadingDoubleSlash =
-    !protocol && (working.startsWith('\\\\') || working.startsWith('//'))
+  const hadLeadingDoubleSlash
+    = !protocol && (working.startsWith('\\\\') || working.startsWith('//'))
 
   if (hadLeadingDoubleSlash) {
     working = working.replace(/^\\\\/, '').replace(/^\/\//, '')
@@ -29,7 +29,7 @@ const normalizeForMatch = (value: string): string => {
 
   working = working.replaceAll('\\', '/')
   working = path.posix.normalize(working)
-  if (working === '.') working = ''
+  if (working === '.') { working = '' }
 
   if (protocol) {
     const normalized = `${protocol}${working}`
@@ -52,11 +52,11 @@ const matchNormalizedPath = (
   base: string,
   caseSensitive: boolean,
 ): { rest: string } | null => {
-  if (!remote || !base) return null
+  if (!remote || !base) { return null }
   const remoteComparable = caseSensitive ? remote : remote.toLowerCase()
   const baseComparable = caseSensitive ? base : base.toLowerCase()
 
-  if (!remoteComparable.startsWith(baseComparable)) return null
+  if (!remoteComparable.startsWith(baseComparable)) { return null }
 
   if (remoteComparable.length === baseComparable.length) {
     return { rest: '' }
@@ -68,7 +68,7 @@ const matchNormalizedPath = (
   }
 
   const boundary = remoteComparable[baseComparable.length]
-  if (boundary !== '/') return null
+  if (boundary !== '/') { return null }
 
   const rest = remote.slice(base.length + 1)
   return { rest }
@@ -76,8 +76,8 @@ const matchNormalizedPath = (
 
 const joinLocalPath = (base: string, rest: string): string => {
   const sanitizedRest = rest.replace(/^[/\\]+/, '')
-  if (!sanitizedRest) return base
-  if (!base) return sanitizedRest
+  if (!sanitizedRest) { return base }
+  if (!base) { return sanitizedRest }
 
   if (isUrl(base)) {
     const trimmedBase = base.replaceAll(/\/+$/g, '')
@@ -113,32 +113,32 @@ interface ResolveOptions {
 const resolveMatch = (
   remotePath: string,
   options?: ResolveOptions,
-): { mapping: PathMappingEntry; rest: string } | null => {
+): { mapping: PathMappingEntry, rest: string } | null => {
   const trimmed = remotePath?.trim()
-  if (!trimmed) return null
+  if (!trimmed) { return null }
 
   const normalizedRemote = normalizeForMatch(trimmed)
-  if (!normalizedRemote) return null
+  if (!normalizedRemote) { return null }
 
   const serverId = options?.serverId ?? null
   const mappings = getPathMappings()
-  let best: { mapping: PathMappingEntry; rest: string; weight: number } | null =
-    null
+  let best: { mapping: PathMappingEntry, rest: string, weight: number } | null
+    = null
 
   for (const entry of mappings) {
-    if (!entry?.enabled) continue
-    if (!entry.remoteBasePath || !entry.localBasePath) continue
-    if (entry.serverId && serverId && entry.serverId !== serverId) continue
+    if (!entry?.enabled) { continue }
+    if (!entry.remoteBasePath || !entry.localBasePath) { continue }
+    if (entry.serverId && serverId && entry.serverId !== serverId) { continue }
 
     const normalizedBase = normalizeForMatch(entry.remoteBasePath)
-    if (!normalizedBase) continue
+    if (!normalizedBase) { continue }
 
     const match = matchNormalizedPath(
       normalizedRemote,
       normalizedBase,
       entry.caseSensitive,
     )
-    if (!match) continue
+    if (!match) { continue }
 
     const weight = normalizedBase.length
     if (!best || weight > best.weight) {
@@ -146,7 +146,7 @@ const resolveMatch = (
     }
   }
 
-  if (!best) return null
+  if (!best) { return null }
   return { mapping: best.mapping, rest: best.rest }
 }
 
@@ -155,7 +155,7 @@ export const resolveMappedPath = (
   options?: ResolveOptions,
 ): ResolvedPathMapping | null => {
   const match = resolveMatch(remotePath, options)
-  if (!match) return null
+  if (!match) { return null }
 
   const resolvedPath = joinLocalPath(match.mapping.localBasePath, match.rest)
   return {
@@ -169,8 +169,8 @@ const dedupeCandidates = (values: string[]): string[] => {
   const seen = new Set<string>()
   for (const value of values) {
     const trimmed = value?.trim()
-    if (!trimmed) continue
-    if (seen.has(trimmed)) continue
+    if (!trimmed) { continue }
+    if (seen.has(trimmed)) { continue }
     seen.add(trimmed)
     result.push(trimmed)
   }
@@ -180,9 +180,9 @@ const dedupeCandidates = (values: string[]): string[] => {
 export const buildPathCandidates = (
   remotePath: string,
   options?: ResolveOptions,
-): { candidates: string[]; mapping: PathMappingEntry | null } => {
+): { candidates: string[], mapping: PathMappingEntry | null } => {
   const trimmed = remotePath?.trim()
-  if (!trimmed) return { candidates: [], mapping: null }
+  if (!trimmed) { return { candidates: [], mapping: null } }
 
   const candidates: string[] = []
   const resolved = resolveMappedPath(trimmed, options)
@@ -196,7 +196,8 @@ export const buildPathCandidates = (
     const { sep } = path
     if (sep === '\\' && trimmed.includes('/')) {
       candidates.push(trimmed.replaceAll('/', '\\'))
-    } else if (sep === '/' && trimmed.includes('\\')) {
+    }
+    else if (sep === '/' && trimmed.includes('\\')) {
       candidates.push(trimmed.replaceAll('\\', '/'))
     }
   }
@@ -212,9 +213,9 @@ export const buildParentPathCandidates = (
   options?: ResolveOptions,
 ) => {
   const trimmed = remotePath?.trim()
-  if (!trimmed) return { candidates: [], mapping: null }
+  if (!trimmed) { return { candidates: [], mapping: null } }
   const normalized = normalizeForMatch(trimmed)
-  if (!normalized) return { candidates: [], mapping: null }
+  if (!normalized) { return { candidates: [], mapping: null } }
 
   const lastSlash = normalized.lastIndexOf('/')
   if (lastSlash <= 0) {

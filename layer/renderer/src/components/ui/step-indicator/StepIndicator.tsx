@@ -42,11 +42,13 @@ export const StepIndicator = ({
                   },
                 )}
               >
-                {isCompleted ? (
-                  <i className="i-mingcute-check-line text-base" />
-                ) : (
-                  <span className="text-sm font-semibold">{index + 1}</span>
-                )}
+                {isCompleted
+                  ? (
+                      <i className="i-mingcute-check-line text-base" />
+                    )
+                  : (
+                      <span className="text-sm font-semibold">{index + 1}</span>
+                    )}
               </div>
               <div className="mt-3 text-center min-w-0">
                 <p

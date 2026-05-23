@@ -34,8 +34,6 @@ declare global {
   >
 }
 
-
-
 declare global {
   export type Component<P = object> = FC<Prettify<ComponentType & P>>
 
@@ -50,8 +48,8 @@ declare global {
 
   export type ComponentType<P = object> = {
     className?: string
-  } & PropsWithChildren &
-    P
+  } & PropsWithChildren
+  & P
 
   export const ELECTRON: boolean
   export const __DEV__: boolean

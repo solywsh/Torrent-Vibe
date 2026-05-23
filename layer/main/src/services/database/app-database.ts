@@ -51,12 +51,14 @@ export class AppDatabase {
         await exec(this.sqlite, 'PRAGMA journal_mode = WAL')
         await exec(this.sqlite, 'PRAGMA foreign_keys = ON')
         await runAppDatabaseMigrations(this.sqlite, logger)
-      } catch (error) {
+      }
+      catch (error) {
         logger.error('Failed to initialize application database', error)
 
         try {
           await close(this.sqlite)
-        } catch (closeError) {
+        }
+        catch (closeError) {
           logger.warn(
             'Failed to close application database after initialization error',
             closeError,

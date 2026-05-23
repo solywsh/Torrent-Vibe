@@ -18,10 +18,10 @@ export const DiscoverSearchInput = ({
   // 原 props 下沉：状态、动作、i18n、历史、禁用/搜索中标记
   const actions = DiscoverModalActions.shared
   const { form, search: searchSlice, history: historySlice } = actions.slices
-  const keyword = useDiscoverModalStore((s) => s.keyword)
-  const searchHistory = useDiscoverModalStore((s) => s.searchHistory)
-  const providerReady = useDiscoverModalStore((s) => s.providerReady)
-  const isSearching = useDiscoverModalStore((s) => s.isSearching)
+  const keyword = useDiscoverModalStore(s => s.keyword)
+  const searchHistory = useDiscoverModalStore(s => s.searchHistory)
+  const providerReady = useDiscoverModalStore(s => s.providerReady)
+  const isSearching = useDiscoverModalStore(s => s.isSearching)
   const { t } = useTranslation('app')
 
   const disabled = !providerReady
@@ -35,7 +35,7 @@ export const DiscoverSearchInput = ({
   const onChange = (v: string) => form.updateKeyword(v)
   const onSelect = (v: string) => {
     form.updateKeyword(v)
-    if (autoSearchOnSelect) submitSearch()
+    if (autoSearchOnSelect) { submitSearch() }
   }
   const onSubmit = submitSearch
   const clearHistory = () => historySlice.clearSearchHistory()
@@ -58,14 +58,14 @@ export const DiscoverSearchInput = ({
   const uniqueHistory = useMemo(() => {
     const seen = new Set<string>()
     return history.filter((h) => {
-      if (seen.has(h)) return false
+      if (seen.has(h)) { return false }
       seen.add(h)
       return true
     })
   }, [history])
 
   const fuse = useMemo(() => {
-    if (uniqueHistory.length === 0) return null
+    if (uniqueHistory.length === 0) { return null }
     return new Fuse(uniqueHistory, {
       includeScore: true,
       threshold: 0.4,
@@ -73,9 +73,9 @@ export const DiscoverSearchInput = ({
   }, [uniqueHistory])
 
   const filteredHistory = useMemo(() => {
-    if (!value.trim()) return uniqueHistory
-    if (!fuse) return uniqueHistory
-    return fuse.search(value.trim()).map((r) => r.item)
+    if (!value.trim()) { return uniqueHistory }
+    if (!fuse) { return uniqueHistory }
+    return fuse.search(value.trim()).map(r => r.item)
   }, [value, fuse, uniqueHistory])
 
   const hasData = filteredHistory.length > 0
@@ -83,14 +83,15 @@ export const DiscoverSearchInput = ({
   useEffect(() => {
     if (!hasData) {
       setActiveIndex(-1)
-    } else if (activeIndex >= filteredHistory.length) {
+    }
+    else if (activeIndex >= filteredHistory.length) {
       setActiveIndex(filteredHistory.length - 1)
     }
   }, [filteredHistory, hasData, activeIndex])
 
   const openPanel = useCallback(() => {
-    if (disabled) return
-    if (!hasData) return
+    if (disabled) { return }
+    if (!hasData) { return }
     setOpen(true)
   }, [disabled, hasData])
 
@@ -101,13 +102,12 @@ export const DiscoverSearchInput = ({
 
   // 点击外部关闭
   useEffect(() => {
-    if (!open) return
+    if (!open) { return }
     const handler = (e: MouseEvent) => {
       if (
-        panelRef.current?.contains(e.target as Node) ||
-        inputRef.current?.contains(e.target as Node)
-      )
-        return
+        panelRef.current?.contains(e.target as Node)
+        || inputRef.current?.contains(e.target as Node)
+      ) { return }
       closePanel()
     }
     document.addEventListener('mousedown', handler)
@@ -129,7 +129,8 @@ export const DiscoverSearchInput = ({
         if (!open) {
           openPanel()
           setActiveIndex(0)
-        } else if (hasData) {
+        }
+        else if (hasData) {
           setActiveIndex((prev) => {
             const next = prev + 1
             return next >= filteredHistory.length ? 0 : next
@@ -153,9 +154,11 @@ export const DiscoverSearchInput = ({
           e.preventDefault()
           onSelect(filteredHistory[activeIndex])
           closePanel()
-        } else if (!open) {
+        }
+        else if (!open) {
           onSubmit()
-        } else if (activeIndex === -1) {
+        }
+        else if (activeIndex === -1) {
           onSubmit()
         }
         break
@@ -187,7 +190,7 @@ export const DiscoverSearchInput = ({
         disabled={disabled}
         autoComplete="off"
         onFocus={() => {
-          if (hasData) openPanel()
+          if (hasData) { openPanel() }
         }}
         onBlur={handleBlur}
         onChange={(e) => {
@@ -195,7 +198,8 @@ export const DiscoverSearchInput = ({
           // 输入过程中动态展开/收起
           if (!open && e.target.value && filteredHistory.length > 0) {
             openPanel()
-          } else if (open && !hasData) {
+          }
+          else if (open && !hasData) {
             closePanel()
           }
         }}

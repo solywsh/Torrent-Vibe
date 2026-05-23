@@ -18,8 +18,9 @@ export const useTorrentTableInteractions = () => {
   const handleSelectAll = useCallback(
     (torrents: TorrentInfo[], selected: boolean) => {
       if (selected) {
-        torrentDataStoreSetters.selectTorrents(torrents.map((t) => t.hash))
-      } else {
+        torrentDataStoreSetters.selectTorrents(torrents.map(t => t.hash))
+      }
+      else {
         torrentDataStoreSetters.clearSelection()
       }
     },

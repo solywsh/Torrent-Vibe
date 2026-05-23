@@ -25,7 +25,7 @@ export const CategoryCell = ({ rowIndex }: CategoryCellProps) => {
 
   const category = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentCategory(state, deferredRowIndex),
+      state => selectTorrentCategory(state, deferredRowIndex),
       [deferredRowIndex],
     ),
   )
@@ -65,19 +65,21 @@ export const CategoryCell = ({ rowIndex }: CategoryCellProps) => {
   )
 
   return (
-    <div className="flex items-center px-2 py-2 text-sm text-text">
-      {category ? (
-        <Tag
-          tag={category}
-          variant="accent"
-          type="category"
-          showContextMenu
-          onModify={handleModifyCategory}
-          onDelete={handleDeleteCategory}
-        />
-      ) : (
-        <span className="text-text-tertiary">-</span>
-      )}
+    <div className="flex items-center justify-start px-2 py-2 text-sm text-text">
+      {category
+        ? (
+            <Tag
+              tag={category}
+              variant="accent"
+              type="category"
+              showContextMenu
+              onModify={handleModifyCategory}
+              onDelete={handleDeleteCategory}
+            />
+          )
+        : (
+            <span className="text-text-tertiary">-</span>
+          )}
     </div>
   )
 }

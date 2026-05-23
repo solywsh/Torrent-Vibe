@@ -15,8 +15,8 @@ export function configureLogging() {
   const logDir = join(app.getPath('logs'))
   log.transports.file.resolvePathFn = () => join(logDir, 'main.log')
   log.transports.file.maxSize = 10 * 1024 * 1024 // 10MB
-  log.transports.file.format =
-    '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {scope} {text}'
+  log.transports.file.format
+    = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {scope} {text}'
 
   // Configure console transport
   log.transports.console.format = '[{h}:{i}:{s}.{ms}] [{level}] {scope} {text}'

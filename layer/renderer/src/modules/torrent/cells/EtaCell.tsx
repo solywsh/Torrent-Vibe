@@ -18,9 +18,8 @@ const useI18nEta = () => {
 
   const format = useCallback(
     (etaSeconds: number): React.ReactNode => {
-      if (etaSeconds === ETA_INFINITY || etaSeconds < 0)
-        return t('time.unknown')
-      if (etaSeconds === 0) return t('time.done')
+      if (etaSeconds === ETA_INFINITY || etaSeconds < 0) { return t('time.unknown') }
+      if (etaSeconds === 0) { return t('time.done') }
 
       const years = Math.floor(etaSeconds / 31536000)
       const months = Math.floor((etaSeconds % 31536000) / 2592000)
@@ -34,10 +33,10 @@ const useI18nEta = () => {
       const h = t('time.units.h')
       const m = t('time.units.m')
 
-      if (years > 0) return `${years}${y} ${months}${mo}`
-      if (months > 0) return `${months}${mo} ${days}${d}`
-      if (days > 0) return `${days}${d} ${hours}${h}`
-      if (hours > 0) return `${hours}${h} ${minutes}${m}`
+      if (years > 0) { return `${years}${y} ${months}${mo}` }
+      if (months > 0) { return `${months}${mo} ${days}${d}` }
+      if (days > 0) { return `${days}${d} ${hours}${h}` }
+      if (hours > 0) { return `${hours}${h} ${minutes}${m}` }
       return `${minutes}${m}`
     },
     [t],
@@ -51,7 +50,7 @@ export const EtaCell = ({ rowIndex }: EtaCellProps) => {
   const deferredRowIndex = useDeferredValue(rowIndex)
   const status = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentStatus(state, deferredRowIndex).state,
+      state => selectTorrentStatus(state, deferredRowIndex).state,
       [deferredRowIndex],
     ),
   )
@@ -59,7 +58,7 @@ export const EtaCell = ({ rowIndex }: EtaCellProps) => {
   // Use granular selector for just the ETA data we need
   const eta = useTorrentDataStore(
     useCallback(
-      (state) =>
+      state =>
         status === 'pausedUP'
           ? 0
           : selectTorrentEta(state, deferredRowIndex).eta,
@@ -68,20 +67,22 @@ export const EtaCell = ({ rowIndex }: EtaCellProps) => {
   )
 
   const formattedEta = useMemo(() => {
-    return status === 'pausedUP' || status === 'stoppedUP' ? (
-      '-'
-    ) : eta === ETA_INFINITY ? (
-      <i className="i-lucide-infinity" />
-    ) : (
-      formatEtaI18n(eta)
-    )
+    return status === 'pausedUP' || status === 'stoppedUP'
+      ? (
+          '-'
+        )
+      : eta === ETA_INFINITY
+        ? (
+            <i className="i-lucide-infinity" />
+          )
+        : (
+            formatEtaI18n(eta)
+          )
   }, [eta, status, formatEtaI18n])
 
   return (
     <div
-      className={
-        'flex items-center justify-center px-2 absolute inset-x-2 top-4'
-      }
+      className="flex items-center justify-start px-2 absolute inset-x-2 top-4"
     >
       <span className="text-sm tabular-nums text-text">{formattedEta}</span>
     </div>

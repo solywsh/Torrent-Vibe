@@ -45,6 +45,7 @@ export class UpdateService {
     // Configure logger for UpdateService
     this.logger.info('UpdateService initialized')
   }
+
   public static shared = new UpdateService()
   private logger = log.scope('UpdateService')
   private getLatestInstalledUpdateVersion(): string | null {
@@ -59,8 +60,8 @@ export class UpdateService {
       }
 
       const versions = readdirSync(dir, { withFileTypes: true })
-        .filter((d) => d.isDirectory())
-        .map((d) => d.name)
+        .filter(d => d.isDirectory())
+        .map(d => d.name)
 
       this.logger.debug(
         `Found ${versions.length} version directories: ${versions.join(', ')}`,
@@ -89,14 +90,15 @@ export class UpdateService {
       const sorted = validVersions.sort((a, b) => {
         const cleanedA = semver.clean(a)
         const cleanedB = semver.clean(b)
-        if (!cleanedA || !cleanedB) return 0
+        if (!cleanedA || !cleanedB) { return 0 }
         return semver.compare(cleanedA, cleanedB)
       })
 
       const latest = sorted.at(-1) ?? null
       this.logger.info(`Latest installed update version: ${latest}`)
       return latest
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Error getting latest installed update version:', error)
       return null
     }
@@ -321,8 +323,8 @@ export class UpdateService {
       )
 
       const { tmpDir, pkgPath } = this.prepareTempDirectory(latest)
-      const { expectedSha256, decision } =
-        await this.processRendererManifestAndValidate(latest, tmpDir)
+      const { expectedSha256, decision }
+        = await this.processRendererManifestAndValidate(latest, tmpDir)
 
       // Handle compatibility decision centrally; emit events after decision finalized
       if (decision.action === 'skip' && decision.reason === 'older-than-app') {
@@ -351,12 +353,13 @@ export class UpdateService {
       await this.performPostUpdateCleanup()
       this.notifyRendererUpdateComplete(latest)
       return 'prepared'
-    } catch (error) {
+    }
+    catch (error) {
       this.handleUpdateError(error)
       if (
-        isAppError(error) &&
-        (error.code === AppErrorCode.AppVersionTooLow ||
-          error.code === AppErrorCode.MainHashMissing)
+        isAppError(error)
+        && (error.code === AppErrorCode.AppVersionTooLow
+          || error.code === AppErrorCode.MainHashMissing)
       ) {
         // Hot-update incompatible with current app -> app update path
         return 'incompatible'
@@ -376,7 +379,8 @@ export class UpdateService {
       BridgeService.shared.broadcast('update:checking', {
         startedAt: new Date().toISOString(),
       })
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Failed to broadcast update:checking:', e)
     }
   }
@@ -515,9 +519,9 @@ export class UpdateService {
     expectedSha256: string | undefined
     decision:
       | { action: 'proceed' }
-      | { action: 'skip'; reason: 'older-than-app' }
-      | { action: 'incompatible'; code: AppErrorCode; message: string }
-      | { action: 'error'; message: string }
+      | { action: 'skip', reason: 'older-than-app' }
+      | { action: 'incompatible', code: AppErrorCode, message: string }
+      | { action: 'error', message: string }
   }> {
     let expected = latest.expectedSha256
     this.logger.debug(`Expected SHA256 from release: ${expected || 'none'}`)
@@ -544,7 +548,8 @@ export class UpdateService {
       if (decision.action !== 'proceed') {
         return { expectedSha256: expected, decision }
       }
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Failed to download or validate manifest:', error)
       throw error
     }
@@ -578,9 +583,9 @@ export class UpdateService {
 
     // Ensure manifest.asset_name matches selected asset name from release info
     if (
-      manifest.asset_name &&
-      latest.assetName &&
-      manifest.asset_name !== latest.assetName
+      manifest.asset_name
+      && latest.assetName
+      && manifest.asset_name !== latest.assetName
     ) {
       throw new Error(
         `Manifest asset_name (${manifest.asset_name}) does not match release asset (${latest.assetName})`,
@@ -638,9 +643,9 @@ export class UpdateService {
     _latest: LatestReleaseInfo,
   ): Promise<
     | { action: 'proceed' }
-    | { action: 'skip'; reason: 'older-than-app' }
-    | { action: 'incompatible'; code: AppErrorCode; message: string }
-    | { action: 'error'; message: string }
+    | { action: 'skip', reason: 'older-than-app' }
+    | { action: 'incompatible', code: AppErrorCode, message: string }
+    | { action: 'error', message: string }
   > {
     // Dev mode: skip all compatibility checks
     if (!app.isPackaged) {
@@ -655,8 +660,8 @@ export class UpdateService {
       const updateCreatedAt = new Date(String(manifest.created_at))
       const appBuildTime = new Date(String(__BUILD_TIME__))
       if (
-        !Number.isNaN(updateCreatedAt.getTime()) &&
-        !Number.isNaN(appBuildTime.getTime())
+        !Number.isNaN(updateCreatedAt.getTime())
+        && !Number.isNaN(appBuildTime.getTime())
       ) {
         if (updateCreatedAt.getTime() <= appBuildTime.getTime()) {
           this.logger.info(
@@ -665,12 +670,14 @@ export class UpdateService {
           return { action: 'skip', reason: 'older-than-app' }
         }
         isNewerThanAppBuild = true
-      } else {
+      }
+      else {
         this.logger.warn(
           'Unable to parse created_at or __BUILD_TIME__ for build-time check (manifest)',
         )
       }
-    } else {
+    }
+    else {
       this.logger.warn('No created_at in manifest for build-time check')
     }
 
@@ -735,7 +742,8 @@ export class UpdateService {
     if (expectedSha256) {
       this.logger.debug('Using resumable download with checksum verification')
       await gh.downloadWithResume(latest.assetUrl, pkgPath, expectedSha256)
-    } else {
+    }
+    else {
       this.logger.warn(
         'Downloading without checksum verification (signature verification will still protect)',
       )
@@ -773,7 +781,8 @@ export class UpdateService {
   private async performPostUpdateCleanup(): Promise<void> {
     try {
       await this.cleanup(7)
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Post-update cleanup encountered issues:', e)
     }
   }
@@ -814,10 +823,11 @@ export class UpdateService {
       const gh = new GithubUpdateService()
 
       const [owner, repo] = String(APP_RELEASE_REPO).split('/')
-      if (!owner || !repo) return null
+      if (!owner || !repo) { return null }
       const rel = await gh.getLatestAppRelease(owner, repo)
       return rel?.assetUrl ?? null
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Failed to get latest app installer url:', e)
       return null
     }
@@ -841,10 +851,10 @@ export class UpdateService {
     }
 
     // If hot update is incompatible with current app, provide app installer URL as fallback
-    const incompatible =
-      isAppError(error) &&
-      (error.code === AppErrorCode.AppVersionTooLow ||
-        error.code === AppErrorCode.MainHashMissing)
+    const incompatible
+      = isAppError(error)
+        && (error.code === AppErrorCode.AppVersionTooLow
+          || error.code === AppErrorCode.MainHashMissing)
     if (incompatible) {
       void this.getLatestAppInstallerUrl()
         .then((url) => {
@@ -885,16 +895,17 @@ export class UpdateService {
       if (existsSync(updatesDir)) {
         const entries = readdirSync(updatesDir, { withFileTypes: true })
 
-        const dirs = entries.filter((e) => e.isDirectory()).map((e) => e.name)
-        const files = entries.filter((e) => e.isFile()).map((e) => e.name)
+        const dirs = entries.filter(e => e.isDirectory()).map(e => e.name)
+        const files = entries.filter(e => e.isFile()).map(e => e.name)
 
         // Remove leftover archives
-        const archiveFiles = files.filter((f) => /\.tar\.gz$/i.test(f))
+        const archiveFiles = files.filter(f => /\.tar\.gz$/i.test(f))
         for (const f of archiveFiles) {
           try {
             unlinkSync(join(updatesDir, f))
             this.logger.info('Removed leftover archive', { file: f })
-          } catch (e) {
+          }
+          catch (e) {
             this.logger.warn('Failed to remove leftover archive', {
               file: f,
               error: e,
@@ -904,21 +915,22 @@ export class UpdateService {
 
         // Determine ordering of version directories
         const semverish = dirs
-          .map((v) => ({ raw: v, coerced: semver.coerce(v)?.version || null }))
-          .filter((x) => !!x.coerced) as { raw: string; coerced: string }[]
+          .map(v => ({ raw: v, coerced: semver.coerce(v)?.version || null }))
+          .filter(x => !!x.coerced) as { raw: string, coerced: string }[]
 
         const keepSet = new Set<string>()
         if (semverish.length > 0) {
           const sorted = semverish
-            .map((x) => x.coerced)
+            .map(x => x.coerced)
             .sort(semver.compare)
             .slice(-retainVersions)
           // Map back to raw names by matching coerced prefixes
           for (const v of sorted) {
-            const raw = semverish.find((x) => x.coerced === v)?.raw
-            if (raw) keepSet.add(raw)
+            const raw = semverish.find(x => x.coerced === v)?.raw
+            if (raw) { keepSet.add(raw) }
           }
-        } else {
+        }
+        else {
           // Fallback by directory mtime
           const sortedByTime = dirs
             .map((name) => {
@@ -926,13 +938,14 @@ export class UpdateService {
               try {
                 const s = statSync(p)
                 return { name, mtime: s.mtimeMs }
-              } catch {
+              }
+              catch {
                 return { name, mtime: 0 }
               }
             })
             .sort((a, b) => b.mtime - a.mtime)
             .slice(0, retainVersions)
-          sortedByTime.forEach((x) => keepSet.add(x.name))
+          sortedByTime.forEach(x => keepSet.add(x.name))
         }
 
         // Always drop invalid/incomplete directories (missing index.html)
@@ -954,7 +967,8 @@ export class UpdateService {
             try {
               rmSync(p, { recursive: true, force: true })
               this.logger.info('Removed outdated update directory', { name })
-            } catch (e) {
+            }
+            catch (e) {
               this.logger.warn('Failed to remove outdated update directory', {
                 name,
                 error: e,
@@ -963,7 +977,8 @@ export class UpdateService {
           }
         }
       }
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Cleanup of updates directory encountered issues:', e)
     }
 
@@ -974,7 +989,8 @@ export class UpdateService {
         this.logger.info('Cleared update-cache directory')
       }
       mkdirSync(cacheDir, { recursive: true })
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Cleanup of update-cache encountered issues:', e)
     }
 
@@ -989,7 +1005,8 @@ export class UpdateService {
           this.logger.info('Removed stale update lock file')
         }
       }
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.warn('Cleanup of update.lock encountered issues:', e)
     }
 
@@ -1002,7 +1019,8 @@ export class UpdateService {
       const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as any
       const hash: string | undefined = pkg.mainHash
       return hash ? String(hash) : null
-    } catch (e) {
+    }
+    catch (e) {
       this.logger.error('Failed to read mainHash from package.json:', e)
       return null
     }

@@ -17,16 +17,16 @@ export interface NetworkStats {
   connectionStatus: string
 }
 
-export type TorrentFilterState =
-  | 'all'
-  | 'downloading'
-  | 'seeding'
-  | 'completed'
-  | 'paused'
-  | 'error'
-  | { type: 'category'; value: string }
-  | { type: 'tag'; value: string }
-  | {
+export type TorrentFilterState
+  = | 'all'
+    | 'downloading'
+    | 'seeding'
+    | 'completed'
+    | 'paused'
+    | 'error'
+    | { type: 'category', value: string }
+    | { type: 'tag', value: string }
+    | {
       type: 'multi'
       statuses?: string[]
       categories?: string[]
@@ -50,7 +50,7 @@ export interface TorrentStoreState {
   // === SERVER STATE ===
   torrents: TorrentInfo[]
   serverState: ServerState | null
-  categories: Record<string, { name: string; savePath: string }> | null
+  categories: Record<string, { name: string, savePath: string }> | null
   tags: string[] | null
   lastUpdated: number
 

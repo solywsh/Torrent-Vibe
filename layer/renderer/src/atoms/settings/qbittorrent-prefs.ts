@@ -20,13 +20,13 @@ const combinedPrefsAtom = atom<Partial<Preferences>>((get) => {
 })
 
 // Hooks/accessors
-const [, , useDirtyPrefsValue, , getDirtyPrefs, setDirtyPrefs] =
-  createAtomHooks(dirtyPrefsAtom)
+const [, , useDirtyPrefsValue, , getDirtyPrefs, setDirtyPrefs]
+  = createAtomHooks(dirtyPrefsAtom)
 
 const usePrefsValue = createAtomSelector(combinedPrefsAtom)
 
-const [, , useBasePrefsValue, , getBasePrefs, setBasePrefs] =
-  createAtomHooks(basePrefsAtom)
+const [, , useBasePrefsValue, , getBasePrefs, setBasePrefs]
+  = createAtomHooks(basePrefsAtom)
 
 // Utility to merge updates into dirty state (shallow)
 export const useUpdatePrefs = () => {
@@ -39,7 +39,7 @@ export const useUpdatePrefs = () => {
 export const resetDraftPrefs = () => setDirtyPrefs({})
 
 // Expose selectors
-export const usePrefs = () => usePrefsValue((v) => v)
+export const usePrefs = () => usePrefsValue(v => v)
 export const useBasePrefs = () => useBasePrefsValue()
 export const useDirtyPrefs = () => useDirtyPrefsValue()
 
@@ -50,7 +50,7 @@ export const useQBittorrentPrefsManager = () => {
 
   // Sync fetched prefs into base store and clear draft when server data changes
   useEffect(() => {
-    if (!data) return
+    if (!data) { return }
     const currentBase = getBasePrefs()
     if (!currentBase || currentBase !== data) {
       setBasePrefs(data)
@@ -60,7 +60,7 @@ export const useQBittorrentPrefsManager = () => {
 
   const save = async () => {
     const dirty = getDirtyPrefs()
-    if (!dirty || Object.keys(dirty).length === 0) return
+    if (!dirty || Object.keys(dirty).length === 0) { return }
 
     await mutation.mutateAsync(dirty)
     // On success, merge dirty into base and clear draft

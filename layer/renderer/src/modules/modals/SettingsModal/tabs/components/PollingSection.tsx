@@ -22,16 +22,14 @@ export const PollingSection = () => {
       <SettingSelectField
         label={t('general.polling.interval.label')}
         value={currentInterval.toString()}
-        onValueChange={(value) =>
-          setPollingInterval(Number(value) as PollingInterval)
-        }
+        onValueChange={value =>
+          setPollingInterval(Number(value) as PollingInterval)}
         renderItems={() =>
-          POLLING_INTERVAL_OPTIONS.map((option) => (
+          POLLING_INTERVAL_OPTIONS.map(option => (
             <SelectItem key={option.value} value={option.value.toString()}>
               {t(option.labelKey)}
             </SelectItem>
-          ))
-        }
+          ))}
       />
     </SettingSectionCard>
   )

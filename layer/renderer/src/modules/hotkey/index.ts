@@ -1,4 +1,3 @@
-
 // Minimal public API
 export { hotkeyManager } from './core/hotkey-manager-core'
 export { useFocusScope } from './hooks/use-focus-scope'

@@ -5,5 +5,3 @@ import 'vite/client'
 declare global {
   export const __BUILD_TIME__: string
 }
-
-

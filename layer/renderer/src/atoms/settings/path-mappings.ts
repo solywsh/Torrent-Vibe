@@ -23,11 +23,11 @@ const createId = () =>
 const normalizeEntry = (
   entry: Partial<PathMappingEntry>,
 ): PathMappingEntry | null => {
-  if (!entry || typeof entry !== 'object') return null
-  const remote =
-    typeof entry.remoteBasePath === 'string' ? entry.remoteBasePath : ''
-  const local =
-    typeof entry.localBasePath === 'string' ? entry.localBasePath : ''
+  if (!entry || typeof entry !== 'object') { return null }
+  const remote
+    = typeof entry.remoteBasePath === 'string' ? entry.remoteBasePath : ''
+  const local
+    = typeof entry.localBasePath === 'string' ? entry.localBasePath : ''
   return {
     id: entry.id && typeof entry.id === 'string' ? entry.id : createId(),
     serverId:
@@ -47,11 +47,11 @@ const normalizeEntry = (
 
 const loadPathMappings = (): PathMappingEntry[] => {
   const stored = storage.getJSON<unknown>(STORAGE_KEYS.PATH_MAPPINGS)
-  if (!Array.isArray(stored)) return []
+  if (!Array.isArray(stored)) { return [] }
   const entries: PathMappingEntry[] = []
   for (const raw of stored) {
     const normalized = normalizeEntry(raw as Partial<PathMappingEntry>)
-    if (normalized) entries.push(normalized)
+    if (normalized) { entries.push(normalized) }
   }
   return entries
 }
@@ -62,8 +62,8 @@ const persistPathMappings = (entries: PathMappingEntry[]) => {
 
 const pathMappingsAtom = atom<PathMappingEntry[]>(loadPathMappings())
 
-const [, , usePathMappings, , getPathMappings, setPathMappingsDirect] =
-  createAtomHooks(pathMappingsAtom)
+const [, , usePathMappings, , getPathMappings, setPathMappingsDirect]
+  = createAtomHooks(pathMappingsAtom)
 
 const setPathMappings = (
   updater:
@@ -71,8 +71,8 @@ const setPathMappings = (
     | ((prev: PathMappingEntry[]) => PathMappingEntry[] | undefined),
 ) => {
   const current = getPathMappings()
-  const next =
-    typeof updater === 'function'
+  const next
+    = typeof updater === 'function'
       ? ((
           updater as (
             prev: PathMappingEntry[],
@@ -96,15 +96,13 @@ const addPathMapping = (entry?: Partial<PathMappingEntry>) => {
 }
 
 const updatePathMapping = (id: string, patch: Partial<PathMappingEntry>) => {
-  setPathMappings((prev) =>
-    prev.map((entry) =>
-      entry.id === id ? { ...entry, ...patch, id: entry.id } : entry,
-    ),
-  )
+  setPathMappings(prev =>
+    prev.map(entry =>
+      entry.id === id ? { ...entry, ...patch, id: entry.id } : entry))
 }
 
 const removePathMapping = (id: string) => {
-  setPathMappings((prev) => prev.filter((entry) => entry.id !== id))
+  setPathMappings(prev => prev.filter(entry => entry.id !== id))
 }
 
 export {

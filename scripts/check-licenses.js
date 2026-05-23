@@ -37,12 +37,12 @@ const LICENSE_CATEGORIES = {
 }
 
 function getLicenseCategory(license) {
-  if (!license) return 'UNKNOWN'
+  if (!license) { return 'UNKNOWN' }
 
   const normalizedLicense = license.toUpperCase()
 
   for (const [category, licenses] of Object.entries(LICENSE_CATEGORIES)) {
-    if (licenses.some((l) => normalizedLicense.includes(l.toUpperCase()))) {
+    if (licenses.some(l => normalizedLicense.includes(l.toUpperCase()))) {
       return category
     }
   }
@@ -86,7 +86,7 @@ async function getPackageLicenseInfo(packageName, version) {
 
     let license = packageInfo.license || 'UNKNOWN'
     let licenseText = ''
-    let repository = packageInfo.repository?.url || packageInfo.homepage || ''
+    const repository = packageInfo.repository?.url || packageInfo.homepage || ''
 
     // Handle license objects
     if (typeof license === 'object') {
@@ -125,7 +125,8 @@ async function getPackageLicenseInfo(packageName, version) {
           }
         }
       }
-    } catch {
+    }
+    catch {
       // Ignore local file errors
     }
 
@@ -138,7 +139,8 @@ async function getPackageLicenseInfo(packageName, version) {
       category: getLicenseCategory(license),
       riskLevel: getRiskLevel(getLicenseCategory(license)),
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`Error fetching license for ${packageName}: ${error.message}`)
     return {
       name: packageName,
@@ -178,7 +180,7 @@ async function main() {
     licenseInfos.push(licenseInfo)
 
     // Add a small delay to avoid overwhelming the registry
-    await new Promise((resolve) => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 100))
   }
 
   // Ensure output directory exists
@@ -192,14 +194,13 @@ async function main() {
     const aRisk = riskOrder[a.riskLevel] || 1
     const bRisk = riskOrder[b.riskLevel] || 1
 
-    if (aRisk !== bRisk) return aRisk - bRisk
+    if (aRisk !== bRisk) { return aRisk - bRisk }
     return a.name.localeCompare(b.name)
   })
 
   // Sort by name for app display (alphabetical for better UX)
   const appSortedInfos = [...licenseInfos].sort((a, b) =>
-    a.name.localeCompare(b.name),
-  )
+    a.name.localeCompare(b.name))
 
   // Generate all reports
   const complianceReport = generateComplianceReport(packageJson, licenseInfos)
@@ -298,7 +299,7 @@ This document provides a comprehensive overview of all production dependencies a
 
   // Add high-risk packages section
   const highRiskPackages = licenseInfos.filter(
-    (info) => info.riskLevel === 'HIGH',
+    info => info.riskLevel === 'HIGH',
   )
   if (highRiskPackages.length > 0) {
     report += `\n## ⚠️ High Risk Packages\n\n`
@@ -319,8 +320,8 @@ This document provides a comprehensive overview of all production dependencies a
   report += `|---------|---------|---------|----------|------|------------|\n`
 
   for (const info of licenseInfos) {
-    const riskEmoji =
-      info.riskLevel === 'HIGH'
+    const riskEmoji
+      = info.riskLevel === 'HIGH'
         ? '🔴'
         : info.riskLevel === 'MEDIUM'
           ? '🟡'
@@ -338,7 +339,8 @@ This document provides a comprehensive overview of all production dependencies a
     report += `1. **Review High Risk Packages:** ${highRiskPackages.length} packages need immediate legal review\n`
     report += `2. **Unknown Licenses:** Manually verify license terms for packages with unknown licenses\n`
     report += `3. **Copyleft Compliance:** Ensure GPL/AGPL compliance requirements are met\n\n`
-  } else {
+  }
+  else {
     report += `✅ No high-risk packages detected. Continue with regular compliance monitoring.\n\n`
   }
 
@@ -437,7 +439,7 @@ function generateJsonData(packageJson, licenseInfos) {
         return acc
       }, {}),
     },
-    dependencies: licenseInfos.map((info) => ({
+    dependencies: licenseInfos.map(info => ({
       name: info.name,
       version: info.version,
       license: info.license,
@@ -455,7 +457,7 @@ function generateAppJsonData(packageJson, licenseInfos) {
     appVersion: packageJson.version,
     generated: new Date().toISOString(),
     totalLibraries: licenseInfos.length,
-    licenses: licenseInfos.map((info) => ({
+    licenses: licenseInfos.map(info => ({
       name: info.name,
       version: info.version,
       license: info.license,

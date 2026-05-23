@@ -4,7 +4,7 @@ import zhCn from '@locales/native/zh-CN.json'
 import type { MainSupportedLanguages, ns } from './constants'
 
 export const resources = {
-  en: {
+  'en': {
     native: en,
   },
   'zh-CN': {

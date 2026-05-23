@@ -52,11 +52,11 @@ export const useTorrentDetails = (hash: string | null) => {
     properties: properties.data,
     pieceStates: pieceStates.data,
     isLoading:
-      files.isLoading ||
-      peers.isLoading ||
-      trackers.isLoading ||
-      properties.isLoading ||
-      pieceStates.isLoading,
+      files.isLoading
+      || peers.isLoading
+      || trackers.isLoading
+      || properties.isLoading
+      || pieceStates.isLoading,
     error: files.error || peers.error || trackers.error || properties.error,
     isFilesLoading: files.isLoading,
     isPeersLoading: peers.isLoading,

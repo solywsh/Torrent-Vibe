@@ -27,14 +27,18 @@ export const SettingField = ({
         <Label htmlFor={htmlFor} className="text-text">
           {label}
         </Label>
-        {description ? (
-          <div className="mt-1 text-xs text-text-secondary flex items-center gap-2">
-            <div className="min-w-0">{description}</div>
-            {descriptionTrailing ? (
-              <div className="ml-auto shrink-0">{descriptionTrailing}</div>
-            ) : null}
-          </div>
-        ) : null}
+        {description
+          ? (
+              <div className="mt-1 text-xs text-text-secondary flex items-center gap-2">
+                <div className="min-w-0">{description}</div>
+                {descriptionTrailing
+                  ? (
+                      <div className="ml-auto shrink-0">{descriptionTrailing}</div>
+                    )
+                  : null}
+              </div>
+            )
+          : null}
       </div>
       <div
         className={cn(

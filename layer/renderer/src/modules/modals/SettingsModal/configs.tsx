@@ -14,19 +14,19 @@ import { GeneralTab } from './tabs/GeneralTab'
 import { SpeedTab } from './tabs/SpeedTab'
 import { WebUITab } from './tabs/WebUITab'
 
-export type SettingsSection =
-  | 'appearance'
-  | 'apiTokens'
-  | 'discover'
-  | 'appConnection'
-  | 'servers'
-  | 'about'
-  | 'downloads'
-  | 'connection'
-  | 'speed'
-  | 'bittorrent'
-  | 'webui'
-  | 'advanced'
+export type SettingsSection
+  = | 'appearance'
+    | 'apiTokens'
+    | 'discover'
+    | 'appConnection'
+    | 'servers'
+    | 'about'
+    | 'downloads'
+    | 'connection'
+    | 'speed'
+    | 'bittorrent'
+    | 'webui'
+    | 'advanced'
 
 export type SidebarGroupId = 'app' | 'qbittorrent'
 
@@ -67,7 +67,7 @@ export const getTabConfig = (
   t: TFunction<'setting'>,
 ): Record<
   SettingsSection,
-  { label: string; icon: string; description: string; Component: React.FC }
+  { label: string, icon: string, description: string, Component: React.FC }
 > => ({
   appearance: {
     label: t('tabs.general.label'),
@@ -165,9 +165,9 @@ export const SIDEBAR_GROUPS: SidebarGroup[] = (() => {
       ...group,
       keys: filteredKeys as SettingsSection[],
     }
-  }).filter((group) => group.keys.length > 0)
+  }).filter(group => group.keys.length > 0)
 })()
 
 export const SIDEBAR_KEYS = (() => {
-  return SIDEBAR_GROUPS.flatMap((group) => group.keys)
+  return SIDEBAR_GROUPS.flatMap(group => group.keys)
 })()

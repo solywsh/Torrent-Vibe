@@ -29,7 +29,7 @@ const TagComponent = ({
 
   const handleContextMenu = useCallback(
     async (e: React.MouseEvent) => {
-      if (!showContextMenu || (!onModify && !onDelete)) return
+      if (!showContextMenu || (!onModify && !onDelete)) { return }
 
       e.preventDefault()
       e.stopPropagation()
@@ -37,21 +37,21 @@ const TagComponent = ({
       const { t } = getI18n()
 
       const menuItems = [
-        onModify &&
-          new MenuItemText({
-            label:
+        onModify
+        && new MenuItemText({
+          label:
               type === 'category'
                 ? t('contextMenu.modifyCategory')
                 : t('contextMenu.modifyTag'),
-            icon: <i className="i-mingcute-edit-line" />,
-            click: () => onModify(tag),
-          }),
-        onDelete &&
-          new MenuItemText({
-            label: t('contextMenu.delete'),
-            icon: <i className="i-mingcute-delete-line" />,
-            click: () => onDelete(tag),
-          }),
+          icon: <i className="i-mingcute-edit-line" />,
+          click: () => onModify(tag),
+        }),
+        onDelete
+        && new MenuItemText({
+          label: t('contextMenu.delete'),
+          icon: <i className="i-mingcute-delete-line" />,
+          click: () => onDelete(tag),
+        }),
       ].filter(Boolean)
 
       if (menuItems.length > 0) {
@@ -61,8 +61,8 @@ const TagComponent = ({
     [showContextMenu, onModify, onDelete, tag, showContextMenuHandler, type],
   )
 
-  const baseClassName =
-    'px-2 py-1 rounded-md text-xs font-medium whitespace-pre min-w-0 truncate'
+  const baseClassName
+    = 'px-2 py-1 rounded-md text-xs font-medium whitespace-pre min-w-0 truncate'
 
   const variantClassName = {
     primary: 'bg-accent/20 text-accent',
@@ -70,8 +70,8 @@ const TagComponent = ({
     tertiary: 'bg-text-tertiary/20 text-text-tertiary',
   }[variant]
 
-  const interactiveClassName =
-    showContextMenu && (onModify || onDelete)
+  const interactiveClassName
+    = showContextMenu && (onModify || onDelete)
       ? 'hover:opacity-80 transition-opacity'
       : ''
 

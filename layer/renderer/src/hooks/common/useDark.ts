@@ -31,8 +31,8 @@ const useSyncThemeWebApp = () => {
   const colorMode = useAtomValue(themeAtom)
   const systemIsDark = useDarkQuery()
   useLayoutEffect(() => {
-    const realColorMode: Exclude<ColorMode, 'system'> =
-      colorMode === 'system' ? (systemIsDark ? 'dark' : 'light') : colorMode
+    const realColorMode: Exclude<ColorMode, 'system'>
+      = colorMode === 'system' ? (systemIsDark ? 'dark' : 'light') : colorMode
     document.documentElement.dataset.colorMode = realColorMode
     disableTransition(['[role=switch]>*'])()
   }, [colorMode, systemIsDark])
@@ -48,7 +48,7 @@ function disableTransition(disableTransitionExclude: string[] = []) {
   css.append(
     document.createTextNode(
       `
-*${disableTransitionExclude.map((s) => `:not(${s})`).join('')} {
+*${disableTransitionExclude.map(s => `:not(${s})`).join('')} {
   -webkit-transition: none !important;
   -moz-transition: none !important;
   -o-transition: none !important;
@@ -77,12 +77,12 @@ const useSyncThemeElectron = () => {
   useLayoutEffect(() => {
     let isMounted = true
     ipcServices?.app.getAppearance().then((appearance) => {
-      if (!isMounted) return
+      if (!isMounted) { return }
       setTheme(appearance as ColorMode)
       disableTransition(['[role=switch]>*'])()
 
-      document.documentElement.dataset.colorMode =
-        appearance === 'system' ? (appIsDark ? 'dark' : 'light') : appearance
+      document.documentElement.dataset.colorMode
+        = appearance === 'system' ? (appIsDark ? 'dark' : 'light') : appearance
     })
     return () => {
       isMounted = false

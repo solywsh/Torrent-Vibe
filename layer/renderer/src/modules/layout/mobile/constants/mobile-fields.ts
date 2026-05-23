@@ -24,7 +24,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'primary',
     icon: 'i-mingcute-hard-drive-line',
     description: 'Total file size',
-    formatter: (value) => formatBytes(value),
+    formatter: value => formatBytes(value),
   },
   {
     id: 'progress',
@@ -35,7 +35,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'primary',
     icon: 'i-mingcute-loading-line',
     description: 'Download progress percentage',
-    formatter: (value) => `${(value * 100).toFixed(1)}%`,
+    formatter: value => `${(value * 100).toFixed(1)}%`,
   },
   {
     id: 'status',
@@ -109,7 +109,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-download-line',
     description: 'Current download speed',
-    formatter: (value) => formatSpeedWithStatus(value).text,
+    formatter: value => formatSpeedWithStatus(value).text,
   },
   {
     id: 'upspeed',
@@ -120,7 +120,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-upload-line',
     description: 'Current upload speed',
-    formatter: (value) => formatSpeedWithStatus(value).text,
+    formatter: value => formatSpeedWithStatus(value).text,
   },
   {
     id: 'eta',
@@ -131,7 +131,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-time-line',
     description: 'Estimated time remaining',
-    formatter: (value) => formatEta(value),
+    formatter: value => formatEta(value),
   },
   {
     id: 'ratio',
@@ -142,7 +142,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-exchange-line',
     description: 'Share ratio (uploaded/downloaded)',
-    formatter: (value) => value?.toFixed(2) || '0.00',
+    formatter: value => value?.toFixed(2) || '0.00',
   },
 
   // Seeds & Peers - Connection information
@@ -155,7 +155,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-plant-line',
     description: 'Number of seeds',
-    formatter: (value) => value?.toString() || '0',
+    formatter: value => value?.toString() || '0',
   },
   {
     id: 'num_leechs',
@@ -166,7 +166,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'speeds',
     icon: 'i-mingcute-group-line',
     description: 'Number of peers',
-    formatter: (value) => value?.toString() || '0',
+    formatter: value => value?.toString() || '0',
   },
 
   // Dates & Time - Temporal information
@@ -179,7 +179,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'dates',
     icon: 'i-mingcute-calendar-add-line',
     description: 'When torrent was added',
-    formatter: (value) => (value ? formatDate(value) : 'Unknown'),
+    formatter: value => (value ? formatDate(value) : 'Unknown'),
   },
   {
     id: 'completion_on',
@@ -190,7 +190,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'dates',
     icon: 'i-mingcute-calendar-check-line',
     description: 'When torrent completed',
-    formatter: (value) => (value ? formatDate(value) : 'Not completed'),
+    formatter: value => (value ? formatDate(value) : 'Not completed'),
   },
   {
     id: 'time_active',
@@ -214,7 +214,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
     category: 'advanced',
     icon: 'i-mingcute-download-2-line',
     description: 'Amount downloaded',
-    formatter: (value) => formatBytes(value),
+    formatter: value => formatBytes(value),
   },
   {
     id: 'uploaded',
@@ -254,7 +254,7 @@ export const ALL_MOBILE_FIELDS: MobileCellField[] = [
 
 // Default visible fields - matches current MobileTorrentCard structure
 export const DEFAULT_MOBILE_FIELDS: MobileCellField[] = ALL_MOBILE_FIELDS.map(
-  (field) => ({
+  field => ({
     ...field,
     visible: [
       'name',
@@ -285,23 +285,26 @@ function formatDate(timestamp: number): string {
 
   if (days === 0) {
     return 'Today'
-  } else if (days === 1) {
+  }
+  else if (days === 1) {
     return 'Yesterday'
-  } else if (days < 7) {
+  }
+  else if (days < 7) {
     return `${days} days ago`
-  } else {
+  }
+  else {
     return date.toLocaleDateString()
   }
 }
 
 function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${seconds}s`
+  if (seconds < 60) { return `${seconds}s` }
 
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
-  if (days > 0) return `${days}d ${hours % 24}h`
-  if (hours > 0) return `${hours}h ${minutes % 60}m`
+  if (days > 0) { return `${days}d ${hours % 24}h` }
+  if (hours > 0) { return `${hours}h ${minutes % 60}m` }
   return `${minutes}m`
 }

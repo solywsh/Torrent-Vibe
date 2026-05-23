@@ -26,20 +26,18 @@ export const TorrentQueuingSection = ({
     <SettingSectionCard
       title={t('bittorrent.queueing.title')}
       enabled={queuingEnabled}
-      onToggleEnabled={(checked) =>
-        onPrefsChange({ queueing_enabled: Boolean(checked) })
-      }
+      onToggleEnabled={checked =>
+        onPrefsChange({ queueing_enabled: Boolean(checked) })}
     >
       <SettingField label={t('bittorrent.queueing.maxActiveDownloads')}>
         <Input
           id="max-active-downloads"
           type="number"
           value={prefs.max_active_downloads ?? 8}
-          onChange={(e) =>
+          onChange={e =>
             onPrefsChange({
               max_active_downloads: Number.parseInt(e.target.value) || 8,
-            })
-          }
+            })}
           min={1}
           className="w-20"
         />
@@ -49,11 +47,10 @@ export const TorrentQueuingSection = ({
           id="max-active-uploads"
           type="number"
           value={prefs.max_active_uploads ?? 3}
-          onChange={(e) =>
+          onChange={e =>
             onPrefsChange({
               max_active_uploads: Number.parseInt(e.target.value) || 3,
-            })
-          }
+            })}
           min={1}
           className="w-20"
         />
@@ -63,11 +60,10 @@ export const TorrentQueuingSection = ({
           id="max-active-torrents"
           type="number"
           value={prefs.max_active_torrents ?? 8}
-          onChange={(e) =>
+          onChange={e =>
             onPrefsChange({
               max_active_torrents: Number.parseInt(e.target.value) || 8,
-            })
-          }
+            })}
           min={1}
           className="w-20"
         />
@@ -77,16 +73,14 @@ export const TorrentQueuingSection = ({
         label={t('bittorrent.queueing.excludeSlowTorrents')}
         description={t('bittorrent.queueing.excludeSlowTorrentsDescription')}
         checked={excludeSlowTorrents}
-        onCheckedChange={(checked) =>
-          onPrefsChange({ dont_count_slow_torrents: Boolean(checked) })
-        }
+        onCheckedChange={checked =>
+          onPrefsChange({ dont_count_slow_torrents: Boolean(checked) })}
       />
       <SettingSectionCard
         title={t('bittorrent.queueing.slowThresholds')}
         enabled={excludeSlowTorrents}
-        onToggleEnabled={(checked) =>
-          onPrefsChange({ dont_count_slow_torrents: Boolean(checked) })
-        }
+        onToggleEnabled={checked =>
+          onPrefsChange({ dont_count_slow_torrents: Boolean(checked) })}
       >
         <SettingField label={t('bittorrent.queueing.downloadRateLimit')}>
           <div className="flex items-center gap-2">
@@ -94,12 +88,11 @@ export const TorrentQueuingSection = ({
               id="download-rate-limit"
               type="number"
               value={prefs.slow_torrent_dl_rate_threshold ?? 2}
-              onChange={(e) =>
+              onChange={e =>
                 onPrefsChange({
                   slow_torrent_dl_rate_threshold:
                     Number.parseInt(e.target.value) || 2,
-                })
-              }
+                })}
               min={0}
               className="w-20"
             />
@@ -112,12 +105,11 @@ export const TorrentQueuingSection = ({
               id="upload-rate-limit"
               type="number"
               value={prefs.slow_torrent_ul_rate_threshold ?? 2}
-              onChange={(e) =>
+              onChange={e =>
                 onPrefsChange({
                   slow_torrent_ul_rate_threshold:
                     Number.parseInt(e.target.value) || 2,
-                })
-              }
+                })}
               min={0}
               className="w-20"
             />
@@ -130,12 +122,11 @@ export const TorrentQueuingSection = ({
               id="torrent-inactivity-timer"
               type="number"
               value={prefs.slow_torrent_inactive_timer ?? 60}
-              onChange={(e) =>
+              onChange={e =>
                 onPrefsChange({
                   slow_torrent_inactive_timer:
                     Number.parseInt(e.target.value) || 60,
-                })
-              }
+                })}
               min={1}
               className="w-20"
             />

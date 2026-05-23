@@ -14,7 +14,7 @@ export interface PieceBarCanvasProps {
 }
 
 function getBgColorFromClass(className: string): string {
-  if (typeof document === 'undefined') return 'rgba(0,0,0,0.3)'
+  if (typeof document === 'undefined') { return 'rgba(0,0,0,0.3)' }
   const el = document.createElement('span')
   el.style.display = 'none'
   el.className = className
@@ -48,7 +48,7 @@ export function PieceBarCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) { return }
 
     const drawCanvas = (width: number, canvasHeight: number) => {
       const dpr = window.devicePixelRatio || 1
@@ -60,7 +60,7 @@ export function PieceBarCanvas({
       // Don't set canvas style size - let CSS handle it
 
       const ctx = canvas.getContext('2d')
-      if (!ctx) return
+      if (!ctx) { return }
 
       // Scale context to match device pixel ratio
       ctx.scale(dpr, dpr)
@@ -103,9 +103,8 @@ export function PieceBarCanvas({
           for (let j = start; j < Math.max(end, start + 1); j++) {
             const state = states[j] ?? 0
             totalCount += 1
-            if (state === 2)
-              downloadedCount += 1 // Downloaded
-            else if (state === 1) downloadingCount += 1 // Downloading
+            if (state === 2) { downloadedCount += 1 } // Downloaded
+            else if (state === 1) { downloadingCount += 1 } // Downloading
             // state === 0 is not downloaded (no action needed)
           }
 
@@ -114,7 +113,8 @@ export function PieceBarCanvas({
           // Special handling for completed torrents
           if (isCompleted) {
             col = colorDone
-          } else {
+          }
+          else {
             // Determine color based on piece completion ratio
             const completionRatio = downloadedCount / totalCount
             const partialRatio = downloadingCount / totalCount
@@ -125,8 +125,8 @@ export function PieceBarCanvas({
             }
             // If there are any downloading pieces or some downloaded pieces, show as partial
             else if (
-              partialRatio > 0 ||
-              (completionRatio > 0 && completionRatio < 0.8)
+              partialRatio > 0
+              || (completionRatio > 0 && completionRatio < 0.8)
             ) {
               col = colorPartial
             }
@@ -137,7 +137,8 @@ export function PieceBarCanvas({
           // Draw the column using logical pixels
           ctx.fillRect(x, 0, 1, h)
         }
-      } else {
+      }
+      else {
         // Fallback when piece states are not available - use have/total ratio
         const have = havePieces || 0
         const total = totalPieces || 1
@@ -168,7 +169,7 @@ export function PieceBarCanvas({
 
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0]
-      if (!entry) return
+      if (!entry) { return }
 
       const width = Math.max(1, Math.floor(entry.contentRect.width))
       const canvasHeight = Math.max(1, Math.floor(entry.contentRect.height))

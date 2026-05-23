@@ -49,7 +49,7 @@ export const AdvancedFilters = () => {
 
   const handleModifyCategory = useCallback(
     async (categoryName: string) => {
-      const category = categories.find((cat) => cat.name === categoryName)
+      const category = categories.find(cat => cat.name === categoryName)
       ModifyCategoryPrompt.show({
         categoryName,
         currentSavePath: category?.savePath || '',
@@ -83,24 +83,23 @@ export const AdvancedFilters = () => {
       ModifyTagPrompt.show({
         tagName,
         onConfirm: async (newTagName: string) => {
-          if (newTagName.trim() === tagName.trim()) return // No change
+          if (newTagName.trim() === tagName.trim()) { return } // No change
 
           // Since qBittorrent doesn't support renaming tags directly,
           // we need to create the new tag and update all torrents that use the old tag
           const { torrents } = useTorrentDataStore.getState()
-          const torrentsWithTag = torrents.filter((torrent) =>
+          const torrentsWithTag = torrents.filter(torrent =>
             torrent.tags
               .split(',')
-              .map((t) => t.trim())
-              .includes(tagName),
-          )
+              .map(t => t.trim())
+              .includes(tagName))
 
           // Create new tag
           await createTagMutation.mutateAsync([newTagName.trim()])
 
           // Add new tag to all torrents that had the old tag
           if (torrentsWithTag.length > 0) {
-            const hashes = torrentsWithTag.map((t) => t.hash)
+            const hashes = torrentsWithTag.map(t => t.hash)
             await addTorrentTagsMutation.mutateAsync({
               hashes,
               tags: [newTagName.trim()],
@@ -230,13 +229,13 @@ export const AdvancedFilters = () => {
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {categories.map((category) => {
-                      const isActive =
-                        (typeof filterState === 'object' &&
-                          filterState.type === 'category' &&
-                          filterState.value === category.name) ||
-                        (typeof filterState === 'object' &&
-                          filterState.type === 'multi' &&
-                          filterState.categories?.includes(category.name))
+                      const isActive
+                        = (typeof filterState === 'object'
+                          && filterState.type === 'category'
+                          && filterState.value === category.name)
+                        || (typeof filterState === 'object'
+                          && filterState.type === 'multi'
+                          && filterState.categories?.includes(category.name))
                       const isEmpty = category.count === 0
 
                       return (
@@ -246,34 +245,36 @@ export const AdvancedFilters = () => {
                             className={`
                             px-2 py-1 rounded text-xs font-medium transition-all border border-transparent
                             ${
-                              isActive
-                                ? 'bg-accent/15 text-accent border-accent/30'
-                                : isEmpty
-                                  ? 'text-text-quaternary bg-fill/50 cursor-not-allowed'
-                                  : 'text-text-tertiary bg-fill hover:bg-fill-tertiary hover:text-text-secondary'
-                            }
+                        isActive
+                          ? 'bg-accent/15 text-accent border-accent/30'
+                          : isEmpty
+                            ? 'text-text-quaternary bg-fill/50 cursor-not-allowed'
+                            : 'text-text-tertiary bg-fill hover:bg-fill-tertiary hover:text-text-secondary'
+                        }
                           `}
                             onClick={(e) => {
-                              if (isEmpty) return
+                              if (isEmpty) { return }
 
                               // Direct click now preserves current status and combines with category
                               // Use Ctrl/Cmd for multi-select within categories
                               if (e.ctrlKey || e.metaKey) {
                                 toggleCategoryFilter(category.name)
-                              } else {
+                              }
+                              else {
                                 // If this category is already active, toggle it off
                                 if (
-                                  isActive &&
-                                  typeof filterState === 'object' &&
-                                  ((filterState.type === 'category' &&
-                                    filterState.value === category.name) ||
-                                    (filterState.type === 'multi' &&
-                                      filterState.categories?.includes(
-                                        category.name,
-                                      )))
+                                  isActive
+                                  && typeof filterState === 'object'
+                                  && ((filterState.type === 'category'
+                                    && filterState.value === category.name)
+                                  || (filterState.type === 'multi'
+                                    && filterState.categories?.includes(
+                                      category.name,
+                                    )))
                                 ) {
                                   toggleCategoryFilter(category.name)
-                                } else {
+                                }
+                                else {
                                   // Add this category while preserving current filters
                                   toggleCategoryFilter(category.name)
                                 }
@@ -287,17 +288,19 @@ export const AdvancedFilters = () => {
                           >
                             <span>{category.name}</span>
                             <span className="ml-1 opacity-70">
-                              ({category.count})
+                              (
+                              {category.count}
+                              )
                             </span>
                           </button>
 
                           {/* Multi-select indicator */}
-                          {isActive &&
-                            typeof filterState === 'object' &&
-                            filterState.type === 'multi' &&
-                            filterState.categories?.includes(category.name) && (
-                              <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full border border-background" />
-                            )}
+                          {isActive
+                            && typeof filterState === 'object'
+                            && filterState.type === 'multi'
+                            && filterState.categories?.includes(category.name) && (
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full border border-background" />
+                          )}
                         </div>
                       )
                     })}
@@ -314,13 +317,13 @@ export const AdvancedFilters = () => {
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {tags.map((tag) => {
-                      const isActive =
-                        (typeof filterState === 'object' &&
-                          filterState.type === 'tag' &&
-                          filterState.value === tag.name) ||
-                        (typeof filterState === 'object' &&
-                          filterState.type === 'multi' &&
-                          filterState.tags?.includes(tag.name))
+                      const isActive
+                        = (typeof filterState === 'object'
+                          && filterState.type === 'tag'
+                          && filterState.value === tag.name)
+                        || (typeof filterState === 'object'
+                          && filterState.type === 'multi'
+                          && filterState.tags?.includes(tag.name))
                       const isEmpty = tag.count === 0
 
                       return (
@@ -329,32 +332,34 @@ export const AdvancedFilters = () => {
                             className={`
                             px-2 py-1 rounded text-xs font-medium transition-all
                             ${
-                              isActive
-                                ? 'bg-accent/15 text-accent border border-accent/30'
-                                : isEmpty
-                                  ? 'text-text-quaternary bg-fill cursor-not-allowed'
-                                  : 'text-text-tertiary bg-fill-secondary hover:bg-fill hover:text-text-secondary'
-                            }
+                        isActive
+                          ? 'bg-accent/15 text-accent border border-accent/30'
+                          : isEmpty
+                            ? 'text-text-quaternary bg-fill cursor-not-allowed'
+                            : 'text-text-tertiary bg-fill-secondary hover:bg-fill hover:text-text-secondary'
+                        }
                           `}
                             onClick={(e) => {
-                              if (isEmpty) return
+                              if (isEmpty) { return }
 
                               // Direct click now preserves current status and combines with tag
                               // Use Ctrl/Cmd for multi-select within tags
                               if (e.ctrlKey || e.metaKey) {
                                 toggleTagFilter(tag.name)
-                              } else {
+                              }
+                              else {
                                 // If this tag is already active, toggle it off
                                 if (
-                                  isActive &&
-                                  typeof filterState === 'object' &&
-                                  ((filterState.type === 'tag' &&
-                                    filterState.value === tag.name) ||
-                                    (filterState.type === 'multi' &&
-                                      filterState.tags?.includes(tag.name)))
+                                  isActive
+                                  && typeof filterState === 'object'
+                                  && ((filterState.type === 'tag'
+                                    && filterState.value === tag.name)
+                                  || (filterState.type === 'multi'
+                                    && filterState.tags?.includes(tag.name)))
                                 ) {
                                   toggleTagFilter(tag.name)
-                                } else {
+                                }
+                                else {
                                   // Add this tag while preserving current filters
                                   toggleTagFilter(tag.name)
                                 }
@@ -369,19 +374,24 @@ export const AdvancedFilters = () => {
                             whileTap={!isEmpty ? { scale: 0.95 } : undefined}
                             transition={Spring.presets.snappy}
                           >
-                            <span>#{tag.name}</span>
+                            <span>
+                              #
+                              {tag.name}
+                            </span>
                             <span className="ml-1 opacity-70">
-                              ({tag.count})
+                              (
+                              {tag.count}
+                              )
                             </span>
                           </m.button>
 
                           {/* Multi-select indicator */}
-                          {isActive &&
-                            typeof filterState === 'object' &&
-                            filterState.type === 'multi' &&
-                            filterState.tags?.includes(tag.name) && (
-                              <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full border border-background" />
-                            )}
+                          {isActive
+                            && typeof filterState === 'object'
+                            && filterState.type === 'multi'
+                            && filterState.tags?.includes(tag.name) && (
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full border border-background" />
+                          )}
                         </div>
                       )
                     })}
@@ -400,14 +410,14 @@ export const AdvancedFilters = () => {
                     <i className="i-mingcute-close-line mr-1" />
                     {t('torrent.advanced.clearFilters')}
                     {/* Show count of active filters in multi-select mode */}
-                    {typeof filterState === 'object' &&
-                      filterState.type === 'multi' && (
-                        <span className="ml-1 px-1.5 py-0.5 bg-accent/20 text-accent rounded text-xs">
-                          {(filterState.statuses?.length || 0) +
-                            (filterState.categories?.length || 0) +
-                            (filterState.tags?.length || 0)}
-                        </span>
-                      )}
+                    {typeof filterState === 'object'
+                      && filterState.type === 'multi' && (
+                      <span className="ml-1 px-1.5 py-0.5 bg-accent/20 text-accent rounded text-xs">
+                        {(filterState.statuses?.length || 0)
+                          + (filterState.categories?.length || 0)
+                          + (filterState.tags?.length || 0)}
+                      </span>
+                    )}
                   </Button>
                 </div>
               )}

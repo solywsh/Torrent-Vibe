@@ -12,7 +12,7 @@ export interface FloatingResizeHandlesProps {
   maxHeight?: number
   onWidthChange?: (width: number) => void
   onHeightChange?: (height: number) => void
-  onCommit?: (size: { width: number; height: number }) => void
+  onCommit?: (size: { width: number, height: number }) => void
   /** Gap from viewport edges (matches panel offset). Default: 16 */
   offset?: number
 }
@@ -54,7 +54,7 @@ export function FloatingResizeHandles(props: FloatingResizeHandlesProps) {
     Math.min(Math.max(value, min), max)
 
   const ensureCursorStyle = (cursor: string) => {
-    if (styleElementRef.current) return
+    if (styleElementRef.current) { return }
     const $css = document.createElement('style')
     $css.innerHTML = `* { cursor: ${cursor} !important; user-select: none !important; }`
     document.head.append($css)
@@ -68,7 +68,7 @@ export function FloatingResizeHandles(props: FloatingResizeHandlesProps) {
 
   // Horizontal resizer (left edge)
   const widthOnMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isCornerDragging) return
+    if (isCornerDragging) { return }
     event.preventDefault()
     event.stopPropagation()
     ensureCursorStyle('ew-resize')
@@ -98,7 +98,7 @@ export function FloatingResizeHandles(props: FloatingResizeHandlesProps) {
 
   // Vertical resizer (top edge)
   const heightOnMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isCornerDragging) return
+    if (isCornerDragging) { return }
     event.preventDefault()
     event.stopPropagation()
     ensureCursorStyle('ns-resize')
@@ -128,12 +128,10 @@ export function FloatingResizeHandles(props: FloatingResizeHandlesProps) {
 
   // Continuous updates outward - only when the corresponding axis is dragging
   useEffect(() => {
-    if (isWidthDragging && !isCornerDragging)
-      onWidthChange?.(widthDraft ?? width)
+    if (isWidthDragging && !isCornerDragging) { onWidthChange?.(widthDraft ?? width) }
   }, [widthDraft, width, isWidthDragging, isCornerDragging, onWidthChange])
   useEffect(() => {
-    if (isHeightDragging && !isCornerDragging)
-      onHeightChange?.(heightDraft ?? height)
+    if (isHeightDragging && !isCornerDragging) { onHeightChange?.(heightDraft ?? height) }
   }, [heightDraft, height, isHeightDragging, isCornerDragging, onHeightChange])
 
   // Effective positions used for handle placement
@@ -235,9 +233,9 @@ export function FloatingResizeHandles(props: FloatingResizeHandlesProps) {
               width:
                 cornerDraftWidthRef.current ?? cornerDraftWidth ?? startWidth,
               height:
-                cornerDraftHeightRef.current ??
-                cornerDraftHeight ??
-                startHeight,
+                cornerDraftHeightRef.current
+                ?? cornerDraftHeight
+                ?? startHeight,
             })
             setIsCornerDragging(false)
             window.dispatchEvent(new Event('resize'))

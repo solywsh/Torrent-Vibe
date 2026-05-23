@@ -3,15 +3,15 @@ import { atom } from 'jotai'
 import { createAtomHooks } from '~/lib/jotai'
 import { storage, STORAGE_KEYS } from '~/lib/storage-keys'
 
-export type AccentColorId =
-  | 'blue'
-  | 'purple'
-  | 'pink'
-  | 'red'
-  | 'orange'
-  | 'yellow'
-  | 'green'
-  | 'graphite'
+export type AccentColorId
+  = | 'blue'
+    | 'purple'
+    | 'pink'
+    | 'red'
+    | 'orange'
+    | 'yellow'
+    | 'green'
+    | 'graphite'
 
 export type AppColorStyle = 'default' | 'low' | 'high'
 
@@ -73,8 +73,8 @@ export const ACCENT_COLOR_PRESETS: AccentColorPreset[] = [
   },
 ]
 
-export const ACCENT_COLOR_PRESET_MAP: Record<AccentColorId, AccentColorPreset> =
-  ACCENT_COLOR_PRESETS.reduce(
+export const ACCENT_COLOR_PRESET_MAP: Record<AccentColorId, AccentColorPreset>
+  = ACCENT_COLOR_PRESETS.reduce(
     (map, preset) => ({
       ...map,
       [preset.id]: preset,
@@ -101,24 +101,24 @@ const loadColorStyle = (): AppColorStyle => {
   let resolved: AppColorStyle = DEFAULT_COLOR_STYLE
 
   switch (stored) {
-  case 'high': 
-  case 'high-contrast': {
-    resolved = 'high'
-  
-  break;
-  }
-  case 'low': 
-  case 'kawaii': {
-    resolved = 'low'
-  
-  break;
-  }
-  case 'default': 
-  case 'regular': {
-    resolved = 'default'
-  
-  break;
-  }
+    case 'high':
+    case 'high-contrast': {
+      resolved = 'high'
+
+      break
+    }
+    case 'low':
+    case 'kawaii': {
+      resolved = 'low'
+
+      break
+    }
+    case 'default':
+    case 'regular': {
+      resolved = 'default'
+
+      break
+    }
   // No default
   }
 
@@ -132,15 +132,15 @@ const loadColorStyle = (): AppColorStyle => {
 const accentColorAtom = atom<AccentColorId>(loadAccentColor())
 const colorStyleAtom = atom<AppColorStyle>(loadColorStyle())
 
-const [, , useAccentColor, , getAccentColor, setAccentColorAtom] =
-  createAtomHooks(accentColorAtom)
+const [, , useAccentColor, , getAccentColor, setAccentColorAtom]
+  = createAtomHooks(accentColorAtom)
 
-const [, , useColorStyle, , getColorStyle, setColorStyleAtom] =
-  createAtomHooks(colorStyleAtom)
+const [, , useColorStyle, , getColorStyle, setColorStyleAtom]
+  = createAtomHooks(colorStyleAtom)
 
 const setAccentColor = (id: AccentColorId) => {
-  const preset =
-    ACCENT_COLOR_PRESET_MAP[id] ?? ACCENT_COLOR_PRESET_MAP[DEFAULT_ACCENT_COLOR]
+  const preset
+    = ACCENT_COLOR_PRESET_MAP[id] ?? ACCENT_COLOR_PRESET_MAP[DEFAULT_ACCENT_COLOR]
   setAccentColorAtom(preset.id)
   storage.setItem(ACCENT_STORAGE_KEY, preset.id)
 }

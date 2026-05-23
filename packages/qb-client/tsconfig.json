@@ -3,17 +3,17 @@
     "target": "ES2020",
     "module": "ES2020",
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": true,
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": false,
+    "noEmitOnError": true,
     "outDir": "dist",
-    "strict": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmitOnError": true
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"

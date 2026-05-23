@@ -63,8 +63,8 @@ export class PersistentLRUCache<V> {
     this.filePath = join(directory, options.fileName)
     this.namespace = options.namespace
     this.limit = Math.max(1, Math.floor(options.limit))
-    this.ttlMs =
-      options.ttlMs == null ? null : Math.max(0, Math.floor(options.ttlMs))
+    this.ttlMs
+      = options.ttlMs == null ? null : Math.max(0, Math.floor(options.ttlMs))
     this.createdAtSelector = options.createdAtSelector || ((_: V) => Date.now())
     this.ensureDirectory(dirname(this.filePath))
     this.load()
@@ -80,7 +80,7 @@ export class PersistentLRUCache<V> {
 
   get(key: string): V | undefined {
     const value = this.map.get(key)
-    if (value === undefined) return undefined
+    if (value === undefined) { return undefined }
 
     // TTL check
     if (this.isExpired(value)) {
@@ -104,7 +104,7 @@ export class PersistentLRUCache<V> {
 
   delete(key: string): boolean {
     const existed = this.map.delete(key)
-    if (existed) this.scheduleWrite()
+    if (existed) { this.scheduleWrite() }
     return existed
   }
 
@@ -112,22 +112,23 @@ export class PersistentLRUCache<V> {
     this.map.clear()
     try {
       rmSync(this.filePath, { force: true })
-    } catch {
+    }
+    catch {
       // ignore
     }
   }
 
   private isExpired(value: V): boolean {
-    if (this.ttlMs == null) return false
+    if (this.ttlMs == null) { return false }
     const createdAt = this.createdAtSelector(value)
-    if (!Number.isFinite(createdAt)) return false
+    if (!Number.isFinite(createdAt)) { return false }
     return createdAt + this.ttlMs < Date.now()
   }
 
   private evictIfNeeded() {
     while (this.map.size > this.limit) {
       const oldestKey = this.map.keys().next().value as string | undefined
-      if (!oldestKey) break
+      if (!oldestKey) { break }
       this.map.delete(oldestKey)
     }
   }
@@ -139,35 +140,36 @@ export class PersistentLRUCache<V> {
   }
 
   private load() {
-    if (!existsSync(this.filePath)) return
+    if (!existsSync(this.filePath)) { return }
     try {
       const raw = readFileSync(this.filePath, 'utf8')
       const parsed = JSON.parse(raw) as PersistedCacheFile<V>
       if (
-        !parsed ||
-        parsed.version !== 1 ||
-        parsed.namespace !== this.namespace
+        !parsed
+        || parsed.version !== 1
+        || parsed.namespace !== this.namespace
       ) {
         return
       }
 
       const next = new Map<string, V>()
       for (const record of parsed.items || []) {
-        if (!record || typeof record.key !== 'string') continue
+        if (!record || typeof record.key !== 'string') { continue }
         const value = record.value as V
-        if (this.isExpired(value)) continue
+        if (this.isExpired(value)) { continue }
         next.set(record.key, value)
-        if (next.size >= this.limit) break
+        if (next.size >= this.limit) { break }
       }
       this.map = next
-    } catch {
+    }
+    catch {
       // ignore corrupted cache
       this.map.clear()
     }
   }
 
   private scheduleWrite() {
-    if (this.writeTimer) clearTimeout(this.writeTimer)
+    if (this.writeTimer) { clearTimeout(this.writeTimer) }
     this.writeTimer = setTimeout(() => this.writeNow(), 150)
   }
 
@@ -196,14 +198,17 @@ export class PersistentLRUCache<V> {
         const fd = openSync(tmp, 'r+')
         try {
           fsyncSync(fd)
-        } finally {
+        }
+        finally {
           closeSync(fd)
         }
-      } catch {
+      }
+      catch {
         // ignore fsync issues
       }
       renameSync(tmp, this.filePath)
-    } catch {
+    }
+    catch {
       // ignore write errors
     }
   }

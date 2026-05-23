@@ -28,7 +28,7 @@ export const SettingSwitchField = ({
         id={id}
         checked={checked}
         disabled={disabled}
-        onCheckedChange={(v) => onCheckedChange(Boolean(v))}
+        onCheckedChange={v => onCheckedChange(Boolean(v))}
       />
     </SettingField>
   )

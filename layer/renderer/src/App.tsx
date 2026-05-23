@@ -23,14 +23,13 @@ const AppLayer = () => {
   useDocumentTitleSpeed()
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAppIsReady(true)
   }, [appIsReady, location.pathname, navigate])
 
   useEffect(() => {
-    if (!appIsReady) return
+    if (!appIsReady) { return }
     // Do not auto-show the main window when rendering the mini floating view
-    if (location.pathname === '/mini') return
+    if (location.pathname === '/mini') { return }
     ipcServices?.window.showMainWindow()
   }, [appIsReady, location.pathname])
 

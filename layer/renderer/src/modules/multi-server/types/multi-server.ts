@@ -2,11 +2,11 @@ import { z } from 'zod'
 
 import type { QBittorrentConfig } from '~/shared/types/qbittorrent'
 
-export type ConnectionStatus =
-  | 'disconnected'
-  | 'connecting'
-  | 'connected'
-  | 'error'
+export type ConnectionStatus
+  = | 'disconnected'
+    | 'connecting'
+    | 'connected'
+    | 'error'
 
 export interface ServerConnection {
   id: string

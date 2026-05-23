@@ -46,20 +46,20 @@ export const MTeamProviderSection = () => {
 
   const isDirty = useMemo(() => {
     return (
-      form.baseUrl.trim() !== config.baseUrl.trim() ||
-      form.apiKey.trim() !== config.apiKey.trim() ||
-      form.mode !== (config.mode ?? 'normal') ||
-      Number(form.pageSize) !== config.pageSize
+      form.baseUrl.trim() !== config.baseUrl.trim()
+      || form.apiKey.trim() !== config.apiKey.trim()
+      || form.mode !== (config.mode ?? 'normal')
+      || Number(form.pageSize) !== config.pageSize
     )
   }, [config.apiKey, config.baseUrl, config.mode, config.pageSize, form])
 
-  const canSave =
-    Boolean(form.baseUrl.trim()) &&
-    Boolean(form.apiKey.trim()) &&
-    Number(form.pageSize) > 0
+  const canSave
+    = Boolean(form.baseUrl.trim())
+      && Boolean(form.apiKey.trim())
+      && Number(form.pageSize) > 0
 
   const handleSave = () => {
-    if (!canSave) return
+    if (!canSave) { return }
 
     updateDiscoverProviderConfig('mteam', {
       baseUrl: form.baseUrl.trim().replace(/\/$/, ''),
@@ -90,12 +90,11 @@ export const MTeamProviderSection = () => {
         label={t('discover.providers.mteam.baseUrl.label')}
         description={t('discover.providers.mteam.baseUrl.description')}
         value={form.baseUrl}
-        onChange={(value) =>
-          setForm((prev) => ({
+        onChange={value =>
+          setForm(prev => ({
             ...prev,
             baseUrl: value,
-          }))
-        }
+          }))}
         placeholder="https://api.m-team.cc/api"
         spellCheck={false}
         autoComplete="off"
@@ -105,13 +104,12 @@ export const MTeamProviderSection = () => {
         id="mteam-mode"
         label={t('discover.providers.mteam.mode.label')}
         value={form.mode}
-        onValueChange={(value) =>
-          setForm((prev) => ({
+        onValueChange={value =>
+          setForm(prev => ({
             ...prev,
             mode: value,
-          }))
-        }
-        options={MTEAM_FILTER_DEFINITIONS_MODES.map((option) => ({
+          }))}
+        options={MTEAM_FILTER_DEFINITIONS_MODES.map(option => ({
           value: option.value,
           label: t(option.label),
         }))}
@@ -122,12 +120,11 @@ export const MTeamProviderSection = () => {
         label={t('discover.providers.mteam.apiKey.label')}
         description={t('discover.providers.mteam.apiKey.description')}
         value={form.apiKey}
-        onChange={(value) =>
-          setForm((prev) => ({
+        onChange={value =>
+          setForm(prev => ({
             ...prev,
             apiKey: value,
-          }))
-        }
+          }))}
         type="password"
         autoComplete="off"
       />
@@ -137,12 +134,11 @@ export const MTeamProviderSection = () => {
         label={t('discover.providers.mteam.pageSize.label')}
         description={t('discover.providers.mteam.pageSize.description')}
         value={form.pageSize}
-        onChange={(value) =>
-          setForm((prev) => ({
+        onChange={value =>
+          setForm(prev => ({
             ...prev,
             pageSize: value.replaceAll(/\D/g, ''),
-          }))
-        }
+          }))}
         inputMode="numeric"
         min={1}
         max={100}

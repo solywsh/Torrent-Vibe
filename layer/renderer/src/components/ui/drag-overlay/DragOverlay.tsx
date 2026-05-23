@@ -9,7 +9,7 @@ interface DragOverlayProps {
 }
 
 export const DragOverlay = ({ isVisible, isDragOver }: DragOverlayProps) => {
-  if (!isVisible) return null
+  if (!isVisible) { return null }
 
   return (
     <m.div

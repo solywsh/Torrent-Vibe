@@ -20,7 +20,7 @@ export const useDocumentTitleSpeed = () => {
 
   useEffect(() => {
     // Only update title in web environment, not in Electron
-    if (ELECTRON) return
+    if (ELECTRON) { return }
 
     if (!serverState) {
       // Reset title if no server state
@@ -28,8 +28,8 @@ export const useDocumentTitleSpeed = () => {
       return
     }
 
-    const { dl_info_speed: downloadSpeed = 0, up_info_speed: uploadSpeed = 0 } =
-      serverState
+    const { dl_info_speed: downloadSpeed = 0, up_info_speed: uploadSpeed = 0 }
+      = serverState
 
     // Format speeds
     const formattedDownload = formatSpeed(downloadSpeed)

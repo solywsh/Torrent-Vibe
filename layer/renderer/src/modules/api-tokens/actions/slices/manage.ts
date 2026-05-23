@@ -9,9 +9,9 @@ const isElectronEnvironment = typeof ELECTRON !== 'undefined' && ELECTRON
 
 type ApiTokensService = NonNullable<typeof ipcServices>['apiTokens']
 
-type SupportResult =
-  | { ok: true; service: ApiTokensService }
-  | { ok: false; error: string }
+type SupportResult
+  = | { ok: true, service: ApiTokensService }
+    | { ok: false, error: string }
 
 const updateSlotFromSummary = (
   context: ApiTokenActionContext,
@@ -19,7 +19,7 @@ const updateSlotFromSummary = (
 ) => {
   context.setState((draft) => {
     const slot = draft.slots[summary.id as ApiTokenSlotId]
-    if (!slot) return
+    if (!slot) { return }
 
     slot.hasValue = summary.hasValue
     slot.hint = summary.hint
@@ -67,7 +67,7 @@ export const createManageSlice = (context: ApiTokenActionContext) => {
         context.setState((draft) => {
           for (const summary of summaries) {
             const slot = draft.slots[summary.id as ApiTokenSlotId]
-            if (!slot) continue
+            if (!slot) { continue }
             slot.hasValue = summary.hasValue
             slot.hint = summary.hint
             slot.encryption = summary.encryption
@@ -79,14 +79,16 @@ export const createManageSlice = (context: ApiTokenActionContext) => {
           draft.initialized = true
           draft.isLoading = false
         })
-      } else {
+      }
+      else {
         context.setState((draft) => {
           draft.initialized = true
           draft.isLoading = false
         })
       }
       return { ok: true }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to load tokens', error)
       context.setState((draft) => {
         draft.isLoading = false
@@ -123,15 +125,16 @@ export const createManageSlice = (context: ApiTokenActionContext) => {
 
     try {
       const { service } = support
-      const def = API_TOKEN_SLOTS.find((s) => s.id === id)
-      const encryption: 'safeStorage' | 'plain' =
-        def?.inputType === 'password' || !def?.inputType
+      const def = API_TOKEN_SLOTS.find(s => s.id === id)
+      const encryption: 'safeStorage' | 'plain'
+        = def?.inputType === 'password' || !def?.inputType
           ? 'safeStorage'
           : 'plain'
       const summary = await service.setValue({ id, value, encryption })
       updateSlotFromSummary(context, summary)
       return { ok: true, data: summary }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to set token', { id, error })
       context.setState((draft) => {
         const slot = draft.slots[id]
@@ -181,7 +184,8 @@ export const createManageSlice = (context: ApiTokenActionContext) => {
         }
       })
       return { ok: true, data: summary }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to clear token', { id, error })
       context.setState((draft) => {
         const slot = draft.slots[id]
@@ -204,7 +208,8 @@ export const createManageSlice = (context: ApiTokenActionContext) => {
       const { service } = support
       const value = await service.getValue(id)
       return typeof value === 'string' && value.trim() ? value.trim() : null
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to retrieve token value', {
         id,
         error,

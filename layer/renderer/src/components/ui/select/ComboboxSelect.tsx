@@ -119,34 +119,36 @@ export const ComboboxSelect: FC<ComboboxSelectProps> = ({
             position="item-aligned"
           >
             <SelectPrimitive.Viewport className="p-0">
-              {options.length === 0 && !allowCustom ? (
-                <div className="px-2.5 py-1 text-sm text-text-secondary">
-                  No options available
-                </div>
-              ) : (
-                <>
-                  {options.map((option) => (
-                    <SelectItem
-                      key={option || '__EMPTY__'}
-                      value={option || '__EMPTY__'}
-                    >
-                      {option || 'No category'}
-                    </SelectItem>
-                  ))}
-
-                  {allowCustom && (
+              {options.length === 0 && !allowCustom
+                ? (
+                    <div className="px-2.5 py-1 text-sm text-text-secondary">
+                      No options available
+                    </div>
+                  )
+                : (
                     <>
-                      {options.length > 0 && <SelectSeparator />}
-                      <SelectItem value="__ADD_CUSTOM__">
-                        <span className="flex items-center gap-2">
-                          <i className="i-mingcute-add-line size-3" />
-                          Add custom...
-                        </span>
-                      </SelectItem>
+                      {options.map(option => (
+                        <SelectItem
+                          key={option || '__EMPTY__'}
+                          value={option || '__EMPTY__'}
+                        >
+                          {option || 'No category'}
+                        </SelectItem>
+                      ))}
+
+                      {allowCustom && (
+                        <>
+                          {options.length > 0 && <SelectSeparator />}
+                          <SelectItem value="__ADD_CUSTOM__">
+                            <span className="flex items-center gap-2">
+                              <i className="i-mingcute-add-line size-3" />
+                              Add custom...
+                            </span>
+                          </SelectItem>
+                        </>
+                      )}
                     </>
                   )}
-                </>
-              )}
             </SelectPrimitive.Viewport>
           </SelectPrimitive.Content>
         </RootPortal>

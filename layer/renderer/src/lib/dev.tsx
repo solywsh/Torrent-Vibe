@@ -30,7 +30,8 @@ export const attachOpenInEditor = (stack: string) => {
             {line}
           </div>
         )
-      } else {
+      }
+      else {
         // at App (http://localhost:5173/src/App.tsx?t=1720527056591:41:9)
         const srcFsPath = o.split('/src')[1]
 

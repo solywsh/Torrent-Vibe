@@ -90,13 +90,14 @@ export const ServerConfigForm = ({
   const validate = (): boolean => {
     const next: ValidationErrors = {}
 
-    if (!form.name.trim()) next.name = 'Server name is required'
-    if (!form.username.trim()) next.username = 'Username is required'
+    if (!form.name.trim()) { next.name = 'Server name is required' }
+    if (!form.username.trim()) { next.username = 'Username is required' }
 
-    if (!form.host.trim()) next.host = 'Host is required'
+    if (!form.host.trim()) { next.host = 'Host is required' }
     if (!form.port.trim()) {
       next.port = 'Port is required when baseUrl is empty'
-    } else if (Number.isNaN(Number(form.port))) {
+    }
+    else if (Number.isNaN(Number(form.port))) {
       next.port = 'Port must be a number'
     }
 
@@ -105,17 +106,18 @@ export const ServerConfigForm = ({
   }
 
   const handleSubmit = async () => {
-    if (!validate()) return
+    if (!validate()) { return }
 
     try {
       await onSubmit(form)
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`${getI18n().t('messages.serverUpdateFailed')}:`, error)
     }
   }
 
   const handleTest = async () => {
-    if (!validate()) return
+    if (!validate()) { return }
 
     setIsTesting(true)
     try {
@@ -154,14 +156,16 @@ export const ServerConfigForm = ({
             responseTime,
           }),
         )
-      } else {
+      }
+      else {
         toast.error(
           getI18n().t('messages.connectionTestFailed', {
             message: result.message,
           }),
         )
       }
-    } catch (e: any) {
+    }
+    catch (e: any) {
       const msg = String(e?.message || e || '')
       const errorMessage = /401|unauthorized|forbidden/i.test(msg)
         ? getI18n().t('messages.connectionTestFailed', {
@@ -173,7 +177,8 @@ export const ServerConfigForm = ({
 
       toast.error(errorMessage)
       await onTest(form) // Still call onTest to update parent state
-    } finally {
+    }
+    finally {
       setIsTesting(false)
     }
   }
@@ -187,7 +192,7 @@ export const ServerConfigForm = ({
           </Label>
           <Input
             value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             disabled={isLoading}
           />
           {errors.name && (
@@ -201,7 +206,7 @@ export const ServerConfigForm = ({
           </Label>
           <Input
             value={form.host}
-            onChange={(e) => setForm((f) => ({ ...f, host: e.target.value }))}
+            onChange={e => setForm(f => ({ ...f, host: e.target.value }))}
             disabled={isLoading}
           />
           {errors.host && (
@@ -216,7 +221,7 @@ export const ServerConfigForm = ({
           <Input
             value={form.port}
             inputMode="numeric"
-            onChange={(e) => setForm((f) => ({ ...f, port: e.target.value }))}
+            onChange={e => setForm(f => ({ ...f, port: e.target.value }))}
             disabled={isLoading}
           />
           {errors.port && (
@@ -230,9 +235,8 @@ export const ServerConfigForm = ({
           </Label>
           <Input
             value={form.username}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, username: e.target.value }))
-            }
+            onChange={e =>
+              setForm(f => ({ ...f, username: e.target.value }))}
             disabled={isLoading}
           />
           {errors.username && (
@@ -247,9 +251,8 @@ export const ServerConfigForm = ({
           <Input
             type="password"
             value={form.password}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, password: e.target.value }))
-            }
+            onChange={e =>
+              setForm(f => ({ ...f, password: e.target.value }))}
             disabled={isLoading}
           />
         </div>
@@ -259,9 +262,8 @@ export const ServerConfigForm = ({
             <Switch
               id="https"
               checked={form.useHttps}
-              onCheckedChange={(v) =>
-                setForm((f) => ({ ...f, useHttps: Boolean(v) }))
-              }
+              onCheckedChange={v =>
+                setForm(f => ({ ...f, useHttps: Boolean(v) }))}
             />
           </div>
 
@@ -270,9 +272,8 @@ export const ServerConfigForm = ({
             <Switch
               id="remember"
               checked={form.remember}
-              onCheckedChange={(v) =>
-                setForm((f) => ({ ...f, remember: Boolean(v) }))
-              }
+              onCheckedChange={v =>
+                setForm(f => ({ ...f, remember: Boolean(v) }))}
               disabled={isLoading}
             />
           </div>
@@ -320,7 +321,12 @@ export const ServerConfigForm = ({
           >
             <span>{testResult.message}</span>
             {testResult.responseTime && (
-              <span> ({testResult.responseTime}ms)</span>
+              <span>
+                {' '}
+                (
+                {testResult.responseTime}
+                ms)
+              </span>
             )}
           </div>
         )}

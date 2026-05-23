@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Build renderer
@@ -90,7 +90,7 @@ jobs:
           tag_name: v${{ inputs.version }}
           name: Release v${{ inputs.version }}
           generate_release_notes: false
-          repository: 'Torrent-Vibe/Renderer-Update-Center'
+          repository: Torrent-Vibe/Renderer-Update-Center
           fail_on_unmatched_files: false
           append_body: true
           body: ${{ inputs.changelog }}

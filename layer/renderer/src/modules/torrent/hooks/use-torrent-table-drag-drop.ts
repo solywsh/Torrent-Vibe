@@ -53,19 +53,19 @@ export const useTorrentTableDragDrop = () => {
         const targetId = over.id as string
 
         // Skip if trying to move 'select' column or move to 'select'
-        if (sourceId === 'select' || targetId === 'select') return
+        if (sourceId === 'select' || targetId === 'select') { return }
 
         // Update both session and persistent state
         actions.updateColumnOrder((prev) => {
           const oldIndex = prev.indexOf(sourceId)
           const newIndex = prev.indexOf(targetId)
 
-          if (oldIndex === -1 || newIndex === -1) return prev
+          if (oldIndex === -1 || newIndex === -1) { return prev }
 
           const newOrder = arrayMove(prev, oldIndex, newIndex)
 
           // Update persistent state (excluding 'select' column)
-          const persistentOrder = newOrder.filter((id) => id !== 'select')
+          const persistentOrder = newOrder.filter(id => id !== 'select')
           actions.setOrderedColumns(persistentOrder)
 
           return newOrder

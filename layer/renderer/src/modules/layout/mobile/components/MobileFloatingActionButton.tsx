@@ -17,7 +17,7 @@ import {
 interface MobileFloatingActionButtonProps {
   className?: string
   position?: 'bottom-right' | 'bottom-left' | 'bottom-center'
-  offset?: { x: number; y: number }
+  offset?: { x: number, y: number }
   hideOnMultiSelect?: boolean
   hideOnScroll?: boolean
 }
@@ -33,8 +33,8 @@ export const MobileExpandableFloatingActionButton = ({
 }: MobileFloatingActionButtonProps) => {
   const multiSelectMode = useAtomValue(multiSelectModeAtom)
   const { exitMultiSelectMode } = useMobileSelection()
-  const { resumeSelectedTorrents, pauseSelectedTorrents } =
-    useMobileTorrentActions()
+  const { resumeSelectedTorrents, pauseSelectedTorrents }
+    = useMobileTorrentActions()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const shouldShow = !(hideOnMultiSelect && multiSelectMode)

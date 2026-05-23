@@ -29,33 +29,31 @@ export const MobileFieldSelectorContent = ({
   // Group fields by category for better organization
   const fieldGroups = useMemo(() => {
     return {
-      primary: ALL_MOBILE_FIELDS.filter((f) => f.category === 'primary'),
-      details: ALL_MOBILE_FIELDS.filter((f) => f.category === 'details'),
-      speeds: ALL_MOBILE_FIELDS.filter((f) => f.category === 'speeds'),
-      dates: ALL_MOBILE_FIELDS.filter((f) => f.category === 'dates'),
-      advanced: ALL_MOBILE_FIELDS.filter((f) => f.category === 'advanced'),
+      primary: ALL_MOBILE_FIELDS.filter(f => f.category === 'primary'),
+      details: ALL_MOBILE_FIELDS.filter(f => f.category === 'details'),
+      speeds: ALL_MOBILE_FIELDS.filter(f => f.category === 'speeds'),
+      dates: ALL_MOBILE_FIELDS.filter(f => f.category === 'dates'),
+      advanced: ALL_MOBILE_FIELDS.filter(f => f.category === 'advanced'),
     }
   }, [])
 
   const handleFieldToggle = useCallback((fieldId: string) => {
-    setPreviewFields((prev) =>
-      prev.map((field) =>
-        field.id === fieldId ? { ...field, visible: !field.visible } : field,
-      ),
-    )
+    setPreviewFields(prev =>
+      prev.map(field =>
+        field.id === fieldId ? { ...field, visible: !field.visible } : field))
   }, [])
 
   const handleApply = useCallback(() => {
     // Validate that at least one primary field is visible
-    const hasPrimaryField = previewFields.some((f) => f.primary && f.visible)
+    const hasPrimaryField = previewFields.some(f => f.primary && f.visible)
     if (!hasPrimaryField) {
       // Show error or force enable name field
-      const updatedFields = previewFields.map((f) =>
-        f.id === 'name' ? { ...f, visible: true } : f,
-      )
-      setConfig((prev) => ({ ...prev, fields: updatedFields }))
-    } else {
-      setConfig((prev) => ({ ...prev, fields: previewFields }))
+      const updatedFields = previewFields.map(f =>
+        f.id === 'name' ? { ...f, visible: true } : f)
+      setConfig(prev => ({ ...prev, fields: updatedFields }))
+    }
+    else {
+      setConfig(prev => ({ ...prev, fields: previewFields }))
     }
     onClose?.()
   }, [previewFields, setConfig, onClose])
@@ -84,7 +82,7 @@ export const MobileFieldSelectorContent = ({
       {/* Fields List */}
       <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-6">
         {Object.entries(fieldGroups).map(([groupKey, fields]) => {
-          if (fields.length === 0) return null
+          if (fields.length === 0) { return null }
 
           const groupLabels = {
             primary: 'Primary Information',
@@ -102,7 +100,7 @@ export const MobileFieldSelectorContent = ({
               <div className="space-y-2">
                 {fields.map((field) => {
                   const previewField = previewFields.find(
-                    (f) => f.id === field.id,
+                    f => f.id === field.id,
                   )
                   const isChecked = previewField?.visible ?? field.visible
                   const isDisabled = field.id === 'name' // Name is always required
@@ -139,8 +137,7 @@ export const MobileFieldSelectorContent = ({
                       <Switch
                         checked={isChecked}
                         onCheckedChange={() =>
-                          !isDisabled && handleFieldToggle(field.id)
-                        }
+                          !isDisabled && handleFieldToggle(field.id)}
                         disabled={isDisabled}
                       />
                     </m.div>
@@ -159,12 +156,14 @@ export const MobileFieldSelectorContent = ({
             Preview
           </h4>
           <div className="text-xs text-placeholder-text mb-2">
-            {previewFields.filter((f) => f.visible).length} fields selected
+            {previewFields.filter(f => f.visible).length}
+            {' '}
+            fields selected
           </div>
           <div className="flex flex-wrap gap-1">
             {previewFields
-              .filter((f) => f.visible)
-              .map((field) => (
+              .filter(f => f.visible)
+              .map(field => (
                 <span
                   key={field.id}
                   className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-fill-secondary text-text border border-border"

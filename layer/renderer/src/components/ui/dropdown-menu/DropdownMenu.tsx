@@ -45,8 +45,8 @@ const DropdownMenuSubTrigger = ({
     <i className="i-mingcute-right-line ml-auto size-3" />
   </DropdownMenuPrimitive.SubTrigger>
 )
-DropdownMenuSubTrigger.displayName =
-  DropdownMenuPrimitive.SubTrigger.displayName
+DropdownMenuSubTrigger.displayName
+  = DropdownMenuPrimitive.SubTrigger.displayName
 
 const DropdownMenuSubContent = ({
   ref,
@@ -68,8 +68,8 @@ const DropdownMenuSubContent = ({
     {...props}
   />
 )
-DropdownMenuSubContent.displayName =
-  DropdownMenuPrimitive.SubContent.displayName
+DropdownMenuSubContent.displayName
+  = DropdownMenuPrimitive.SubContent.displayName
 
 const DropdownMenuContent = ({
   ref,
@@ -149,8 +149,8 @@ const DropdownMenuCheckboxItem = ({
     </span>
   </DropdownMenuPrimitive.CheckboxItem>
 )
-DropdownMenuCheckboxItem.displayName =
-  DropdownMenuPrimitive.CheckboxItem.displayName
+DropdownMenuCheckboxItem.displayName
+  = DropdownMenuPrimitive.CheckboxItem.displayName
 
 const DropdownMenuRadioItem = ({
   ref,

@@ -29,7 +29,7 @@ export const AboutTab = () => {
 
   const calculateLicenseStats = useCallback(
     (data: AppLicenseData): LicenseStats[] => {
-      return data.licenseGroups.map((group) => ({
+      return data.licenseGroups.map(group => ({
         license: group.license,
         count: group.count,
         percentage: Math.round((group.count / data.totalLibraries) * 100),
@@ -65,14 +65,14 @@ export const AboutTab = () => {
       )}
 
       {/* Electron (Main) Dependencies - only in Electron env */}
-      {ELECTRON &&
-        electronLicenseData &&
-        electronLicenseData.licenses.length > 0 && (
-          <DependenciesSection
-            commandLabel="torrent-vibe --dependencies electron"
-            dependencies={electronLicenseData.licenses}
-          />
-        )}
+      {ELECTRON
+        && electronLicenseData
+        && electronLicenseData.licenses.length > 0 && (
+        <DependenciesSection
+          commandLabel="torrent-vibe --dependencies electron"
+          dependencies={electronLicenseData.licenses}
+        />
+      )}
 
       {/* License Statistics for Renderer */}
       {rendererLicenseData && (

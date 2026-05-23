@@ -31,12 +31,12 @@ export const useMobileTorrentList = () => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect()
       const newHeight = Math.floor(rect.height) || 400
-      setContainerHeight((prev) => (prev !== newHeight ? newHeight : prev))
+      setContainerHeight(prev => (prev !== newHeight ? newHeight : prev))
     }
   }, [])
 
   React.useEffect(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) { return }
     const resizeObserver = new ResizeObserver(updateDimensions)
     resizeObserver.observe(containerRef.current)
     updateDimensions()
@@ -65,7 +65,7 @@ export const useMobileTorrentList = () => {
     ),
     measureElement: (el) => {
       // Include margin in measurement
-      if (!el) return MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT
+      if (!el) { return MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT }
       const rect = el.getBoundingClientRect()
       return rect.height + 12 // 12px gap (mb-3)
     },
@@ -88,7 +88,7 @@ export const useMobileTorrentList = () => {
   const scrollToTorrent = React.useCallback(
     (torrentHash: string) => {
       const { sortedTorrents } = useTorrentDataStore.getState()
-      const index = sortedTorrents.findIndex((t) => t.hash === torrentHash)
+      const index = sortedTorrents.findIndex(t => t.hash === torrentHash)
       if (index !== -1) {
         scrollToIndex(index)
       }
@@ -104,9 +104,9 @@ export const useMobileTorrentList = () => {
   const listMetrics = React.useMemo(() => {
     const expandedCount = expandedCards.size
     const collapsedCount = Math.max(0, torrentsLength - expandedCount)
-    const estimatedHeight =
-      expandedCount * MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT_EXPANDED +
-      collapsedCount * MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT
+    const estimatedHeight
+      = expandedCount * MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT_EXPANDED
+        + collapsedCount * MOBILE_LAYOUT_CONSTANTS.CELL_HEIGHT
 
     return {
       totalItems: torrentsLength,
@@ -211,7 +211,7 @@ export const useMobilePullToRefresh = (
 
   const handlePullMove = React.useCallback(
     (distance: number) => {
-      if (!isPulling) return
+      if (!isPulling) { return }
 
       // Apply elastic resistance
       const elasticDistance = Math.min(
@@ -225,7 +225,7 @@ export const useMobilePullToRefresh = (
   )
 
   const handlePullEnd = React.useCallback(async () => {
-    if (!isPulling) return
+    if (!isPulling) { return }
 
     setIsPulling(false)
 
@@ -233,13 +233,16 @@ export const useMobilePullToRefresh = (
       setIsRefreshing(true)
       try {
         await onRefresh()
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Refresh failed:', error)
-      } finally {
+      }
+      finally {
         setIsRefreshing(false)
         setPullDistance(0)
       }
-    } else {
+    }
+    else {
       setPullDistance(0)
     }
   }, [isPulling, pullDistance, onRefresh, isRefreshing])
@@ -278,7 +281,7 @@ export const useMobileListKeyboard = (
 
   const handleKeyDown = React.useCallback(
     (event: KeyboardEvent) => {
-      if (torrentsLength === 0) return
+      if (torrentsLength === 0) { return }
 
       switch (event.key) {
         case 'ArrowDown': {
@@ -307,7 +310,8 @@ export const useMobileListKeyboard = (
           if (focusedIndex >= 0) {
             if (event.key === 'Enter' && onAction) {
               onAction(focusedIndex)
-            } else if (event.key === ' ' && onSelect) {
+            }
+            else if (event.key === ' ' && onSelect) {
               onSelect(focusedIndex)
             }
           }

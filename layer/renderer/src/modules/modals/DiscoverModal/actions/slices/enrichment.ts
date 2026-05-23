@@ -68,9 +68,9 @@ interface ImdbQueryError extends Error {
 }
 
 const sanitizeOmdbNumber = (value: unknown): number | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
-  if (!trimmed || trimmed === 'N/A') return null
+  if (!trimmed || trimmed === 'N/A') { return null }
   const normalized = trimmed.replaceAll(',', '')
   const parsed = Number(normalized)
   if (Number.isFinite(parsed)) {
@@ -85,9 +85,9 @@ const sanitizeOmdbNumber = (value: unknown): number | null => {
 }
 
 const parseRuntime = (value: unknown): number | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
-  if (!trimmed || trimmed === 'N/A') return null
+  if (!trimmed || trimmed === 'N/A') { return null }
 
   const hoursMatch = trimmed.match(/(\d+)\s*h/i)
   const minutesMatch = trimmed.match(/(\d+)\s*min/i)
@@ -115,27 +115,27 @@ const parseRuntime = (value: unknown): number | null => {
 }
 
 const parseList = (value: unknown): string[] => {
-  if (typeof value !== 'string') return []
+  if (typeof value !== 'string') { return [] }
   return value
     .split(',')
-    .map((part) => part.trim())
-    .filter((part) => part.length > 0 && part !== 'N/A')
+    .map(part => part.trim())
+    .filter(part => part.length > 0 && part !== 'N/A')
 }
 
 const parseYear = (value: unknown): number | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
-  if (!trimmed || trimmed === 'N/A') return null
+  if (!trimmed || trimmed === 'N/A') { return null }
   const match = trimmed.match(/\d{4}/)
-  if (!match) return null
+  if (!match) { return null }
   const parsed = Number(match[0])
   return Number.isFinite(parsed) ? parsed : null
 }
 
 const parseReleasedDate = (value: unknown): string | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
-  if (!trimmed || trimmed === 'N/A') return null
+  if (!trimmed || trimmed === 'N/A') { return null }
   const parsed = new Date(trimmed)
   if (Number.isNaN(parsed.getTime())) {
     return null
@@ -144,7 +144,7 @@ const parseReleasedDate = (value: unknown): string | null => {
 }
 
 const normalizeString = (value: unknown): string | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
   return trimmed && trimmed !== 'N/A' ? trimmed : null
 }
@@ -217,7 +217,7 @@ const resolveOmdbApiKey = async (): Promise<string | null> => {
     const value = await ApiTokenActions.shared.getTokenValue(
       'discover.omdb.apiKey',
     )
-    if (value) return value
+    if (value) { return value }
   }
 
   const fallback = FALLBACK_OMDB_API_KEY?.trim()
@@ -267,9 +267,9 @@ const updateItemsWithImdb = (
   updater: (imdb: DiscoverItemImdbInfo, item: DiscoverItem) => void,
 ) => {
   const target = findItemById(draftItems, targetId)
-  if (!target) return
+  if (!target) { return }
   const imdb = target.external?.imdb
-  if (!imdb) return
+  if (!imdb) { return }
   updater(imdb, target)
 }
 
@@ -336,7 +336,8 @@ export const createEnrichmentSlice = (context: DiscoverActionContext) => {
 
         if (enrichmentClone.rating && enrichmentClone.rating > 0) {
           targetImdb.rating = enrichmentClone.rating
-        } else {
+        }
+        else {
           targetImdb.rating = undefined
         }
 
@@ -353,8 +354,8 @@ export const createEnrichmentSlice = (context: DiscoverActionContext) => {
         }
 
         if (
-          enrichmentClone.votes !== null &&
-          enrichmentClone.votes !== undefined
+          enrichmentClone.votes !== null
+          && enrichmentClone.votes !== undefined
         ) {
           const previousExtra = (targetItem.extra ?? {}) as Record<
             string,
@@ -366,11 +367,12 @@ export const createEnrichmentSlice = (context: DiscoverActionContext) => {
           }
         }
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
       const imdbError = error as ImdbQueryError
-      const message =
-        imdbError.code === 'missingToken'
+      const message
+        = imdbError.code === 'missingToken'
           ? 'missingToken'
           : error instanceof Error
             ? error.message

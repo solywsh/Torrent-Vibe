@@ -92,7 +92,8 @@ export const validateConnection = async (
     return loginSuccess
       ? { success: true }
       : { success: false, error: VALIDATION_ERRORS.auth }
-  } catch (error) {
+  }
+  catch (error) {
     return {
       success: false,
       error:

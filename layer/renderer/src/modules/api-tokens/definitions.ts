@@ -2,14 +2,14 @@ import type { AiProviderId } from '@torrent-vibe/shared'
 import { API_TOKENS } from '@torrent-vibe/shared'
 
 export type ApiTokenGroupId = 'discover' | 'ai' | 'metadata'
-export type ApiTokenSlotId =
-  | 'discover.omdb.apiKey'
-  | 'ai.openai.apiKey'
-  | 'ai.openai.baseUrl'
-  | 'ai.openai.model'
-  | 'ai.openrouter.apiKey'
-  | 'ai.openrouter.model'
-  | 'metadata.tmdb.apiKey'
+export type ApiTokenSlotId
+  = | 'discover.omdb.apiKey'
+    | 'ai.openai.apiKey'
+    | 'ai.openai.baseUrl'
+    | 'ai.openai.model'
+    | 'ai.openrouter.apiKey'
+    | 'ai.openrouter.model'
+    | 'metadata.tmdb.apiKey'
 
 export interface ApiTokenSlotDefinition {
   id: ApiTokenSlotId
@@ -138,8 +138,8 @@ export const AI_PROVIDER_DEFINITIONS: readonly AiProviderDefinition[] = [
   },
 ] as const
 
-const AI_SLOTS: readonly ApiTokenSlotDefinition[] =
-  AI_PROVIDER_DEFINITIONS.flatMap((provider) => provider.slots)
+const AI_SLOTS: readonly ApiTokenSlotDefinition[]
+  = AI_PROVIDER_DEFINITIONS.flatMap(provider => provider.slots)
 
 const METADATA_SLOTS: readonly ApiTokenSlotDefinition[] = [
   {
@@ -180,5 +180,5 @@ export const API_TOKEN_GROUPS: readonly ApiTokenGroupDefinition[] = [
   },
 ] as const
 
-export const API_TOKEN_SLOTS: readonly ApiTokenSlotDefinition[] =
-  API_TOKEN_GROUPS.flatMap((group) => group.slots)
+export const API_TOKEN_SLOTS: readonly ApiTokenSlotDefinition[]
+  = API_TOKEN_GROUPS.flatMap(group => group.slots)

@@ -24,10 +24,11 @@ export function loadStoredConnectionConfig(): {
     const stored = storage.getJSON<StoredConnectionConfig>(
       STORAGE_KEYS.CONNECTION_CONFIG,
     )
-    const password =
-      storage.getItem(STORAGE_KEYS.CONNECTION_PASSWORD) ?? undefined
+    const password
+      = storage.getItem(STORAGE_KEYS.CONNECTION_PASSWORD) ?? undefined
     return { stored: stored ?? undefined, password }
-  } catch {
+  }
+  catch {
     return {}
   }
 }
@@ -47,7 +48,8 @@ export function saveStoredConnectionConfig(
   storage.setJSON(STORAGE_KEYS.CONNECTION_CONFIG, toStore)
   if (rememberPassword && config.password) {
     storage.setItem(STORAGE_KEYS.CONNECTION_PASSWORD, config.password)
-  } else {
+  }
+  else {
     storage.removeItem(STORAGE_KEYS.CONNECTION_PASSWORD)
   }
 }
@@ -58,9 +60,9 @@ export function getInitialQBittorrentConfig(): QBittorrentConfig {
     const cfg = { ...defaultConnectionConfig }
     // If the app is served via HTTPS, prefer HTTPS for backend too to avoid mixed content
     if (
-      typeof globalThis !== 'undefined' &&
-      globalThis.location !== undefined &&
-      globalThis.location.protocol === 'https:'
+      typeof globalThis !== 'undefined'
+      && globalThis.location !== undefined
+      && globalThis.location.protocol === 'https:'
     ) {
       cfg.useHttps = true
     }
@@ -76,9 +78,9 @@ export function getInitialQBittorrentConfig(): QBittorrentConfig {
   }
   // Coerce to HTTPS when the app is served over HTTPS to prevent mixed-content
   if (
-    typeof globalThis !== 'undefined' &&
-    globalThis.location !== undefined &&
-    globalThis.location.protocol === 'https:'
+    typeof globalThis !== 'undefined'
+    && globalThis.location !== undefined
+    && globalThis.location.protocol === 'https:'
   ) {
     result.useHttps = true
   }
@@ -88,11 +90,11 @@ export function getInitialQBittorrentConfig(): QBittorrentConfig {
 export function checkHasPersistConnectionConfig(): boolean {
   const { stored } = loadStoredConnectionConfig()
   return Boolean(
-    stored &&
-      stored.username &&
-      stored.useHttps !== undefined &&
-      // Either a baseUrl is stored, or host/port are present
-      (stored.baseUrl || (stored.host && stored.port)),
+    stored
+    && stored.username
+    && stored.useHttps !== undefined
+    // Either a baseUrl is stored, or host/port are present
+    && (stored.baseUrl || (stored.host && stored.port)),
   )
 }
 

@@ -10,7 +10,7 @@ import {
 
 export const MobileSearchInput: React.FC = () => {
   const { t } = useTranslation()
-  const searchQuery = useTorrentDataStore((s) => s.searchQuery ?? '')
+  const searchQuery = useTorrentDataStore(s => s.searchQuery ?? '')
 
   const [value, setValue] = React.useState(searchQuery)
   const [isPending, startTransition] = React.useTransition()
@@ -53,7 +53,7 @@ export const MobileSearchInput: React.FC = () => {
         placeholder={t('mobile.search.placeholder')}
         inputClassName={cn('pl-8 pr-10 h-10 text-base', isPending && 'pr-16')}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={e => setValue(e.target.value)}
         // Prevent losing focus on mobile
         onBlur={(e) => {
           // Only blur if not clicking on clear button

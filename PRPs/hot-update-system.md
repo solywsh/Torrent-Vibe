@@ -2,7 +2,8 @@
 
 ## Overview
 
-Implement a comprehensive hot update system that enables secure, automated updates of the renderer layer without requiring full application reinstalls or restarts. The system uses a "bootstrapper + external code" architecture with encrypted update packages, manual changelog management, and a separate update distribution repository for enhanced security and version management.
+Implement a comprehensive hot update system that enables secure, automated updates of the renderer layer without requiring full application reinstalls or restarts.
+The system uses a "bootstrapper + external code" architecture with encrypted update packages, manual changelog management, and a separate update distribution repository for enhanced security and version management.
 
 The implementation leverages a dual-repository approach: the main repository (`innei/qb-client-webui`) handles development and main version releases, while a dedicated update center (`Torrent-Vibe/Renderer-Update-Center`) manages encrypted hot update distribution with manual changelog editing and automated CI/CD workflows.
 
@@ -22,7 +23,7 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
 
 - **Content Loader Interface**: `layer/main/src/manager/content-loader.ts` - `WindowContentLoader` interface
   - Development vs production path resolution
-  - Preload script path management  
+  - Preload script path management
   - Dev server URL generation and health checking
   - Clean separation of concerns for content source determination
 
@@ -37,7 +38,7 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
   - Security obfuscation plugin integration
   - Development vs production environment handling
   - Dependency chunking and code splitting
-  
+
 - **GitHub Actions**: `.github/workflows/build.yml` - Multi-platform build matrix
   - Tag-triggered releases with manual platform selection
   - Build artifact generation and upload
@@ -52,28 +53,31 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
 ### External Research Insights
 
 #### Encryption & Security Best Practices
-- **Node.js Crypto Module**: https://nodejs.org/api/crypto.html
+
+- **Node.js Crypto Module**: <https://nodejs.org/api/crypto.html>
   - RSA-OAEP for key encryption, AES-256-GCM for data encryption
   - Digital signatures with RSA-SHA256 for integrity verification
   - Secure random key generation with crypto.randomBytes()
 
-- **Electron Security Guidelines**: https://www.electronjs.org/docs/tutorial/security
+- **Electron Security Guidelines**: <https://www.electronjs.org/docs/tutorial/security>
   - Context isolation and disabled node integration
   - Secure preload script patterns
   - Safe external resource loading practices
 
 #### GitHub Actions & Repository Management
-- **GitHub Releases API**: https://docs.github.com/en/rest/releases
+
+- **GitHub Releases API**: <https://docs.github.com/en/rest/releases>
   - Automated release creation with asset uploads
   - Repository dispatch events for cross-repo coordination
   - Artifact sharing between workflows
 
-- **Cross-Repository Actions**: https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
+- **Cross-Repository Actions**: <https://docs.github.com/en/actions/learn-github-actions/reusing-workflows>
   - Repository dispatch patterns for triggering external builds
   - Artifact download from external repositories
   - Secure token management for cross-repo access
 
 #### Update System Architecture
+
 - **Electron Auto-Updater Alternatives**: Manual update systems for greater control
 - **Package Integrity Verification**: SHA-256 hashing with signature validation
 - **Fallback Strategies**: Multi-tier recovery with graceful degradation
@@ -96,7 +100,7 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
 │   ├── manager/
 │   │   ├── bootstrap.ts (✅ Minimal changes for hot update integration)
 │   │   ├── content-loader.ts (✅ Existing interface remains unchanged)
-│   │   ├── hot-content-loader.ts (🆕 Hot update ContentLoader implementation)  
+│   │   ├── hot-content-loader.ts (🆕 Hot update ContentLoader implementation)
 │   │   └── update-manager.ts (🆕 Core update orchestration)
 │   ├── services/
 │   │   ├── package-decryption-service.ts (🆕 Client-side decryption)
@@ -110,7 +114,7 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
 └── .github/workflows/
     └── trigger-update.yml (🆕 Cross-repo build triggering)
 
-📦 Update Center Repository: Torrent-Vibe/Renderer-Update-Center  
+📦 Update Center Repository: Torrent-Vibe/Renderer-Update-Center
 ├── changelogs/ (🆕 Manual changelog management)
 │   ├── template.md (Changelog template)
 │   ├── v1.2.0.md (Example release changelog)
@@ -174,15 +178,15 @@ Key features include application-wide unique encryption keys, multi-tier fallbac
 ```typescript
 // Per-installation key pairs generated on first run
 interface ClientKeyPair {
-  public: string    // Registered with update center
-  private: string   // Stored locally, rotated as needed
+  public: string // Registered with update center
+  private: string // Stored locally, rotated as needed
   rotatedAt: number
 }
 
 // Application-wide signing key used to verify packages
 interface SigningKeySystem {
-  public: string    // Clients use for verification
-  private: string   // Update center uses for signing (GitHub Secret)
+  public: string // Clients use for verification
+  private: string // Update center uses for signing (GitHub Secret)
 }
 
 // Encrypted package structure
@@ -193,13 +197,13 @@ interface EncryptedPackageStructure {
     size: number
     algorithm: 'AES-256-GCM'
     keyAlgorithm: 'RSA-2048-OAEP'
-    originalHash: string  // SHA-256 of original content
+    originalHash: string // SHA-256 of original content
   }
-  payload: string        // Base64 AES-encrypted ZIP content
-  encryptedKey: string   // Base64 RSA-encrypted AES key
-  iv: string            // Base64 initialization vector
-  authTag: string       // Base64 GCM authentication tag
-  signature: string     // Base64 RSA signature of entire structure
+  payload: string // Base64 AES-encrypted ZIP content
+  encryptedKey: string // Base64 RSA-encrypted AES key
+  iv: string // Base64 initialization vector
+  authTag: string // Base64 GCM authentication tag
+  signature: string // Base64 RSA signature of entire structure
 }
 ```
 
@@ -218,10 +222,10 @@ name: Trigger Update Package Build
 
 on:
   workflow_run:
-    workflows: ["🖥️ Build Desktop"]
+    workflows: [🖥️ Build Desktop]
     types: [completed]
     branches: [main]
-  
+
   workflow_dispatch:
     inputs:
       version:
@@ -229,7 +233,7 @@ on:
         required: true
         type: string
       force_update:
-        description: 'Force update build even if version exists'
+        description: Force update build even if version exists
         required: false
         type: boolean
         default: false
@@ -241,7 +245,7 @@ jobs:
   trigger-update-center:
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    
+
     steps:
       # 1. 确定版本号
       - name: Determine version
@@ -254,7 +258,7 @@ jobs:
             VERSION=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)
             VERSION="1.2.0-${VERSION}"  # 实际项目中需要从 package.json 读取
           fi
-          
+
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "📦 Building update for version: $VERSION"
 
@@ -304,36 +308,36 @@ name: Build Encrypted Update Package
 on:
   push:
     branches: [main]
-    paths: ['changelogs/v*.md']  # 只有新增版本 changelog 才触发
-  
+    paths: ['changelogs/v*.md'] # 只有新增版本 changelog 才触发
+
   repository_dispatch:
-    types: [trigger-update-build]  # 接收主仓库触发
-    
-  workflow_dispatch:  # 手动触发
+    types: [trigger-update-build] # 接收主仓库触发
+
+  workflow_dispatch: # 手动触发
     inputs:
       version:
         description: 'Version to build (e.g., 1.2.0)'
         required: true
         type: string
       source_repo:
-        description: 'Source repository (owner/repo)'
+        description: Source repository (owner/repo)
         required: false
-        default: 'innei/qb-client-webui'
+        default: innei/qb-client-webui
         type: string
       workflow_run_id:
-        description: 'Source workflow run ID for artifact download'
+        description: Source workflow run ID for artifact download
         required: false
         type: string
       force_rebuild:
-        description: 'Force rebuild even if version exists'
+        description: Force rebuild even if version exists
         required: false
         type: boolean
         default: false
 
 env:
   NODE_VERSION: '20'
-  ENCRYPTION_TIMEOUT: 300000  # 5 minutes
-  DOWNLOAD_TIMEOUT: 600000    # 10 minutes
+  ENCRYPTION_TIMEOUT: 300000 # 5 minutes
+  DOWNLOAD_TIMEOUT: 600000 # 10 minutes
 
 jobs:
   detect-version:
@@ -344,12 +348,12 @@ jobs:
       should_build: ${{ steps.detect.outputs.should_build }}
       source_repo: ${{ steps.detect.outputs.source_repo }}
       workflow_run_id: ${{ steps.detect.outputs.workflow_run_id }}
-    
+
     steps:
       - name: Checkout update center
         uses: actions/checkout@v4
         with:
-          fetch-depth: 10  # 检查最近的 changelog 变更
+          fetch-depth: 10 # 检查最近的 changelog 变更
 
       - name: Detect version and source
         id: detect
@@ -359,28 +363,28 @@ jobs:
           CHANGELOG_PATH=""
           SOURCE_REPO="innei/qb-client-webui"
           WORKFLOW_RUN_ID=""
-          
+
           # 手动触发
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             VERSION="${{ inputs.version }}"
             SOURCE_REPO="${{ inputs.source_repo }}"
             WORKFLOW_RUN_ID="${{ inputs.workflow_run_id }}"
             CHANGELOG_PATH="changelogs/v${VERSION}.md"
-            
+
             if [ ! -f "$CHANGELOG_PATH" ]; then
               echo "❌ Changelog file not found: $CHANGELOG_PATH"
               exit 1
             fi
-            
+
             SHOULD_BUILD="true"
-            
+
           # Repository dispatch 事件
           elif [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             VERSION="${{ github.event.client_payload.version }}"
             SOURCE_REPO="${{ github.event.client_payload.source_repo }}"
             WORKFLOW_RUN_ID="${{ github.event.client_payload.workflow_run_id }}"
             CHANGELOG_PATH="changelogs/v${VERSION}.md"
-            
+
             # 检查是否强制更新
             if [ "${{ github.event.client_payload.force_update }}" = "true" ]; then
               echo "🔄 Force update requested"
@@ -392,31 +396,31 @@ jobs:
             else
               SHOULD_BUILD="true"
             fi
-            
+
           # Push 事件：检测新增的 changelog 文件
           else
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
             NEW_CHANGELOG=$(echo "$CHANGED_FILES" | grep "^changelogs/v.*\.md$" | head -1)
-            
+
             if [ -n "$NEW_CHANGELOG" ]; then
               VERSION=$(basename "$NEW_CHANGELOG" .md | sed 's/^v//')
               CHANGELOG_PATH="$NEW_CHANGELOG"
               SHOULD_BUILD="true"
-              
+
               echo "✅ Detected new changelog: $NEW_CHANGELOG"
               echo "📦 Version: $VERSION"
             else
               echo "ℹ️ No new changelog detected, skipping build"
             fi
           fi
-          
+
           # 输出结果
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "changelog_path=$CHANGELOG_PATH" >> $GITHUB_OUTPUT
           echo "should_build=$SHOULD_BUILD" >> $GITHUB_OUTPUT
           echo "source_repo=$SOURCE_REPO" >> $GITHUB_OUTPUT
           echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
-          
+
           echo "📋 Detection Results:"
           echo "  Version: $VERSION"
           echo "  Should Build: $SHOULD_BUILD"
@@ -429,9 +433,9 @@ jobs:
     if: needs.detect-version.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     permissions:
-      contents: write  # 创建 Release 需要写权限
+      contents: write # 创建 Release 需要写权限
 
     steps:
       # 1. 检出更新中心代码
@@ -443,7 +447,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       # 3. 安装依赖
       - name: Install dependencies
@@ -459,12 +463,12 @@ jobs:
             echo "❌ Encryption public key not found"
             exit 1
           fi
-          
+
           if [ ! -f "keys/app-signing-public.pem" ]; then
             echo "❌ Signing public key not found"
             exit 1
           fi
-          
+
           # 验证脚本文件
           REQUIRED_SCRIPTS=(
             "scripts/create-update-package.js"
@@ -472,14 +476,14 @@ jobs:
             "scripts/generate-manifest.js"
             "scripts/encryption-service.js"
           )
-          
+
           for script in "${REQUIRED_SCRIPTS[@]}"; do
             if [ ! -f "$script" ]; then
               echo "❌ Required script not found: $script"
               exit 1
             fi
           done
-          
+
           echo "✅ All required files validated"
 
       # 5. 下载主仓库构建产物
@@ -499,29 +503,29 @@ jobs:
       - name: Validate and extract build artifacts
         run: |
           DOWNLOAD_DIR="./downloads"
-          
+
           if [ ! -d "$DOWNLOAD_DIR" ]; then
             echo "❌ Download directory not found: $DOWNLOAD_DIR"
             exit 1
           fi
-          
+
           echo "📁 Contents of download directory:"
           ls -la "$DOWNLOAD_DIR"
-          
+
           # 查找构建档案
           BUILD_ARCHIVE=$(find "$DOWNLOAD_DIR" -name "*.zip" -o -name "*.tar.gz" | head -1)
-          
+
           if [ -z "$BUILD_ARCHIVE" ]; then
             echo "❌ No build archive found in downloads"
             find "$DOWNLOAD_DIR" -type f -exec file {} \;
             exit 1
           fi
-          
+
           echo "✅ Found build archive: $BUILD_ARCHIVE"
-          
+
           # 创建解压目录
           mkdir -p ./build-input
-          
+
           # 解压构建产物
           if [[ "$BUILD_ARCHIVE" == *.zip ]]; then
             echo "📦 Extracting ZIP archive..."
@@ -533,13 +537,13 @@ jobs:
             echo "❌ Unsupported archive format: $BUILD_ARCHIVE"
             exit 1
           fi
-          
+
           # 验证必需文件
           REQUIRED_FILES=(
             "index.html"
             "assets"
           )
-          
+
           for file in "${REQUIRED_FILES[@]}"; do
             if [ ! -e "./build-input/$file" ]; then
               echo "❌ Required file not found in build: $file"
@@ -548,7 +552,7 @@ jobs:
               exit 1
             fi
           done
-          
+
           echo "✅ Build validation passed"
           echo "📊 Build size: $(du -sh ./build-input | cut -f1)"
 
@@ -557,17 +561,17 @@ jobs:
         run: |
           VERSION="${{ needs.detect-version.outputs.version }}"
           echo "📦 Creating update package for version: $VERSION"
-          
+
           # 确保输出目录存在
           mkdir -p ./dist
-          
+
           # 运行包创建脚本
           timeout ${{ env.ENCRYPTION_TIMEOUT }}s node scripts/create-update-package.js \
             --input ./build-input \
             --output ./dist \
             --version "$VERSION" \
             --verbose
-          
+
           # 验证包创建成功
           PACKAGE_PATH="./dist/qb-webui-renderer-v${VERSION}.zip"
           if [ ! -f "$PACKAGE_PATH" ]; then
@@ -575,7 +579,7 @@ jobs:
             ls -la ./dist/
             exit 1
           fi
-          
+
           echo "✅ Package created: $PACKAGE_PATH"
           echo "📊 Package size: $(du -sh "$PACKAGE_PATH" | cut -f1)"
 
@@ -585,11 +589,11 @@ jobs:
           VERSION="${{ needs.detect-version.outputs.version }}"
           PACKAGE_PATH="./dist/qb-webui-renderer-v${VERSION}.zip"
           ENCRYPTED_PATH="./dist/qb-webui-renderer-v${VERSION}-encrypted.json"
-          
+
           echo "🔐 Encrypting update package..."
           echo "  Input: $PACKAGE_PATH"
           echo "  Output: $ENCRYPTED_PATH"
-          
+
           # 运行加密脚本
           timeout ${{ env.ENCRYPTION_TIMEOUT }}s node scripts/encrypt-package.js \
             --input "$PACKAGE_PATH" \
@@ -597,14 +601,14 @@ jobs:
             --public-key "./keys/app-encrypt-public.pem" \
             --signing-key-env "APP_SIGNING_PRIVATE_KEY" \
             --verbose
-          
+
           # 验证加密成功
           if [ ! -f "$ENCRYPTED_PATH" ]; then
             echo "❌ Encryption failed: $ENCRYPTED_PATH not found"
             ls -la ./dist/
             exit 1
           fi
-          
+
           # 验证加密包结构
           echo "🔍 Validating encrypted package structure..."
           node -e "
@@ -629,9 +633,9 @@ jobs:
           ENCRYPTED_PATH="./dist/qb-webui-renderer-v${VERSION}-encrypted.json"
           MANIFEST_PATH="./dist/manifest.json"
           CHANGELOG_PATH="${{ needs.detect-version.outputs.changelog_path }}"
-          
+
           echo "📋 Generating release manifest..."
-          
+
           # 运行 manifest 生成脚本
           node scripts/generate-manifest.js \
             --version "$VERSION" \
@@ -640,13 +644,13 @@ jobs:
             --output "$MANIFEST_PATH" \
             --github-repo "Torrent-Vibe/Renderer-Update-Center" \
             --verbose
-          
+
           # 验证 manifest 生成成功
           if [ ! -f "$MANIFEST_PATH" ]; then
             echo "❌ Manifest generation failed"
             exit 1
           fi
-          
+
           echo "✅ Manifest generated: $MANIFEST_PATH"
           echo "📋 Manifest contents:"
           cat "$MANIFEST_PATH" | jq .
@@ -657,10 +661,10 @@ jobs:
         run: |
           CHANGELOG_PATH="${{ needs.detect-version.outputs.changelog_path }}"
           VERSION="${{ needs.detect-version.outputs.version }}"
-          
+
           if [ -f "$CHANGELOG_PATH" ]; then
             echo "📖 Processing changelog: $CHANGELOG_PATH"
-            
+
             # 处理 changelog 内容，转换为 GitHub Release 格式
             {
               echo "# QBittorrent WebUI Renderer Update v${VERSION}"
@@ -675,7 +679,7 @@ jobs:
               echo "📱 **Installation**: Updates are applied automatically by the application."
               echo "🔄 **Compatibility**: Compatible with QBittorrent WebUI v1.0.0 and later."
             } > changelog-release.txt
-            
+
             echo "✅ Changelog processed for release"
           else
             echo "⚠️ Changelog file not found: $CHANGELOG_PATH"
@@ -702,10 +706,10 @@ jobs:
       - name: Update latest version info
         run: |
           VERSION="${{ needs.detect-version.outputs.version }}"
-          
+
           # 确保 releases 目录存在
           mkdir -p releases/versions
-          
+
           # 生成最新版本信息
           cat > releases/latest.json << EOF
           {
@@ -719,10 +723,10 @@ jobs:
             "release_url": "https://github.com/Torrent-Vibe/Renderer-Update-Center/releases/tag/v$VERSION"
           }
           EOF
-          
+
           # 生成版本特定信息
           cp releases/latest.json "releases/versions/v$VERSION.json"
-          
+
           # 提交版本信息更新
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -731,7 +735,7 @@ jobs:
             git commit -m "chore: update latest version info to v$VERSION [skip ci]"
             git push
           }
-          
+
           echo "✅ Version info updated"
 
       # 13. 通知主仓库（可选）
@@ -758,11 +762,11 @@ jobs:
           echo "🧹 Cleaning up build artifacts..."
           rm -rf ./downloads ./build-input
           rm -f changelog-release.txt
-          
+
           # 保留加密包和 manifest 用于调试
           echo "📁 Remaining files in dist:"
           ls -la ./dist/ || echo "No dist directory"
-          
+
           echo "✅ Cleanup completed"
 
   # 构建失败通知
@@ -770,7 +774,7 @@ jobs:
     needs: [detect-version, build-encrypted-package]
     if: failure() && needs.detect-version.outputs.workflow_run_id != ''
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Notify source repository of failure
         uses: peter-evans/repository-dispatch@v3
@@ -864,7 +868,7 @@ class UpdatePackageBuilder {
       'assets'
     ]
 
-    const missingFiles = requiredFiles.filter(file => {
+    const missingFiles = requiredFiles.filter((file) => {
       const filePath = path.join(inputDir, file)
       return !fs.existsSync(filePath)
     })
@@ -888,14 +892,15 @@ class UpdatePackageBuilder {
 
     const walkDir = (currentDir) => {
       const files = fs.readdirSync(currentDir)
-      
+
       for (const file of files) {
         const filePath = path.join(currentDir, file)
         const stat = fs.statSync(filePath)
-        
+
         if (stat.isDirectory()) {
           walkDir(filePath)
-        } else {
+        }
+        else {
           fileCount++
           totalSize += stat.size
         }
@@ -950,13 +955,13 @@ class UpdatePackageBuilder {
       output.on('close', () => {
         const compressedSize = archive.pointer()
         const compressionRatio = ((packageInfo.packageStats.totalSize - compressedSize) / packageInfo.packageStats.totalSize * 100).toFixed(1)
-        
+
         this.log(`✅ ZIP package created successfully`)
         this.log(`📊 Compression stats:`)
         this.log(`   Original: ${(packageInfo.packageStats.totalSize / 1024 / 1024).toFixed(2)} MB`)
         this.log(`   Compressed: ${(compressedSize / 1024 / 1024).toFixed(2)} MB`)
         this.log(`   Ratio: ${compressionRatio}% reduction`)
-        
+
         resolve(compressedSize)
       })
 
@@ -975,7 +980,7 @@ class UpdatePackageBuilder {
       archive.directory(inputDir, false)
 
       // 添加包信息文件
-      archive.append(JSON.stringify(packageInfo, null, 2), { 
+      archive.append(JSON.stringify(packageInfo, null, 2), {
         name: 'package-info.json',
         comment: 'Update package metadata'
       })
@@ -1000,7 +1005,7 @@ class UpdatePackageBuilder {
     // 验证 ZIP 文件格式（简单检查）
     const buffer = fs.readFileSync(packagePath, { start: 0, end: 4 })
     const zipSignature = buffer.toString('hex')
-    
+
     if (!zipSignature.startsWith('504b0304') && !zipSignature.startsWith('504b0506')) {
       throw new Error(`Invalid ZIP file format: ${packagePath}`)
     }
@@ -1018,7 +1023,8 @@ async function main() {
     const builder = new UpdatePackageBuilder(program.opts())
     await builder.createUpdatePackage()
     process.exit(0)
-  } catch (error) {
+  }
+  catch (error) {
     console.error('❌ Package creation failed:', error.message)
     if (program.opts().verbose) {
       console.error(error.stack)
@@ -1046,15 +1052,15 @@ const path = require('node:path')
 class UpdatePackageEncryption {
   constructor(options = {}) {
     this.options = {
-      keySize: 2048,           // RSA key size
-      aesKeySize: 32,          // AES key size (256 bits)
-      ivSize: 16,              // AES IV size (128 bits)
+      keySize: 2048, // RSA key size
+      aesKeySize: 32, // AES key size (256 bits)
+      ivSize: 16, // AES IV size (128 bits)
       algorithm: 'aes-256-gcm',
       hashAlgorithm: 'sha256',
       signatureAlgorithm: 'RSA-SHA256',
       ...options
     }
-    
+
     this.verbose = options.verbose || false
   }
 
@@ -1070,7 +1076,7 @@ class UpdatePackageEncryption {
    * @param {string} outputPath - 加密包输出路径
    * @param {string} publicKeyPath - 加密公钥路径
    * @param {string} signingPrivateKey - 签名私钥（PEM格式字符串）
-   * @returns {Promise<Object>} 加密包信息
+   * @returns {Promise<object>} 加密包信息
    */
   async encryptPackage(packagePath, outputPath, publicKeyPath, signingPrivateKey) {
     this.log(`🔐 Starting package encryption process`, true)
@@ -1091,8 +1097,8 @@ class UpdatePackageEncryption {
       // 3. 生成随机密钥和 IV
       const aesKey = crypto.randomBytes(this.options.aesKeySize)
       const iv = crypto.randomBytes(this.options.ivSize)
-      
-      this.log(`🔑 Generated AES key (${this.options.aesKeySize * 8} bits)`) 
+
+      this.log(`🔑 Generated AES key (${this.options.aesKeySize * 8} bits)`)
       this.log(`🎲 Generated IV (${this.options.ivSize * 8} bits)`)
 
       // 4. AES 加密包内容
@@ -1105,7 +1111,11 @@ class UpdatePackageEncryption {
 
       // 6. 创建加密包结构
       const encryptedPackage = this.createEncryptedPackage(
-        packagePath, packageData, encryptionResult, encryptedKey, iv
+        packagePath,
+        packageData,
+        encryptionResult,
+        encryptedKey,
+        iv
       )
 
       // 7. 数字签名
@@ -1115,7 +1125,7 @@ class UpdatePackageEncryption {
 
       // 8. 保存加密包
       this.saveEncryptedPackage(encryptedPackage, outputPath)
-      
+
       this.log(`✅ Package encryption completed successfully`, true)
       this.log(`📊 Encrypted package size: ${(JSON.stringify(encryptedPackage).length / 1024 / 1024).toFixed(2)} MB`)
 
@@ -1125,8 +1135,8 @@ class UpdatePackageEncryption {
         compressionRatio: (packageData.length - encryptionResult.encryptedPayload.length) / packageData.length * 100,
         metadata: encryptedPackage.metadata
       }
-
-    } catch (error) {
+    }
+    catch (error) {
       this.log(`❌ Encryption failed: ${error.message}`, true)
       throw error
     }
@@ -1168,7 +1178,8 @@ class UpdatePackageEncryption {
     try {
       crypto.createPublicKey(publicKey)
       crypto.createPrivateKey(signingPrivateKey)
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`Key validation failed: ${error.message}`)
     }
 
@@ -1177,50 +1188,50 @@ class UpdatePackageEncryption {
 
   encryptWithAES(data, key, iv) {
     this.log(`🔐 Performing AES-${this.options.aesKeySize * 8}-GCM encryption...`)
-    
+
     const cipher = crypto.createCipherGCM(this.options.algorithm, key, iv)
-    
+
     const encrypted = Buffer.concat([
       cipher.update(data),
       cipher.final()
     ])
-    
+
     const authTag = cipher.getAuthTag()
-    
+
     this.log(`   Encrypted payload: ${encrypted.length} bytes`)
     this.log(`   Auth tag: ${authTag.length} bytes`)
-    
+
     return {
       encryptedPayload: encrypted,
-      authTag: authTag
+      authTag
     }
   }
 
   encryptAESKey(aesKey, publicKey) {
     this.log(`🔑 Encrypting AES key with RSA...`)
-    
+
     try {
       const encryptedKey = crypto.publicEncrypt({
         key: publicKey,
         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
         oaepHash: this.options.hashAlgorithm
       }, aesKey)
-      
+
       this.log(`   Encrypted key size: ${encryptedKey.length} bytes`)
       return encryptedKey
-      
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`RSA key encryption failed: ${error.message}`)
     }
   }
 
   createEncryptedPackage(originalPath, originalData, encryptionResult, encryptedKey, iv) {
     this.log(`📦 Creating encrypted package structure...`)
-    
+
     const originalHash = crypto.createHash(this.options.hashAlgorithm)
       .update(originalData)
       .digest('hex')
-    
+
     const encryptedPackage = {
       metadata: {
         version: this.extractVersionFromPath(originalPath),
@@ -1229,7 +1240,7 @@ class UpdatePackageEncryption {
         algorithm: this.options.algorithm.toUpperCase(),
         keyAlgorithm: `RSA-${this.options.keySize}-OAEP`,
         hashAlgorithm: this.options.hashAlgorithm.toUpperCase(),
-        originalHash: originalHash,
+        originalHash,
         encryptedSize: encryptionResult.encryptedPayload.length,
         compressionRatio: ((originalData.length - encryptionResult.encryptedPayload.length) / originalData.length * 100).toFixed(2)
       },
@@ -1238,19 +1249,19 @@ class UpdatePackageEncryption {
       iv: iv.toString('base64'),
       authTag: encryptionResult.authTag.toString('base64')
     }
-    
+
     this.log(`✅ Package structure created`)
     this.log(`📊 Metadata:`)
     this.log(`   Original size: ${(originalData.length / 1024 / 1024).toFixed(2)} MB`)
     this.log(`   Encrypted size: ${(encryptionResult.encryptedPayload.length / 1024 / 1024).toFixed(2)} MB`)
     this.log(`   Compression: ${encryptedPackage.metadata.compressionRatio}%`)
-    
+
     return encryptedPackage
   }
 
   signPackage(encryptedPackage, signingPrivateKey) {
     this.log(`✍️ Creating digital signature...`)
-    
+
     // 创建签名数据（不包含 signature 字段）
     const dataToSign = JSON.stringify({
       metadata: encryptedPackage.metadata,
@@ -1259,38 +1270,38 @@ class UpdatePackageEncryption {
       iv: encryptedPackage.iv,
       authTag: encryptedPackage.authTag
     })
-    
+
     try {
       const signature = crypto.sign(this.options.signatureAlgorithm, Buffer.from(dataToSign), signingPrivateKey)
-      
+
       this.log(`   Signature size: ${signature.length} bytes`)
       this.log(`   Signature algorithm: ${this.options.signatureAlgorithm}`)
-      
+
       return signature.toString('base64')
-      
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`Digital signature creation failed: ${error.message}`)
     }
   }
 
   saveEncryptedPackage(encryptedPackage, outputPath) {
     this.log(`💾 Saving encrypted package to: ${outputPath}`)
-    
+
     try {
       // 确保输出目录存在
       const outputDir = path.dirname(outputPath)
       if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true })
       }
-      
+
       // 保存加密包（格式化 JSON）
       const jsonString = JSON.stringify(encryptedPackage, null, 2)
       fs.writeFileSync(outputPath, jsonString, 'utf8')
-      
+
       const fileSize = fs.statSync(outputPath).size
       this.log(`✅ Encrypted package saved (${(fileSize / 1024 / 1024).toFixed(2)} MB)`)
-      
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`Failed to save encrypted package: ${error.message}`)
     }
   }
@@ -1306,37 +1317,38 @@ class UpdatePackageEncryption {
    */
   async validateEncryptedPackage(encryptedPackagePath) {
     this.log(`🔍 Validating encrypted package: ${encryptedPackagePath}`)
-    
+
     if (!fs.existsSync(encryptedPackagePath)) {
       throw new Error(`Encrypted package not found: ${encryptedPackagePath}`)
     }
-    
+
     try {
       const packageContent = fs.readFileSync(encryptedPackagePath, 'utf8')
       const encryptedPackage = JSON.parse(packageContent)
-      
+
       // 验证必需字段
       const requiredFields = ['metadata', 'payload', 'encryptedKey', 'iv', 'authTag', 'signature']
       const missingFields = requiredFields.filter(field => !encryptedPackage[field])
-      
+
       if (missingFields.length > 0) {
         throw new Error(`Missing required fields: ${missingFields.join(', ')}`)
       }
-      
+
       // 验证 base64 编码
       const base64Fields = ['payload', 'encryptedKey', 'iv', 'authTag', 'signature']
       for (const field of base64Fields) {
         try {
           Buffer.from(encryptedPackage[field], 'base64')
-        } catch (error) {
+        }
+        catch (error) {
           throw new Error(`Invalid base64 encoding in field: ${field}`)
         }
       }
-      
+
       this.log(`✅ Encrypted package validation passed`)
       return true
-      
-    } catch (error) {
+    }
+    catch (error) {
       throw new Error(`Encrypted package validation failed: ${error.message}`)
     }
   }
@@ -1419,8 +1431,8 @@ class PackageEncryptor {
       console.log(`⏰ Timestamp: ${result.metadata.timestamp}`)
 
       return result
-
-    } catch (error) {
+    }
+    catch (error) {
       console.error('❌ Package encryption failed:', error.message)
       if (this.options.verbose) {
         console.error('🗂️ Stack trace:', error.stack)
@@ -1435,11 +1447,11 @@ async function main() {
   try {
     const encryptor = new PackageEncryptor(program.opts())
     await encryptor.encryptPackage()
-    
+
     console.log('\n🎉 Encryption process completed successfully!')
     process.exit(0)
-    
-  } catch (error) {
+  }
+  catch (error) {
     console.error('\n💥 Encryption process failed!')
     process.exit(1)
   }
@@ -1503,9 +1515,9 @@ class ManifestGenerator {
 
       // 4. 构建 manifest
       const manifest = this.buildManifest(
-        version, 
-        packageInfo, 
-        changelogContent, 
+        version,
+        packageInfo,
+        changelogContent,
         downloadUrls
       )
 
@@ -1514,8 +1526,8 @@ class ManifestGenerator {
       this.log(`✅ Manifest saved to ${output}`, true)
 
       return manifest
-
-    } catch (error) {
+    }
+    catch (error) {
       this.log(`❌ Manifest generation failed: ${error.message}`, true)
       throw error
     }
@@ -1567,10 +1579,10 @@ class ManifestGenerator {
     }
 
     const changelogContent = fs.readFileSync(changelogPath, 'utf8')
-    
+
     // 解析 changelog（简单的 Markdown 解析）
     const parsed = this.parseChangelog(changelogContent)
-    
+
     return parsed
   }
 
@@ -1589,33 +1601,37 @@ class ManifestGenerator {
 
     for (const line of lines) {
       const trimmed = line.trim()
-      
+
       // 标题检测
       if (trimmed.startsWith('# ')) {
-        result.summary = trimmed.replace(/^# /, '').replace(/v[\d.\-\w]*/, '').trim()
+        result.summary = trimmed.replace(/^# /, '').replace(/v[.\-\w]*/, '').trim()
         inSummary = true
         continue
       }
-      
+
       // 段落检测
       if (trimmed.startsWith('## ')) {
         inSummary = false
         const sectionTitle = trimmed.toLowerCase()
-        
+
         if (sectionTitle.includes('新功能') || sectionTitle.includes('feature')) {
           currentSection = 'features'
-        } else if (sectionTitle.includes('修复') || sectionTitle.includes('fix') || sectionTitle.includes('bug')) {
+        }
+        else if (sectionTitle.includes('修复') || sectionTitle.includes('fix') || sectionTitle.includes('bug')) {
           currentSection = 'fixes'
-        } else if (sectionTitle.includes('breaking') || sectionTitle.includes('不兼容')) {
+        }
+        else if (sectionTitle.includes('breaking') || sectionTitle.includes('不兼容')) {
           currentSection = 'breaking'
-        } else if (sectionTitle.includes('变更') || sectionTitle.includes('change')) {
+        }
+        else if (sectionTitle.includes('变更') || sectionTitle.includes('change')) {
           currentSection = 'changes'
-        } else {
+        }
+        else {
           currentSection = 'changes'
         }
         continue
       }
-      
+
       // 列表项检测
       if (trimmed.startsWith('- ✅') || trimmed.startsWith('- [x]')) {
         const item = trimmed.replace(/^- (✅|\[x\])\s*/, '').trim()
@@ -1635,7 +1651,7 @@ class ManifestGenerator {
 
   generateDownloadUrls(githubRepo, version) {
     const baseUrl = `https://github.com/${githubRepo}/releases/download/v${version}`
-    
+
     return {
       encryptedPackage: `${baseUrl}/qb-webui-renderer-v${version}-encrypted.json`,
       manifest: `${baseUrl}/manifest.json`,
@@ -1650,20 +1666,20 @@ class ManifestGenerator {
     const manifest = {
       version,
       tag: `v${version}`,
-      buildNumber: parseInt(process.env.GITHUB_RUN_NUMBER || '0'),
+      buildNumber: Number.parseInt(process.env.GITHUB_RUN_NUMBER || '0'),
       minimumAppVersion: '1.0.0',
-      
+
       // 平台兼容性
       platform: {
         darwin: true,
         win32: true,
         linux: true
       },
-      
+
       // 时间戳
       timestamp: new Date().toISOString(),
       prerelease: version.includes('-'),
-      
+
       // 包信息
       package: {
         name: packageInfo.fileName,
@@ -1677,7 +1693,7 @@ class ManifestGenerator {
           keyAlgorithm: packageInfo.metadata.keyAlgorithm
         }
       },
-      
+
       // 安全信息
       security: {
         encrypted: true,
@@ -1685,7 +1701,7 @@ class ManifestGenerator {
         algorithm: packageInfo.metadata.algorithm,
         hashAlgorithm: packageInfo.metadata.hashAlgorithm
       },
-      
+
       // 更新说明
       release: {
         name: changelogContent.summary,
@@ -1700,7 +1716,7 @@ class ManifestGenerator {
           changelog: downloadUrls.changelog
         }
       },
-      
+
       // 兼容性和回滚配置
       compatibility: {
         rollbackSupported: true,
@@ -1708,7 +1724,7 @@ class ManifestGenerator {
         backupRequired: true,
         maxRollbackVersions: 3
       },
-      
+
       // 更新行为配置
       updateBehavior: {
         autoDownload: true,
@@ -1752,11 +1768,11 @@ async function main() {
   try {
     const generator = new ManifestGenerator(program.opts())
     await generator.generateManifest()
-    
+
     console.log('\n🎉 Manifest generation completed successfully!')
     process.exit(0)
-    
-  } catch (error) {
+  }
+  catch (error) {
     console.error('❌ Manifest generation failed:', error.message)
     if (program.opts().verbose) {
       console.error(error.stack)
@@ -1866,7 +1882,7 @@ class AppKeyGenerator {
           private: 'app-decrypt-private.pem (client embedded)'
         },
         signing: {
-          public: 'app-verify-public.pem (client embedded)', 
+          public: 'app-verify-public.pem (client embedded)',
           private: 'GitHub Secret: APP_SIGNING_PRIVATE_KEY'
         }
       },
@@ -1929,7 +1945,7 @@ ls -la resources/keys/
 ## 安全说明
 
 ✅ **唯一性**: 整个应用使用一对密钥
-✅ **分发**: 密钥内置在应用二进制文件中  
+✅ **分发**: 密钥内置在应用二进制文件中
 ✅ **访问控制**: 只有拥有解密私钥的客户端能够解密更新包
 ✅ **完整性**: 签名验证确保更新包未被篡改
 
@@ -1959,7 +1975,7 @@ ls -la resources/keys/
 
 // 运行密钥生成
 if (require.main === module) {
-  new AppKeyGenerator().generateAppKeys().catch(error => {
+  new AppKeyGenerator().generateAppKeys().catch((error) => {
     console.error('❌ Key generation failed:', error.message)
     process.exit(1)
   })
@@ -1982,7 +1998,7 @@ export class HotUpdateContentLoader implements WindowContentLoader {
     this.updateManager = new UpdateManager(this.hotUpdatePath)
     this.fallbackService = new FallbackService({
       hotUpdatePath: this.hotUpdatePath,
-      builtInLoader: options.fallbackLoader  // DefaultWindowContentLoader
+      builtInLoader: options.fallbackLoader // DefaultWindowContentLoader
     })
   }
 
@@ -1994,8 +2010,9 @@ export class HotUpdateContentLoader implements WindowContentLoader {
 
     try {
       const hotUpdatePath = await this.getValidatedHotUpdatePath()
-      if (hotUpdatePath) return `file://${hotUpdatePath}`
-    } catch (error) {
+      if (hotUpdatePath) { return `file://${hotUpdatePath}` }
+    }
+    catch (error) {
       console.warn('Hot update failed, using fallback:', error)
     }
 
@@ -2009,7 +2026,7 @@ export class HotUpdateContentLoader implements WindowContentLoader {
 ```typescript
 export class UpdateManager {
   private signatureService: SignatureService
-  private updateService: GitHubUpdateService  
+  private updateService: GitHubUpdateService
   private decryptionService: PackageDecryptionService
 
   constructor(updatePath: string, options: UpdateManagerOptions = {}) {
@@ -2026,7 +2043,7 @@ export class UpdateManager {
   async checkForUpdates(): Promise<boolean> {
     const currentVersion = this.getCurrentVersion()
     const latestRelease = await this.updateService.getLatestRelease()
-    
+
     if (this.shouldUpdate(currentVersion, latestRelease.version)) {
       if (this.options.autoDownload) {
         await this.downloadAndPrepareUpdate(latestRelease)
@@ -2043,13 +2060,13 @@ export class UpdateManager {
 
     // Download encrypted package
     await this.updateService.downloadAsset(releaseInfo.encryptedAsset, encryptedPackagePath)
-    
+
     // Decrypt using application-wide keys
     await this.decryptionService.decryptUpdatePackage(encryptedPackagePath, decryptedPackagePath)
-    
+
     // Extract and validate
     await this.extractAndValidatePackage(decryptedPackagePath, extractPath)
-    
+
     return true
   }
 }
@@ -2063,29 +2080,29 @@ export class FallbackService {
     {
       priority: 1,
       name: 'current-hot-update',
-      condition: (ctx) => ctx.userDataAvailable && ctx.attemptCount === 0,
-      execute: (ctx) => this.loadHotUpdate(ctx),
+      condition: ctx => ctx.userDataAvailable && ctx.attemptCount === 0,
+      execute: ctx => this.loadHotUpdate(ctx),
       maxRetries: 2
     },
     {
-      priority: 2, 
+      priority: 2,
       name: 'last-known-good-backup',
-      condition: (ctx) => ctx.userDataAvailable && ctx.lastSuccessfulVersion,
-      execute: (ctx) => this.loadBackupVersion(ctx),
+      condition: ctx => ctx.userDataAvailable && ctx.lastSuccessfulVersion,
+      execute: ctx => this.loadBackupVersion(ctx),
       maxRetries: 1
     },
     {
       priority: 3,
       name: 'built-in-app-asar',
-      condition: (ctx) => ctx.appAsarIntact,
-      execute: (ctx) => this.loadBuiltInVersion(ctx),
+      condition: ctx => ctx.appAsarIntact,
+      execute: ctx => this.loadBuiltInVersion(ctx),
       maxRetries: 1
     },
     {
       priority: 4,
       name: 'emergency-safe-mode',
       condition: () => true,
-      execute: (ctx) => this.loadSafeModeInterface(ctx),
+      execute: ctx => this.loadSafeModeInterface(ctx),
       maxRetries: 0
     }
   ]
@@ -2102,13 +2119,14 @@ export class FallbackService {
       if (strategy.condition(context)) {
         try {
           return await strategy.execute(context)
-        } catch (error) {
+        }
+        catch (error) {
           console.warn(`Fallback strategy ${strategy.name} failed:`, error)
           context.attemptCount++
         }
       }
     }
-    
+
     throw new Error('All fallback strategies exhausted')
   }
 }
@@ -2121,7 +2139,7 @@ export class FallbackService {
 1. **Generate Application-Wide Key Pairs**
    - Create RSA-2048 key generation script for update center
    - Generate encryption key pair (public for update center, private for clients)
-   - Generate signing key pair (private for update center, public for clients)  
+   - Generate signing key pair (private for update center, public for clients)
    - **Files**: `Torrent-Vibe/Renderer-Update-Center/scripts/generate-app-keys.js`
 
 2. **Implement Package Decryption Service**
@@ -2130,7 +2148,7 @@ export class FallbackService {
    - Add signature verification with application public key
    - **File**: `layer/main/src/services/package-decryption-service.ts`
 
-3. **Create Hot Update Content Loader** 
+3. **Create Hot Update Content Loader**
    - Extend WindowContentLoader interface for hot updates
    - Implement fallback chain: hot update → backup → built-in → safe mode
    - Add health checking and update validation
@@ -2144,25 +2162,25 @@ export class FallbackService {
 
 ### Phase 2: Update Management & GitHub Integration (Days 4-6)
 
-5. **Implement Update Manager**
+1. **Implement Update Manager**
    - Create core update orchestration with state management
    - Add version comparison and update decision logic
    - Implement download, decrypt, extract, and activation pipeline
    - **File**: `layer/main/src/manager/update-manager.ts`
 
-6. **Create GitHub Update Service**
+2. **Create GitHub Update Service**
    - Integrate GitHub Releases API with @octokit/rest
    - Support multiple mirror sources for download resilience
    - Add progress tracking and error handling
    - **File**: `layer/main/src/services/github-update-service.ts`
 
-7. **Build Fallback Service System**
+3. **Build Fallback Service System**
    - Implement multi-tier fallback strategy pattern
    - Add automatic fallback triggering on various error types
    - Create safe mode interface for emergency situations
    - **File**: `layer/main/src/services/fallback-service.ts`
 
-8. **Add Hot Update Type Definitions**
+4. **Add Hot Update Type Definitions**
    - Define comprehensive TypeScript interfaces
    - Add Zod schemas for runtime validation
    - Create error type definitions and context interfaces
@@ -2170,124 +2188,125 @@ export class FallbackService {
 
 ### Phase 3: Update Center Repository Setup (Days 7-9)
 
-9. **Setup Update Center Repository Structure**
+1. **Setup Update Center Repository Structure**
    - Initialize `Torrent-Vibe/Renderer-Update-Center` repository
    - Create directory structure for changelogs, keys, scripts
    - Add key generation and management scripts
    - **Repository**: Complete update center setup
 
-10. **Implement Manual Changelog Workflow**
-    - Create changelog template and validation system
-    - Build release preparation script with interactive editing
-    - Add automated branch creation and PR workflow
-    - **Files**: 
-      - `scripts/prepare-release.js`
-      - `changelogs/template.md`
+2. **Implement Manual Changelog Workflow**
+   - Create changelog template and validation system
+   - Build release preparation script with interactive editing
+   - Add automated branch creation and PR workflow
+   - **Files**:
+     - `scripts/prepare-release.js`
+     - `changelogs/template.md`
 
-11. **Create Package Encryption System** 
-    - Build update package creation scripts
-    - Implement RSA+AES hybrid encryption
-    - Add digital signature generation
-    - **Files**:
-      - `scripts/create-update-package.js`
-      - `scripts/encrypt-package.js`
-      - `scripts/encryption-service.js`
+3. **Create Package Encryption System**
+   - Build update package creation scripts
+   - Implement RSA+AES hybrid encryption
+   - Add digital signature generation
+   - **Files**:
+     - `scripts/create-update-package.js`
+     - `scripts/encrypt-package.js`
+     - `scripts/encryption-service.js`
 
-12. **Build Update Center CI/CD Pipeline**
-    - Create GitHub Actions workflow for automated builds
-    - Add encrypted package creation and release automation
-    - Implement changelog integration and release notes
-    - **File**: `.github/workflows/release.yml`
+4. **Build Update Center CI/CD Pipeline**
+   - Create GitHub Actions workflow for automated builds
+   - Add encrypted package creation and release automation
+   - Implement changelog integration and release notes
+   - **File**: `.github/workflows/release.yml`
 
 ### Phase 4: Cross-Repository Coordination (Days 10-12)
 
-13. **Add Main Repository Build Trigger**
-    - Create workflow to trigger update center builds
-    - Add repository dispatch event integration
-    - Implement build artifact sharing between repositories
-    - **File**: `innei/qb-client-webui/.github/workflows/trigger-update.yml`
+1. **Add Main Repository Build Trigger**
+   - Create workflow to trigger update center builds
+   - Add repository dispatch event integration
+   - Implement build artifact sharing between repositories
+   - **File**: `innei/qb-client-webui/.github/workflows/trigger-update.yml`
 
-14. **Implement Update Center Build Automation**
-    - Add artifact download from main repository
-    - Create automated package creation and encryption
-    - Implement GitHub Release creation with changelog integration
-    - **Update**: Update center workflow enhancements
+2. **Implement Update Center Build Automation**
+   - Add artifact download from main repository
+   - Create automated package creation and encryption
+   - Implement GitHub Release creation with changelog integration
+   - **Update**: Update center workflow enhancements
 
-15. **Setup Secrets and Configuration**
-    - Configure GitHub Secrets for signing private key
-    - Add source repository access token
-    - Set up cross-repository permissions
-    - **Configuration**: Repository secrets setup
+3. **Setup Secrets and Configuration**
+   - Configure GitHub Secrets for signing private key
+   - Add source repository access token
+   - Set up cross-repository permissions
+   - **Configuration**: Repository secrets setup
 
-16. **Deploy Application Keys to Main Repository**
-    - Copy generated client keys to main repository
-    - Update build configuration to include keys in resources
-    - Verify key deployment in Electron application bundle
-    - **Files**: `resources/keys/app-decrypt-private.pem`, `resources/keys/app-verify-public.pem`
+4. **Deploy Application Keys to Main Repository**
+   - Copy generated client keys to main repository
+   - Update build configuration to include keys in resources
+   - Verify key deployment in Electron application bundle
+   - **Files**: `resources/keys/app-decrypt-private.pem`, `resources/keys/app-verify-public.pem`
 
 ### Phase 5: User Data Directory & Storage (Days 13-14)
 
-17. **Implement User Data Directory Structure**
-    - Create hot-updates directory structure in userData
-    - Add directory initialization and permission handling
-    - Implement cleanup and maintenance routines
-    - **Integration**: Update manager directory creation
+1. **Implement User Data Directory Structure**
+   - Create hot-updates directory structure in userData
+   - Add directory initialization and permission handling
+   - Implement cleanup and maintenance routines
+   - **Integration**: Update manager directory creation
 
-18. **Add Update Storage Management**
-    - Implement update package caching and cleanup
-    - Add backup version management
-    - Create storage quota and cleanup policies
-    - **Enhancement**: Update manager storage features
+2. **Add Update Storage Management**
+   - Implement update package caching and cleanup
+   - Add backup version management
+   - Create storage quota and cleanup policies
+   - **Enhancement**: Update manager storage features
 
-19. **Build Health Monitoring System**
-    - Add update system health checking
-    - Implement performance monitoring and metrics
-    - Create diagnostic information collection
-    - **Files**: Health monitoring integration
+3. **Build Health Monitoring System**
+   - Add update system health checking
+   - Implement performance monitoring and metrics
+   - Create diagnostic information collection
+   - **Files**: Health monitoring integration
 
 ### Phase 6: Testing & Validation (Days 15-16)
 
-20. **Create Validation Test Suite**
-    - Build encryption/decryption test cases
-    - Add update pipeline integration tests
-    - Create fallback system validation tests
-    - **Files**: Test suite implementation
+1. **Create Validation Test Suite**
+   - Build encryption/decryption test cases
+   - Add update pipeline integration tests
+   - Create fallback system validation tests
+   - **Files**: Test suite implementation
 
-21. **Implement Security Validation**
-    - Add package signature verification tests
-    - Create key management security tests
-    - Validate encryption strength and implementation
-    - **Integration**: Security test suite
+2. **Implement Security Validation**
+   - Add package signature verification tests
+   - Create key management security tests
+   - Validate encryption strength and implementation
+   - **Integration**: Security test suite
 
-22. **End-to-End Integration Testing**
-    - Test complete update pipeline from main repo to client
-    - Validate cross-repository build coordination
-    - Test fallback scenarios and error handling
-    - **Process**: Complete system testing
+3. **End-to-End Integration Testing**
+   - Test complete update pipeline from main repo to client
+   - Validate cross-repository build coordination
+   - Test fallback scenarios and error handling
+   - **Process**: Complete system testing
 
 ### Phase 7: Documentation & Polish (Days 17-18)
 
-23. **Create System Documentation**
-    - Document key management and rotation procedures
-    - Create operational guides for release process
-    - Add troubleshooting and diagnostics documentation
-    - **Files**: Documentation creation
+1. **Create System Documentation**
+   - Document key management and rotation procedures
+   - Create operational guides for release process
+   - Add troubleshooting and diagnostics documentation
+   - **Files**: Documentation creation
 
-24. **Final Integration & Error Handling**
-    - Integrate hot update system into main application flow
-    - Add comprehensive error handling and user feedback
-    - Implement graceful degradation for all failure modes
-    - **Integration**: Final system integration
+2. **Final Integration & Error Handling**
+   - Integrate hot update system into main application flow
+   - Add comprehensive error handling and user feedback
+   - Implement graceful degradation for all failure modes
+   - **Integration**: Final system integration
 
 ## Validation Gates
 
 ### Build Quality Checks
+
 ```bash
 # TypeScript validation
 cd layer/renderer && pnpm typecheck
 cd layer/main && tsc --noEmit
 
-# ESLint validation  
+# ESLint validation
 pnpm lint
 
 # Build validation
@@ -2296,6 +2315,7 @@ pnpm electron:build
 ```
 
 ### Security Validation
+
 ```bash
 # Key generation and validation
 cd Torrent-Vibe/Renderer-Update-Center
@@ -2309,6 +2329,7 @@ node scripts/test-signature-validation.js
 ```
 
 ### Integration Testing
+
 ```bash
 # Cross-repository coordination testing
 # 1. Trigger main repository build
@@ -2326,6 +2347,7 @@ node scripts/test-signature-validation.js
 ```
 
 ### End-to-End Validation
+
 ```bash
 # Complete update cycle testing
 # 1. Make change in main repository
@@ -2439,24 +2461,28 @@ node scripts/test-signature-validation.js
 ## External References & Documentation
 
 ### Core Technologies
-- **Node.js Crypto Module**: https://nodejs.org/api/crypto.html - RSA and AES encryption implementation
-- **Electron Security**: https://www.electronjs.org/docs/tutorial/security - Context isolation and secure loading
-- **GitHub Actions**: https://docs.github.com/en/actions - CI/CD workflow automation
-- **GitHub Releases API**: https://docs.github.com/en/rest/releases - Release management integration
+
+- **Node.js Crypto Module**: <https://nodejs.org/api/crypto.html> - RSA and AES encryption implementation
+- **Electron Security**: <https://www.electronjs.org/docs/tutorial/security> - Context isolation and secure loading
+- **GitHub Actions**: <https://docs.github.com/en/actions> - CI/CD workflow automation
+- **GitHub Releases API**: <https://docs.github.com/en/rest/releases> - Release management integration
 
 ### Security Research
-- **OWASP Cryptographic Storage**: https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html
-- **Electron Code Signing**: https://www.electronjs.org/docs/tutorial/code-signing
+
+- **OWASP Cryptographic Storage**: <https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html>
+- **Electron Code Signing**: <https://www.electronjs.org/docs/tutorial/code-signing>
 - **Package Integrity Verification**: Best practices for signature validation
 
-### Implementation Examples  
+### Implementation Examples
+
 - **Hybrid Encryption Examples**: RSA+AES implementation patterns in Node.js
 - **GitHub Repository Dispatch**: Cross-repository coordination examples
 - **Electron Auto-Update Alternatives**: Manual update system implementations
 
 ## PRP Quality Score: 9/10
 
-**Confidence Level**: Very High - This PRP provides comprehensive architectural design, detailed security considerations, complete implementation guidance, and addresses all critical technical challenges. The phased approach with clear validation gates ensures systematic implementation.
+**Confidence Level**: Very High - This PRP provides comprehensive architectural design, detailed security considerations, complete implementation guidance, and addresses all critical technical challenges.
+The phased approach with clear validation gates ensures systematic implementation.
 
 **Deductions**: Minor complexity in cross-repository coordination that may require iterative refinement during initial setup phase.
 

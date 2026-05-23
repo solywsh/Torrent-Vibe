@@ -40,7 +40,7 @@ export const mobileLayoutAtom = atom<MobileLayoutState>({
 
 // Derived atoms for specific UI interactions
 export const drawerOpenAtom = atom(
-  (get) => get(mobileLayoutAtom).drawerOpen,
+  get => get(mobileLayoutAtom).drawerOpen,
   (get, set, open: boolean) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, drawerOpen: open })
@@ -48,7 +48,7 @@ export const drawerOpenAtom = atom(
 )
 
 export const searchExpandedAtom = atom(
-  (get) => get(mobileLayoutAtom).searchExpanded,
+  get => get(mobileLayoutAtom).searchExpanded,
   (get, set, expanded: boolean) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, searchExpanded: expanded })
@@ -56,7 +56,7 @@ export const searchExpandedAtom = atom(
 )
 
 export const bottomSheetOpenAtom = atom(
-  (get) => get(mobileLayoutAtom).bottomSheetOpen,
+  get => get(mobileLayoutAtom).bottomSheetOpen,
   (get, set, open: boolean) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, bottomSheetOpen: open })
@@ -64,7 +64,7 @@ export const bottomSheetOpenAtom = atom(
 )
 
 export const selectedCardAtom = atom(
-  (get) => get(mobileLayoutAtom).selectedCard,
+  get => get(mobileLayoutAtom).selectedCard,
   (get, set, cardHash: string | null) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, selectedCard: cardHash })
@@ -72,7 +72,7 @@ export const selectedCardAtom = atom(
 )
 
 export const multiSelectModeAtom = atom(
-  (get) => get(mobileLayoutAtom).multiSelectMode,
+  get => get(mobileLayoutAtom).multiSelectMode,
   (get, set, enabled: boolean) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, multiSelectMode: enabled })
@@ -81,7 +81,7 @@ export const multiSelectModeAtom = atom(
 
 // Card expansion management
 export const expandedCardsAtom = atom(
-  (get) => get(mobileLayoutAtom).expandedCards,
+  get => get(mobileLayoutAtom).expandedCards,
   (get, set, cards: Set<string>) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, expandedCards: new Set(cards) })
@@ -97,7 +97,8 @@ export const toggleCardExpansionAtom = atom(
 
     if (expandedCards.has(cardHash)) {
       expandedCards.delete(cardHash)
-    } else {
+    }
+    else {
       expandedCards.add(cardHash)
     }
 
@@ -112,7 +113,7 @@ export const collapseAllCardsAtom = atom(null, (get, set) => {
 
 // Gesture state management
 export const gestureInteractionActiveAtom = atom(
-  (get) => get(mobileLayoutAtom).gestureInteractionActive,
+  get => get(mobileLayoutAtom).gestureInteractionActive,
   (get, set, active: boolean) => {
     const current = get(mobileLayoutAtom)
     set(mobileLayoutAtom, { ...current, gestureInteractionActive: active })

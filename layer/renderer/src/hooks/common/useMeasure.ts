@@ -44,7 +44,7 @@ type State = {
 }
 
 export type Options = {
-  debounce?: number | { scroll: number; resize: number }
+  debounce?: number | { scroll: number, resize: number }
   scroll?: boolean
   offsetSize?: boolean
 }
@@ -100,9 +100,9 @@ export function useMeasure({
   // memoize handlers, so event-listeners know when they should update
   const [forceRefresh, resizeChange, scrollChange] = useMemo(() => {
     const callback = () => {
-      if (!state.current.element) return
-      const { left, top, width, height, bottom, right, x, y } =
-        state.current.element.getBoundingClientRect() as unknown as RectReadOnly
+      if (!state.current.element) { return }
+      const { left, top, width, height, bottom, right, x, y }
+        = state.current.element.getBoundingClientRect() as unknown as RectReadOnly
 
       const size = {
         left,
@@ -135,9 +135,8 @@ export function useMeasure({
   // cleanup current scroll-listeners / observers
   function removeListeners() {
     if (state.current.scrollContainers) {
-      state.current.scrollContainers.forEach((element) =>
-        element.removeEventListener('scroll', scrollChange, true),
-      )
+      state.current.scrollContainers.forEach(element =>
+        element.removeEventListener('scroll', scrollChange, true))
       state.current.scrollContainers = null
     }
 
@@ -149,22 +148,21 @@ export function useMeasure({
 
   // add scroll-listeners / observers
   function addListeners() {
-    if (!state.current.element) return
+    if (!state.current.element) { return }
     state.current.resizeObserver = new ResizeObserver(scrollChange)
     state.current.resizeObserver!.observe(state.current.element)
     if (scroll && state.current.scrollContainers) {
-      state.current.scrollContainers.forEach((scrollContainer) =>
+      state.current.scrollContainers.forEach(scrollContainer =>
         scrollContainer.addEventListener('scroll', scrollChange, {
           capture: true,
           passive: true,
-        }),
-      )
+        }))
     }
   }
 
   // the ref we expose to the user
   const ref = (node: HTMLOrSVGElement | null) => {
-    if (!node || node === state.current.element) return
+    if (!node || node === state.current.element) { return }
     removeListeners()
     state.current.element = node
     state.current.scrollContainers = findScrollContainers(node)
@@ -209,11 +207,11 @@ function findScrollContainers(
   element: HTMLOrSVGElement | null,
 ): HTMLOrSVGElement[] {
   const result: HTMLOrSVGElement[] = []
-  if (!element || element === document.body) return result
+  if (!element || element === document.body) { return result }
   const { overflow, overflowX, overflowY } = window.getComputedStyle(element)
   if (
     [overflow, overflowX, overflowY].some(
-      (prop) => prop === 'auto' || prop === 'scroll',
+      prop => prop === 'auto' || prop === 'scroll',
     )
   ) {
     result.push(element)
@@ -233,4 +231,4 @@ const keys: (keyof RectReadOnly)[] = [
   'height',
 ]
 const areBoundsEqual = (a: RectReadOnly, b: RectReadOnly): boolean =>
-  keys.every((key) => a[key] === b[key])
+  keys.every(key => a[key] === b[key])

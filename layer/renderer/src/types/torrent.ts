@@ -1,27 +1,27 @@
-export type TorrentState =
-  | 'error'
-  | 'pausedUP'
-  | 'pausedDL'
-  | 'queuedUP'
-  | 'queuedDL'
-  | 'uploading'
-  | 'stalledUP'
-  | 'checkingUP'
-  | 'checkingDL'
-  | 'downloading'
-  | 'stoppedDL'
-  | 'stoppedUP'
-  | 'stalledDL'
-  | 'forcedDL'
-  | 'ForcedMetaDL'
-  | 'forcedUP'
-  | 'metaDL'
-  | 'allocating'
-  | 'queuedForChecking'
-  | 'checkingResumeData'
-  | 'missingFiles'
-  | 'moving'
-  | 'unknown'
+export type TorrentState
+  = | 'error'
+    | 'pausedUP'
+    | 'pausedDL'
+    | 'queuedUP'
+    | 'queuedDL'
+    | 'uploading'
+    | 'stalledUP'
+    | 'checkingUP'
+    | 'checkingDL'
+    | 'downloading'
+    | 'stoppedDL'
+    | 'stoppedUP'
+    | 'stalledDL'
+    | 'forcedDL'
+    | 'ForcedMetaDL'
+    | 'forcedUP'
+    | 'metaDL'
+    | 'allocating'
+    | 'queuedForChecking'
+    | 'checkingResumeData'
+    | 'missingFiles'
+    | 'moving'
+    | 'unknown'
 
 export interface TorrentInfo {
   hash: string
@@ -70,6 +70,19 @@ export interface TorrentInfo {
   total_size: number
   tracker: string
   isPrivate?: boolean
+
+  // qBittorrent 5.0+ fields (optional — may be absent on older servers)
+  infohash_v1?: string
+  infohash_v2?: string
+  popularity?: number
+  comment?: string
+  private?: boolean
+  has_metadata?: boolean
+  reannounce?: number
+  root_path?: string
+  download_path?: string
+  trackers_count?: number
+  inactive_seeding_time_limit?: number
 }
 
 export interface TorrentTableColumn {

@@ -24,12 +24,12 @@ export class FloatWindowManager {
   private readonly PANEL_SIZE = { width: 380, height: 320 }
 
   private constructor(contentLoader?: WindowContentLoader) {
-    this.contentLoader =
-      contentLoader ??
-      new DefaultWindowContentLoader({
-        isDevelopment:
+    this.contentLoader
+      = contentLoader
+        ?? new DefaultWindowContentLoader({
+          isDevelopment:
           process.env.NODE_ENV === 'development' || !app.isPackaged,
-      })
+        })
 
     // Set up app quit cleanup
     this.setupAppQuitHandlers()
@@ -44,8 +44,9 @@ export class FloatWindowManager {
 
   setFloatingMode(enabled: boolean): void {
     this.enableFloatingMode = enabled
-    if (!enabled) this.hideFloatWindow()
+    if (!enabled) { this.hideFloatWindow() }
   }
+
   getFloatingMode(): boolean {
     return this.enableFloatingMode
   }
@@ -84,7 +85,8 @@ export class FloatWindowManager {
           this.panelWindow.destroy()
           this.panelWindow = null
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Error during float window cleanup:', error)
         // Don't prevent quit even if cleanup fails
       }
@@ -179,19 +181,17 @@ export class FloatWindowManager {
     const leftDist = Math.abs(ib.x - iwa.x)
     const rightDist = Math.abs(iwa.x + iwa.width - (ib.x + ib.width))
     const topDist = Math.abs(ib.y - iwa.y)
-    if (leftDist <= rightDist && leftDist <= topDist)
-      this.floatOrientation = 'left'
-    else if (rightDist < leftDist && rightDist <= topDist)
-      this.floatOrientation = 'right'
-    else this.floatOrientation = 'top'
+    if (leftDist <= rightDist && leftDist <= topDist) { this.floatOrientation = 'left' }
+    else if (rightDist < leftDist && rightDist <= topDist) { this.floatOrientation = 'right' }
+    else { this.floatOrientation = 'top' }
     notifyOrientation()
 
     win.on('ready-to-show', () => {
-      if (!win) return
+      if (!win) { return }
       win.showInactive()
     })
     win.on('closed', () => {
-      if (this.floatWindow === win) this.floatWindow = null
+      if (this.floatWindow === win) { this.floatWindow = null }
     })
 
     // Snap on move
@@ -220,12 +220,14 @@ export class FloatWindowManager {
           this.contentLoader as DefaultWindowContentLoader
         ).getDevServerUrl()
         await win.loadURL(`${devUrl}/mini.html`)
-      } else {
+      }
+      else {
         const indexPath = this.contentLoader.getProductionIndexPath()
         const miniPath = indexPath.replace(/index\.html$/, 'mini.html')
         await win.loadFile(miniPath)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to load float window content:', error)
     }
 
@@ -234,17 +236,18 @@ export class FloatWindowManager {
 
   async showFloatWindow(): Promise<void> {
     // Don't create/show windows if app is quitting
-    if (this.isQuitting) return
+    if (this.isQuitting) { return }
 
     const win = await this.createFloatWindow()
-    if (!win.isVisible()) win.showInactive()
+    if (!win.isVisible()) { win.showInactive() }
   }
+
   hideFloatWindow(): void {
-    if (this.floatWindow && !this.floatWindow.isDestroyed())
-      this.floatWindow.hide()
+    if (this.floatWindow && !this.floatWindow.isDestroyed()) { this.floatWindow.hide() }
     // Also hide the panel when bubble is explicitly hidden
     this.hidePanelWindow()
   }
+
   destroyFloatWindow(): void {
     if (this.floatWindow && !this.floatWindow.isDestroyed()) {
       if (!this.isQuitting) {
@@ -264,25 +267,26 @@ export class FloatWindowManager {
       this.panelWindow = null
     }
   }
+
   async toggleFloatWindow(): Promise<void> {
     if (!this.floatWindow || this.floatWindow.isDestroyed()) {
       await this.showFloatWindow()
       return
     }
-    if (this.floatWindow.isVisible()) this.floatWindow.hide()
-    else this.floatWindow.showInactive()
+    if (this.floatWindow.isVisible()) { this.floatWindow.hide() }
+    else { this.floatWindow.showInactive() }
   }
 
   private debounce<T extends (...args: any[]) => void>(fn: T, ms: number) {
     let t: ReturnType<typeof setTimeout> | undefined
     return (...args: Parameters<T>) => {
-      if (t) clearTimeout(t)
-      t = setTimeout(() => fn(...args), ms)
+      if (t) { clearTimeout(t) }
+      t = setTimeout(fn, ms, ...args)
     }
   }
 
   private snapFloatWindowToEdge(): void {
-    if (!this.floatWindow) return
+    if (!this.floatWindow) { return }
 
     const win = this.floatWindow
     const b = win.getBounds()
@@ -300,15 +304,17 @@ export class FloatWindowManager {
     if (leftDist <= rightDist && leftDist < snap) {
       x = wa.x
       orientation = 'left'
-    } else if (rightDist < leftDist && rightDist < snap) {
+    }
+    else if (rightDist < leftDist && rightDist < snap) {
       x = wa.x + wa.width - b.width
       orientation = 'right'
-    } else if (topDist < snap) {
+    }
+    else if (topDist < snap) {
       y = wa.y
       orientation = 'top'
     }
 
-    if (x !== b.x || y !== b.y) win.setBounds({ ...b, x, y })
+    if (x !== b.x || y !== b.y) { win.setBounds({ ...b, x, y }) }
     this.floatOrientation = orientation
   }
 
@@ -318,8 +324,7 @@ export class FloatWindowManager {
   }
 
   private async createPanelWindow(): Promise<BrowserWindow> {
-    if (this.panelWindow && !this.panelWindow.isDestroyed())
-      return this.panelWindow
+    if (this.panelWindow && !this.panelWindow.isDestroyed()) { return this.panelWindow }
 
     // Don't create new windows if app is quitting
     if (this.isQuitting) {
@@ -358,7 +363,7 @@ export class FloatWindowManager {
 
     // Listen for hover state from panel renderer
     const hoverHandler = (e: Electron.IpcMainEvent, hovering: boolean) => {
-      if (e.sender.id !== panel.webContents.id) return
+      if (e.sender.id !== panel.webContents.id) { return }
       this.panelHover = hovering
       this.floatWindow?.webContents.send('panel:hover-state', hovering)
     }
@@ -370,17 +375,19 @@ export class FloatWindowManager {
           this.contentLoader as DefaultWindowContentLoader
         ).getDevServerUrl()
         await panel.loadURL(`${devUrl}/panel.html`)
-      } else {
+      }
+      else {
         const indexPath = this.contentLoader.getProductionIndexPath()
         const panelPath = indexPath.replace(/index\.html$/, 'panel.html')
         await panel.loadFile(panelPath)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to load panel content:', error)
     }
 
     panel.on('closed', () => {
-      if (this.panelWindow === panel) this.panelWindow = null
+      if (this.panelWindow === panel) { this.panelWindow = null }
       ipcMain.removeListener('panel:hover', hoverHandler)
     })
 
@@ -389,12 +396,12 @@ export class FloatWindowManager {
 
   public async showPanelWindow(): Promise<void> {
     // Don't create/show windows if app is quitting
-    if (this.isQuitting) return
+    if (this.isQuitting) { return }
 
     const panel = await this.createPanelWindow()
     this.repositionPanelAlongFloat(panel)
 
-    if (!panel.isVisible()) panel.showInactive()
+    if (!panel.isVisible()) { panel.showInactive() }
 
     panel.webContents.send('panel:enter')
     this.floatWindow?.webContents.send('panel:state', true)
@@ -405,19 +412,19 @@ export class FloatWindowManager {
       if (checkCursor) {
         const cursor = screen.getCursorScreenPoint()
         const b = this.panelWindow.getBounds()
-        const inside =
-          cursor.x >= b.x &&
-          cursor.x <= b.x + b.width &&
-          cursor.y >= b.y &&
-          cursor.y <= b.y + b.height
-        if (inside) return
+        const inside
+          = cursor.x >= b.x
+            && cursor.x <= b.x + b.width
+            && cursor.y >= b.y
+            && cursor.y <= b.y + b.height
+        if (inside) { return }
       }
       this.panelWindow.webContents.send('panel:exit')
 
       // Hide after animation completes
       const ref = this.panelWindow
       setTimeout(() => {
-        if (!ref.isDestroyed()) ref.hide()
+        if (!ref.isDestroyed()) { ref.hide() }
 
         this.floatWindow?.webContents.send('panel:state', false)
         this.floatWindow?.webContents.send('panel:hover-state', false)
@@ -451,7 +458,7 @@ export class FloatWindowManager {
   // Public so drag service can call it while polling
   public repositionPanelAlongFloat(targetPanel?: BrowserWindow | null): void {
     const panel = targetPanel ?? this.panelWindow
-    if (!panel || panel.isDestroyed()) return
+    if (!panel || panel.isDestroyed()) { return }
 
     // Position directly below the bubble window, centered horizontally
     const ref = this.floatWindow

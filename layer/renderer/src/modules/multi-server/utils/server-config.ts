@@ -15,16 +15,16 @@ export function loadMultiServerConfig(): MultiServerConfig {
   const data = storage.getJSON<MultiServerConfig>(
     STORAGE_KEYS.MULTI_SERVER_CONFIG,
   )
-  if (!data) return emptyConfig
+  if (!data) { return emptyConfig }
   const parsed = multiServerConfigSchema.safeParse(data)
-  if (!parsed.success) return emptyConfig
+  if (!parsed.success) { return emptyConfig }
   return parsed.data
 }
 
 export function saveMultiServerConfig(cfg: MultiServerConfig): void {
   // Do not persist passwords inside the config object
   const sanitized: MultiServerConfig = {
-    servers: cfg.servers.map((s) => ({
+    servers: cfg.servers.map(s => ({
       ...s,
       config: { ...s.config, password: '' },
     })),
@@ -57,11 +57,11 @@ export function createServerFromConfig(
  */
 export function migrateToMultiServer(): MultiServerConfig {
   const ms = loadMultiServerConfig()
-  if (ms.servers.length > 0) return ms
+  if (ms.servers.length > 0) { return ms }
 
   // Load legacy (single-server) stored config
   const { stored, password } = loadStoredConnectionConfig()
-  if (!stored) return emptyConfig
+  if (!stored) { return emptyConfig }
 
   const initial = getInitialQBittorrentConfig()
   const cfg: QBittorrentConfig = {
@@ -86,7 +86,8 @@ export async function saveServerPassword(serverId: string, password: string) {
         storage.setItem(key, `enc:${enc}`)
         return
       }
-    } catch {
+    }
+    catch {
       // fallthrough
     }
   }
@@ -102,14 +103,15 @@ export async function loadServerPassword(
 ): Promise<string | undefined> {
   const key = STORAGE_KEYS.serverPasswordKey(serverId)
   const val = storage.getItem(key)
-  if (!val) return undefined
+  if (!val) { return undefined }
   if (val.startsWith('enc:')) {
     const payload = val.slice(4)
     if (typeof ELECTRON !== 'undefined' && ELECTRON) {
       try {
         const dec = await ipcServices?.security.decryptString(payload)
         return dec
-      } catch {
+      }
+      catch {
         return undefined
       }
     }

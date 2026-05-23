@@ -19,8 +19,8 @@ export class GitHubService {
         { permission: 'pull' },
         {
           headers: {
-            Authorization: `Bearer ${config.githubToken}`,
-            Accept: 'application/vnd.github.v3+json',
+            'Authorization': `Bearer ${config.githubToken}`,
+            'Accept': 'application/vnd.github.v3+json',
             'Content-Type': 'application/json',
           },
           timeout: 15000,
@@ -35,7 +35,8 @@ export class GitHubService {
             ? 'New invitation sent'
             : 'User permissions updated',
       }
-    } catch (error: unknown) {
+    }
+    catch (error: unknown) {
       throw mapGitHubApiError(error, username)
     }
   }

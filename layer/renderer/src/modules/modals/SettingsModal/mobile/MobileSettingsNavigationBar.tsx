@@ -26,11 +26,11 @@ export const MobileSettingsNavigationBar: React.FC<
   const currentScreen = useMobileNavigationSelectors.useCurrentScreen()
   const canGoBack = useMobileNavigationSelectors.useCanGoBack()
   const isNavigating = useMobileNavigationSelectors.useIsNavigating()
-  const pop = useMobileNavigationStore((state) => state.pop)
+  const pop = useMobileNavigationStore(state => state.pop)
 
   // Handle back navigation
   const handleBackPress = useCallback(() => {
-    if (isNavigating) return
+    if (isNavigating) { return }
 
     const didPop = pop()
 

@@ -2,7 +2,8 @@
 
 ## Overview
 
-Implement a comprehensive iOS-style mobile layout for the qBittorrent WebUI, replacing the desktop table-based interface with a mobile-optimized card-based list. This PRP transforms the existing stub `src/modules/layout/mobile/Layout.tsx` into a fully functional mobile interface.
+Implement a comprehensive iOS-style mobile layout for the qBittorrent WebUI, replacing the desktop table-based interface with a mobile-optimized card-based list.
+This PRP transforms the existing stub `src/modules/layout/mobile/Layout.tsx` into a fully functional mobile interface.
 
 ## Research Context & Findings
 
@@ -29,19 +30,22 @@ The codebase already has mobile infrastructure in place:
 ### External Research Insights
 
 #### Vaul Best Practices
-- **Documentation**: https://vaul.emilkowal.ski/
-- **GitHub**: https://github.com/emilkowalski/vaul
+
+- **Documentation**: <https://vaul.emilkowal.ski/>
+- **GitHub**: <https://github.com/emilkowalski/vaul>
 - **Usage Pattern**: Responsive drawer (dialog on desktop, drawer on mobile)
 - **Key Features**: Snap points, native iOS-like experience, drag-to-dismiss
 - **Implementation**: Built on Radix Dialog primitive for accessibility
 
 #### TanStack Virtual Optimization
-- **Documentation**: https://tanstack.com/virtual/latest
+
+- **Documentation**: <https://tanstack.com/virtual/latest>
 - **Mobile Considerations**: Dynamic sizing, responsive columns, performance optimization
 - **Best Practices**: Debounced scroll events, memory management, absolute positioning
 - **Architecture**: Only visible items rendered, 60fps performance guarantee
 
 #### iOS Card Design Patterns
+
 - **Visual Hierarchy**: Primary info always visible, secondary info expandable
 - **Touch Interaction**: 44px minimum touch targets, swipe gestures
 - **Content Strategy**: Single concept per card, minimal text, reasonable whitespace
@@ -73,20 +77,21 @@ The codebase already has mobile infrastructure in place:
 
 **Desktop Table → Mobile Cards Mapping:**
 
-| Desktop Column | Mobile Card Position | Display Priority |
-|---------------|---------------------|------------------|
-| name | Card title | Primary (always visible) |
-| state | Status indicator | Primary (colored dot) |
-| progress | Progress bar | Primary (full width) |
-| size | Progress subtitle | Primary (downloaded/total) |
-| dlspeed/upspeed | Speed indicators | Secondary (icon + value) |
-| eta | Right side of speed row | Secondary |
-| ratio, seeds, peers | Expandable section | Tertiary (tap to expand) |
-| category, tags | Expandable section | Tertiary (tags/labels) |
+| Desktop Column      | Mobile Card Position    | Display Priority           |
+| ------------------- | ----------------------- | -------------------------- |
+| name                | Card title              | Primary (always visible)   |
+| state               | Status indicator        | Primary (colored dot)      |
+| progress            | Progress bar            | Primary (full width)       |
+| size                | Progress subtitle       | Primary (downloaded/total) |
+| dlspeed/upspeed     | Speed indicators        | Secondary (icon + value)   |
+| eta                 | Right side of speed row | Secondary                  |
+| ratio, seeds, peers | Expandable section      | Tertiary (tap to expand)   |
+| category, tags      | Expandable section      | Tertiary (tags/labels)     |
 
 ### State Management Integration
 
 **Reuse Existing Patterns:**
+
 ```typescript
 // Leverage existing stores
 import { useTorrentDataStore } from '~/modules/torrent/stores'
@@ -105,32 +110,37 @@ const mobileLayoutAtom = atom({
 ## Implementation Tasks (Execution Order)
 
 ### Phase 1: Core Infrastructure
+
 1. **Create mobile layout atoms** (`/src/modules/layout/mobile/atoms/mobile-layout.ts`)
 2. **Implement MobileHeader component** with compact design and hamburger menu
 3. **Update main Layout.tsx** to use proper mobile layout structure
 4. **Add Vaul bottom sheet integration** for detail panel replacement
 
-### Phase 2: Card-based List System  
-5. **Create MobileTorrentCard component** with iOS-style design
-6. **Implement MobileTorrentList** with TanStack Virtual integration
-7. **Add mobile gesture handling** (tap, long press, swipe)
-8. **Create mobile selection system** (long press to enter multi-select)
+### Phase 2: Card-based List System
+
+1. **Create MobileTorrentCard component** with iOS-style design
+2. **Implement MobileTorrentList** with TanStack Virtual integration
+3. **Add mobile gesture handling** (tap, long press, swipe)
+4. **Create mobile selection system** (long press to enter multi-select)
 
 ### Phase 3: Navigation & Actions
-9. **Build MobileNavDrawer** using Vaul for slide-out menu
-10. **Implement MobileDetailBottomSheet** for torrent details
-11. **Add MobileFloatingActionButton** for quick torrent addition
-12. **Create mobile toolbar** with filter tabs and search
+
+1. **Build MobileNavDrawer** using Vaul for slide-out menu
+2. **Implement MobileDetailBottomSheet** for torrent details
+3. **Add MobileFloatingActionButton** for quick torrent addition
+4. **Create mobile toolbar** with filter tabs and search
 
 ### Phase 4: Polish & Optimization
-13. **Add mobile-specific animations** using Motion library
-14. **Implement responsive breakpoints** and progressive enhancement
-15. **Optimize performance** for mobile devices
-16. **Test accessibility** and touch interactions
+
+1. **Add mobile-specific animations** using Motion library
+2. **Implement responsive breakpoints** and progressive enhancement
+3. **Optimize performance** for mobile devices
+4. **Test accessibility** and touch interactions
 
 ## Key Implementation Details
 
 ### Mobile Header Design
+
 ```typescript
 // 48px height (vs 60px desktop), hamburger menu
 interface MobileHeaderProps {
@@ -143,6 +153,7 @@ interface MobileHeaderProps {
 ```
 
 ### Card Component Structure
+
 ```typescript
 // iOS-style card with collapsible sections
 interface MobileTorrentCardProps {
@@ -151,12 +162,13 @@ interface MobileTorrentCardProps {
   isExpanded?: boolean
   onTap?: () => void
   onLongPress?: () => void
-  onSwipeLeft?: () => void  // delete
+  onSwipeLeft?: () => void // delete
   onSwipeRight?: () => void // toggle state
 }
 ```
 
 ### Vaul Integration Pattern
+
 ```typescript
 // Bottom sheet for detail panel
 import { Drawer } from 'vaul'
@@ -173,6 +185,7 @@ import { Drawer } from 'vaul'
 ```
 
 ### Virtualization Setup
+
 ```typescript
 // Mobile-optimized virtualization
 const MOBILE_CARD_HEIGHT = 120
@@ -194,12 +207,14 @@ const virtualization = useVirtualizer({
 ### Follow Existing Conventions
 
 **Desktop Layout Structure** (`/src/modules/layout/desktop/components/Layout.tsx`):
+
 - Component composition pattern
-- State management integration  
+- State management integration
 - Error boundary handling
 - Animation integration
 
 **Responsive Component Pattern** (`/src/components/ui/select/ResponsiveSelect.tsx`):
+
 ```typescript
 const isMobile = useMobile()
 if (isMobile) {
@@ -209,24 +224,27 @@ return <DesktopImplementation />
 ```
 
 **Torrent Store Integration** (`/src/modules/torrent/stores/`):
+
 - Reuse existing selectors
 - Follow performance patterns
 - Use deferred values for list items
 
 **Module Organization** (Follow `/src/modules/torrent/` structure):
+
 - components/ for UI components
-- hooks/ for custom logic  
+- hooks/ for custom logic
 - stores/ for state (if needed)
 - atoms/ for Jotai state
 
 ## Validation Gates
 
 ### Build Validation
+
 ```bash
 # TypeScript validation
 pnpm typecheck
 
-# Code quality validation  
+# Code quality validation
 pnpm lint
 
 # Build validation
@@ -234,6 +252,7 @@ pnpm build
 ```
 
 ### Manual Testing Checklist
+
 - [ ] Mobile layout renders correctly on < 1024px screens
 - [ ] Card list scrolls smoothly with virtualization
 - [ ] Tap/long press gestures work correctly
@@ -246,6 +265,7 @@ pnpm build
 - [ ] Responsive breakpoints transition smoothly
 
 ### Performance Targets
+
 - [ ] 60fps scrolling on mobile devices
 - [ ] < 100ms interaction response time
 - [ ] Virtualized list handles 1000+ torrents smoothly
@@ -255,28 +275,34 @@ pnpm build
 ## Potential Gotchas & Solutions
 
 ### TanStack Virtual Mobile Issues
+
 **Problem**: Virtualization can cause scroll position jumping
 **Solution**: Use `scrollMargin` and proper `estimateSize` functions
 
-### Vaul Drawer Conflicts  
+### Vaul Drawer Conflicts
+
 **Problem**: Multiple drawers might conflict
 **Solution**: Use single drawer state management with content switching
 
 ### Touch Event Handling
+
 **Problem**: Conflicts between scroll, tap, and swipe
 **Solution**: Proper event delegation and gesture recognition timing
 
 ### State Synchronization
+
 **Problem**: Mobile and desktop states might desync
 **Solution**: Share same Zustand stores, only UI components differ
 
 ### Animation Performance
+
 **Problem**: Too many simultaneous animations on mobile
 **Solution**: Use `useDeferredValue` and `useTransition` for non-critical animations
 
 ## Success Criteria
 
 ### Functional Requirements
+
 - [x] Mobile layout switches automatically at < 1024px
 - [x] Torrent data displays in iOS-style cards
 - [x] Bottom sheet replaces desktop detail panel
@@ -285,7 +311,8 @@ pnpm build
 - [x] List virtualization handles large datasets
 - [x] Search and filtering work on mobile
 
-### User Experience Requirements  
+### User Experience Requirements
+
 - [x] Native iOS-like interaction patterns
 - [x] Smooth 60fps animations and scrolling
 - [x] Intuitive card expansion/collapse
@@ -294,8 +321,9 @@ pnpm build
 - [x] Consistent visual design with desktop
 
 ### Technical Requirements
+
 - [x] TypeScript compliance with existing patterns
-- [x] Performance optimized for mobile devices  
+- [x] Performance optimized for mobile devices
 - [x] Reuses existing state management
 - [x] Follows established component patterns
 - [x] Maintains code organization standards
@@ -303,6 +331,7 @@ pnpm build
 ## PRP Confidence Score: 9/10
 
 **High Confidence Factors:**
+
 - Existing mobile infrastructure (useMobile, layout switching)
 - All required libraries already installed (Vaul, TanStack Virtual, Motion)
 - Clear existing patterns to follow (ResponsiveSelect, desktop Layout)
@@ -310,6 +339,7 @@ pnpm build
 - Well-defined component boundaries and state management
 
 **Minor Risk Factor:**
+
 - First-time Vaul integration (mitigated by excellent documentation and examples)
 
 This PRP provides comprehensive context for one-pass implementation success, with clear patterns, detailed technical specifications, and thorough validation criteria.

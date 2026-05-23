@@ -28,8 +28,8 @@ export const MobileSettingsLayout: React.FC<MobileSettingsLayoutProps> = ({
 }) => {
   const { t } = useTranslation('setting')
   const tabConfig = useMemo(() => getTabConfig(t), [t])
-  const push = useMobileNavigationStore((state) => state.push)
-  const screens = useMobileNavigationStore((state) => state.screens)
+  const push = useMobileNavigationStore(state => state.push)
+  const screens = useMobileNavigationStore(state => state.screens)
   const [initialTabPushed, setInitialTabPushed] = useState(false)
 
   // Screen renderer - only renders content (no headers)
@@ -82,7 +82,7 @@ export const MobileSettingsLayout: React.FC<MobileSettingsLayoutProps> = ({
   }
 
   useEffect(() => {
-    if (!initialTab || initialTabPushed) return
+    if (!initialTab || initialTabPushed) { return }
     if (screens.length === 1 && screens[0]?.screenId === 'root') {
       const tab = tabConfig[initialTab]
       if (tab) {

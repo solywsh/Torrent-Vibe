@@ -11,14 +11,14 @@ export const DiscoverResultsToolbar = () => {
   const actions = DiscoverModalActions.shared
   const { selection, importing: importingSlice } = actions.slices
 
-  const items = useDiscoverModalStore((state) => state.items)
-  const selectedIds = useDiscoverModalStore((state) => state.selectedIds)
-  const importing = useDiscoverModalStore((state) => state.importing)
+  const items = useDiscoverModalStore(state => state.items)
+  const selectedIds = useDiscoverModalStore(state => state.selectedIds)
+  const importing = useDiscoverModalStore(state => state.importing)
   const committedSearch = useDiscoverModalStore(
-    (state) => state.committedSearch,
+    state => state.committedSearch,
   )
-  const total = useDiscoverModalStore((state) => state.total)
-  const totalPages = useDiscoverModalStore((state) => state.totalPages)
+  const total = useDiscoverModalStore(state => state.total)
+  const totalPages = useDiscoverModalStore(state => state.totalPages)
 
   const summaryText = committedSearch
     ? t('discover.modal.resultCount', {
@@ -69,7 +69,8 @@ export const DiscoverResultsToolbar = () => {
             void importingSlice.importSelected().then((result) => {
               if (result.error === 'providerNotReady') {
                 toast.error(t('discover.messages.providerNotReady'))
-              } else if (result.error === 'selectionEmpty') {
+              }
+              else if (result.error === 'selectionEmpty') {
                 toast.error(t('discover.messages.importFailed'))
               }
             })

@@ -159,17 +159,19 @@ export const ScrollArea = ({
         >
           {children}
         </Viewport>
-        {orientation === 'both' ? (
-          <>
-            <Scrollbar orientation="vertical" className={scrollbarClassName} />
-            <Scrollbar
-              orientation="horizontal"
-              className={scrollbarClassName}
-            />
-          </>
-        ) : (
-          <Scrollbar orientation={orientation} className={scrollbarClassName} />
-        )}
+        {orientation === 'both'
+          ? (
+              <>
+                <Scrollbar orientation="vertical" className={scrollbarClassName} />
+                <Scrollbar
+                  orientation="horizontal"
+                  className={scrollbarClassName}
+                />
+              </>
+            )
+          : (
+              <Scrollbar orientation={orientation} className={scrollbarClassName} />
+            )}
       </Root>
     </ScrollElementContext>
   )

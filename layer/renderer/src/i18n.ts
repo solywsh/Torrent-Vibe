@@ -35,15 +35,15 @@ export const getI18n = () => {
 if (import.meta.hot) {
   import.meta.hot.on(
     'i18n-update',
-    async ({ file, content }: { file: string; content: string }) => {
+    async ({ file, content }: { file: string, content: string }) => {
       const resources = JSON.parse(content)
       const i18next = jotaiStore.get(i18nAtom)
 
       const nsName = file.match(/locales\/(.+?)\//)?.[1]
 
-      if (!nsName) return
+      if (!nsName) { return }
       const lang = file.split('/').pop()?.replace('.json', '')
-      if (!lang) return
+      if (!lang) { return }
       i18next.addResourceBundle(lang, nsName, resources, true, true)
 
       console.info('reload', lang, nsName)

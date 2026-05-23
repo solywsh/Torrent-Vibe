@@ -18,9 +18,9 @@ export class DefaultWindowContentLoader implements WindowContentLoader {
   private readonly logger = getLogger('ContentLoader')
 
   constructor(options: ContentLoaderOptions = {}) {
-    this.isDevelopment =
-      options.isDevelopment ??
-      (process.env.NODE_ENV === 'development' || !app.isPackaged)
+    this.isDevelopment
+      = options.isDevelopment
+        ?? (process.env.NODE_ENV === 'development' || !app.isPackaged)
     this.devServerPort = options.devServerPort ?? 5173
     this.devServerHost = options.devServerHost ?? 'localhost'
 
@@ -74,11 +74,12 @@ export class DefaultWindowContentLoader implements WindowContentLoader {
         if (response.ok) {
           return
         }
-      } catch {
+      }
+      catch {
         // Server not ready yet
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
     }
 
     throw new Error(

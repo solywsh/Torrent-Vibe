@@ -14,7 +14,7 @@ import type { InputMethod, TorrentFormData } from '../types'
 export const useAddTorrentForm = (initialFiles?: File[]) => {
   const { data: qbPrefs } = useQBittorrentPreferences()
   const [persistentData, setPersistentData] = useAddTorrentFormPersistent()
-  const categories = useTorrentDataStore((s) => s.categories)
+  const categories = useTorrentDataStore(s => s.categories)
 
   // Initialize form data with persistent settings and initial files if provided
   const [formData, setFormData] = useState<TorrentFormData>(() => {
@@ -25,7 +25,7 @@ export const useAddTorrentForm = (initialFiles?: File[]) => {
         ...baseData,
         ...qbPrefs,
         method: 'file',
-        files: initialFiles.filter((f) => f.name.endsWith('.torrent')),
+        files: initialFiles.filter(f => f.name.endsWith('.torrent')),
       }
     }
 
@@ -34,9 +34,9 @@ export const useAddTorrentForm = (initialFiles?: File[]) => {
 
   // Initialize Auto TMM default from settings once when preferences load
   useEffect(() => {
-    if (!qbPrefs?.auto_tmm_enabled) return
+    if (!qbPrefs?.auto_tmm_enabled) { return }
 
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       autoTMM: Boolean(qbPrefs.auto_tmm_enabled),
     }))
@@ -46,16 +46,15 @@ export const useAddTorrentForm = (initialFiles?: File[]) => {
   useEffect(() => {
     const categoryName = formData.category
     const categoryConfig = categoryName ? categories?.[categoryName] : undefined
-    const resolvedPath =
-      (categoryConfig?.savePath?.trim?.() as string | undefined) ||
-      (qbPrefs?.save_path?.trim?.() as string | undefined) ||
-      ''
+    const resolvedPath
+      = (categoryConfig?.savePath?.trim?.() as string | undefined)
+        || (qbPrefs?.save_path?.trim?.() as string | undefined)
+        || ''
 
-    setFormData((prev) =>
+    setFormData(prev =>
       prev.savepath === resolvedPath
         ? prev
-        : { ...prev, savepath: resolvedPath },
-    )
+        : { ...prev, savepath: resolvedPath })
   }, [formData.autoTMM, formData.category, categories, qbPrefs])
 
   // Persist form data changes (excluding files and magnetLinks)
@@ -83,7 +82,7 @@ export const useAddTorrentForm = (initialFiles?: File[]) => {
   )
 
   const handleInputMethodChange = useEventCallback((method: InputMethod) => {
-    setFormDataWithPersistence((prev) => ({
+    setFormDataWithPersistence(prev => ({
       ...prev,
       method,
       // Clear the other method's data
@@ -101,9 +100,9 @@ export const useAddTorrentForm = (initialFiles?: File[]) => {
     setFormData(resetData)
   })
 
-  const hasValidMagnets =
-    formData.magnetLinks.trim() !== '' &&
-    formData.magnetLinks.includes('magnet:')
+  const hasValidMagnets
+    = formData.magnetLinks.trim() !== ''
+      && formData.magnetLinks.includes('magnet:')
   const hasFiles = formData.files.length > 0
   const isFormValid = hasValidMagnets || hasFiles
 

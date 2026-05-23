@@ -4,7 +4,7 @@ export const sortObjectKeys = (obj) => {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((element) => sortObjectKeys(element))
+    return obj.map(element => sortObjectKeys(element))
   }
 
   return Object.keys(obj)
@@ -20,7 +20,8 @@ export const cleanJsonText = (text) => {
   try {
     JSON.parse(cleaned)
     return cleaned
-  } catch {
+  }
+  catch {
     return text
   }
 }

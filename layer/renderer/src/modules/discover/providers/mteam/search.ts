@@ -23,12 +23,12 @@ const buildSearchPayload = (
   )
   const filters = params.filters ?? {}
   const categories = parseCategories(filters.categories)
-  const mode =
-    (typeof filters.mode === 'string' && filters.mode.trim()) ||
-    config.mode ||
-    'normal'
-  const discount =
-    typeof filters.discount === 'string' ? filters.discount : undefined
+  const mode
+    = (typeof filters.mode === 'string' && filters.mode.trim())
+      || config.mode
+      || 'normal'
+  const discount
+    = typeof filters.discount === 'string' ? filters.discount : undefined
 
   const payload: MTeamSearchPayload = {
     keyword: params.keyword?.trim() || undefined,
@@ -71,7 +71,7 @@ export const search = async (
   const data = (await response.json()) as MTeamSearchResponseBody
   const list = Array.isArray(data.data.data) ? data.data.data : []
 
-  const items = list.map((item) => mapSearchItemToDiscoverItem(item))
+  const items = list.map(item => mapSearchItemToDiscoverItem(item))
   const total = parseNumber(data.data.total)
 
   const page = Math.max(payload.pageNumber, 1)

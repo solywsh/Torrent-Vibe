@@ -30,16 +30,16 @@ export const DiscoverPreviewContent = ({
   const actions = DiscoverModalActions.shared
   const { importing: importingSlice } = actions.slices
 
-  const previewId = useDiscoverModalStore((state) => state.previewId)
-  const previewDetail = useDiscoverModalStore((state) => state.previewDetail)
-  const selectedIds = useDiscoverModalStore((state) => state.selectedIds)
+  const previewId = useDiscoverModalStore(state => state.previewId)
+  const previewDetail = useDiscoverModalStore(state => state.previewDetail)
+  const selectedIds = useDiscoverModalStore(state => state.selectedIds)
   const isPreviewLoading = useDiscoverModalStore(
-    (state) => state.isPreviewLoading,
+    state => state.isPreviewLoading,
   )
-  const previewError = useDiscoverModalStore((state) => state.previewError)
-  const importing = useDiscoverModalStore((state) => state.importing)
+  const previewError = useDiscoverModalStore(state => state.previewError)
+  const importing = useDiscoverModalStore(state => state.importing)
   const descriptionRenderer = useDiscoverModalStore(
-    (state) => state.previewDescriptionRenderer,
+    state => state.previewDescriptionRenderer,
   )
 
   const loadingLabel = t('discover.modal.loading')
@@ -72,7 +72,8 @@ export const DiscoverPreviewContent = ({
     importingSlice.importSelected().then((result) => {
       if (result.error === 'providerNotReady') {
         toast.error(t('discover.messages.providerNotReady'))
-      } else if (result.error === 'selectionEmpty') {
+      }
+      else if (result.error === 'selectionEmpty') {
         toast.error(t('discover.messages.importFailed'))
       }
     })

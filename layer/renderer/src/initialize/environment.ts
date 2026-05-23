@@ -1,13 +1,14 @@
 export const initializeEnvironment = () => {
   const htmlDataset = document.documentElement.dataset
 
-  const isElectronEnvironment =
-    typeof ELECTRON !== 'undefined' ? ELECTRON : Boolean(window.ipcRenderer)
+  const isElectronEnvironment
+    = typeof ELECTRON !== 'undefined' ? ELECTRON : Boolean(window.ipcRenderer)
 
   if (isElectronEnvironment) {
     htmlDataset.electron = 'true'
     delete htmlDataset.web
-  } else {
+  }
+  else {
     htmlDataset.web = 'true'
     delete htmlDataset.electron
   }
@@ -18,13 +19,15 @@ export const initializeEnvironment = () => {
   if (normalizedPlatform === 'darwin' || normalizedPlatform.includes('mac')) {
     htmlDataset.macos = 'true'
     delete htmlDataset.windows
-  } else if (
-    normalizedPlatform === 'win32' ||
-    normalizedPlatform.includes('win')
+  }
+  else if (
+    normalizedPlatform === 'win32'
+    || normalizedPlatform.includes('win')
   ) {
     htmlDataset.windows = 'true'
     delete htmlDataset.macos
-  } else {
+  }
+  else {
     delete htmlDataset.macos
     delete htmlDataset.windows
   }

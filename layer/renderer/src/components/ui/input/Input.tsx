@@ -64,7 +64,7 @@ const inputStyles = tv({
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputStyles> {
+  VariantProps<typeof inputStyles> {
   inputClassName?: string
   /**
    * Optional node to render at the end (right side) of the input.
@@ -102,10 +102,10 @@ const Input = ({
   const isSearch = type === 'search'
   const inputProps = useInputComposition(props)
 
-  const showEndAdornment =
-    Boolean(endAdornment) &&
-    !disabled &&
-    (endAdornmentVisibility === 'always' || focused)
+  const showEndAdornment
+    = Boolean(endAdornment)
+      && !disabled
+      && (endAdornmentVisibility === 'always' || focused)
 
   const rightControlsRef = React.useRef<HTMLDivElement | null>(null)
   const [rightControlsWidth, setRightControlsWidth] = React.useState(0)
@@ -117,7 +117,7 @@ const Input = ({
   }, [isPassword, showEndAdornment])
 
   React.useLayoutEffect(() => {
-    if (!rightControlsRef.current) return
+    if (!rightControlsRef.current) { return }
 
     const node = rightControlsRef.current
 
@@ -140,8 +140,8 @@ const Input = ({
       const padding = rightControlsWidth + 8
       const paddingValue = `${padding}px`
       if (
-        style &&
-        Object.prototype.hasOwnProperty.call(style, 'paddingRight')
+        style
+        && Object.hasOwn(style, 'paddingRight')
       ) {
         return style
       }
@@ -199,11 +199,13 @@ const Input = ({
           ref={rightControlsRef}
         >
           {/* Inline actions / custom adornment */}
-          {showEndAdornment ? (
-            <div className="flex items-center gap-1 pointer-events-auto">
-              {endAdornment}
-            </div>
-          ) : null}
+          {showEndAdornment
+            ? (
+                <div className="flex items-center gap-1 pointer-events-auto">
+                  {endAdornment}
+                </div>
+              )
+            : null}
 
           {/* Password visibility toggle */}
           {isPassword && (
@@ -226,17 +228,19 @@ const Input = ({
               <span className="sr-only">
                 {typeState === 'password' ? 'Show password' : 'Hide password'}
               </span>
-              {typeState === 'password' ? (
-                <i
-                  className="size-5 shrink-0 i-mingcute-eye-line"
-                  aria-hidden="true"
-                />
-              ) : (
-                <i
-                  className="size-5 shrink-0 i-mingcute-eye-close-line"
-                  aria-hidden="true"
-                />
-              )}
+              {typeState === 'password'
+                ? (
+                    <i
+                      className="size-5 shrink-0 i-mingcute-eye-line"
+                      aria-hidden="true"
+                    />
+                  )
+                : (
+                    <i
+                      className="size-5 shrink-0 i-mingcute-eye-close-line"
+                      aria-hidden="true"
+                    />
+                  )}
             </button>
           )}
         </div>

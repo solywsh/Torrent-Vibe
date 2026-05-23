@@ -15,8 +15,8 @@ const execFileAsync = promisify(execFile)
 export class AgentBrowserNotFoundError extends Error {}
 export class AgentBrowserError extends Error {}
 
-export const HEADLESS_USER_AGENT =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+export const HEADLESS_USER_AGENT
+  = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 
 const SESSION_NAME = 'torrent-vibe'
 const MAX_OUTPUT_BYTES = 64 * 1024 * 1024
@@ -62,7 +62,8 @@ const findAgentBrowserCli = (
       dirs.add(join(appData, 'npm'))
     }
     dirs.add(join(home, 'AppData/Local/pnpm'))
-  } else {
+  }
+  else {
     dirs.add('/usr/local/bin')
     dirs.add('/opt/homebrew/bin')
     dirs.add('/usr/bin')
@@ -84,7 +85,8 @@ const findAgentBrowserCli = (
       if (existsSync(candidate)) {
         return candidate
       }
-    } catch {
+    }
+    catch {
       /* empty */
     }
   }
@@ -144,7 +146,7 @@ export class AgentBrowserManager {
   private async exec(
     subcommand: string,
     subArgs: string[],
-    options: { json?: boolean; userAgent?: string; timeoutMs?: number } = {},
+    options: { json?: boolean, userAgent?: string, timeoutMs?: number } = {},
   ): Promise<unknown> {
     const cli = this.resolveCliPath()
     const wantJson = options.json !== false
@@ -166,7 +168,8 @@ export class AgentBrowserManager {
         maxBuffer: MAX_OUTPUT_BYTES,
       })
       stdout = result.stdout ?? ''
-    } catch (error) {
+    }
+    catch (error) {
       const failure = error as NodeJS.ErrnoException & {
         stdout?: string
         killed?: boolean
@@ -189,7 +192,8 @@ export class AgentBrowserManager {
     let envelope: AgentBrowserEnvelope
     try {
       envelope = JSON.parse(stdout) as AgentBrowserEnvelope
-    } catch {
+    }
+    catch {
       throw new AgentBrowserError(
         `agent-browser ${subcommand} returned malformed output`,
       )
@@ -206,7 +210,8 @@ export class AgentBrowserManager {
     await this.gate.acquire()
     try {
       return await task(this)
-    } finally {
+    }
+    finally {
       this.gate.release()
     }
   }
@@ -226,7 +231,8 @@ export class AgentBrowserManager {
     try {
       await this.exec('wait', ['--fn', expression], { timeoutMs })
       return true
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.debug('wait --fn did not settle', { error })
       return false
     }
@@ -238,7 +244,8 @@ export class AgentBrowserManager {
   ): Promise<void> {
     try {
       await this.exec('wait', ['--load', state], { timeoutMs })
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.debug('wait --load did not settle', { error })
     }
   }
@@ -272,7 +279,8 @@ export class AgentBrowserManager {
     this.sessionActive = false
     try {
       await this.exec('close', [], { json: false, timeoutMs: 10_000 })
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.warn('failed to close agent-browser session', { error })
     }
   }

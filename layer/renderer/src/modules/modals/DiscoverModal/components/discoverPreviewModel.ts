@@ -58,13 +58,13 @@ export interface BuildPreviewModelOptions {
 }
 
 const formatRating = (value: number | null) => {
-  if (value === null || Number.isNaN(value) || value <= 0) return null
+  if (value === null || Number.isNaN(value) || value <= 0) { return null }
   const fixed = value.toFixed(1)
   return fixed.endsWith('.0') ? fixed.slice(0, -2) : fixed
 }
 
 const normalizeLink = (value: unknown): string | null => {
-  if (typeof value !== 'string') return null
+  if (typeof value !== 'string') { return null }
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : null
 }
@@ -81,7 +81,7 @@ export const useBuildPreviewModel = () => {
         if (typeof detail.synopsis === 'string' && detail.synopsis.trim()) {
           return detail.synopsis.trim()
         }
-        const legacy = extra['smallDescr']
+        const legacy = extra.smallDescr
         if (typeof legacy === 'string' && legacy.trim()) {
           return legacy.trim()
         }
@@ -96,8 +96,8 @@ export const useBuildPreviewModel = () => {
           }
         }
       }
-      if (Array.isArray(extra['labels'])) {
-        for (const label of extra['labels'] as unknown[]) {
+      if (Array.isArray(extra.labels)) {
+        for (const label of extra.labels as unknown[]) {
           if (typeof label === 'string' && label.trim()) {
             tagSet.add(label.trim())
           }
@@ -181,15 +181,15 @@ export const useBuildPreviewModel = () => {
 
       const links: PreviewLink[] = []
       const imdbInfo = detail.external?.imdb
-      const imdbUrl =
-        normalizeLink(imdbInfo?.url) ?? normalizeLink(extra['imdb'])
+      const imdbUrl
+        = normalizeLink(imdbInfo?.url) ?? normalizeLink(extra.imdb)
       if (imdbUrl) {
-        const imdbRating =
-          imdbInfo?.rating ??
-          imdbInfo?.enrichment?.rating ??
-          (typeof extra['imdbRating'] === 'number'
-            ? (extra['imdbRating'] as number)
-            : null)
+        const imdbRating
+          = imdbInfo?.rating
+            ?? imdbInfo?.enrichment?.rating
+            ?? (typeof extra.imdbRating === 'number'
+              ? (extra.imdbRating as number)
+              : null)
         links.push({
           id: 'imdb',
           href: imdbUrl,
@@ -199,14 +199,14 @@ export const useBuildPreviewModel = () => {
       }
 
       const doubanInfo = detail.external?.douban
-      const doubanUrl =
-        normalizeLink(doubanInfo?.url) ?? normalizeLink(extra['douban'])
+      const doubanUrl
+        = normalizeLink(doubanInfo?.url) ?? normalizeLink(extra.douban)
       if (doubanUrl) {
-        const doubanRating =
-          doubanInfo?.rating ??
-          (typeof extra['doubanRating'] === 'number'
-            ? (extra['doubanRating'] as number)
-            : null)
+        const doubanRating
+          = doubanInfo?.rating
+            ?? (typeof extra.doubanRating === 'number'
+              ? (extra.doubanRating as number)
+              : null)
         links.push({
           id: 'douban',
           href: doubanUrl,
@@ -230,7 +230,7 @@ export const useBuildPreviewModel = () => {
         : []
 
       const files = Array.isArray(detail.files)
-        ? detail.files.map((file) => ({
+        ? detail.files.map(file => ({
             name: file.name,
             sizeLabel:
               file.sizeBytes !== null && file.sizeBytes !== undefined
@@ -239,23 +239,23 @@ export const useBuildPreviewModel = () => {
           }))
         : []
 
-      const filesOverflowLabel =
-        files.length > 10
+      const filesOverflowLabel
+        = files.length > 10
           ? t('discover.modal.detailFilesSuffix', { count: files.length - 10 })
           : null
 
-      const originFileName =
-        typeof extra['originFileName'] === 'string'
-          ? extra['originFileName'].trim() || null
+      const originFileName
+        = typeof extra.originFileName === 'string'
+          ? extra.originFileName.trim() || null
           : null
 
-      const mediainfo =
-        typeof extra['mediainfo'] === 'string'
-          ? extra['mediainfo'].trim() || null
+      const mediainfo
+        = typeof extra.mediainfo === 'string'
+          ? extra.mediainfo.trim() || null
           : null
 
-      const description =
-        typeof detail.description === 'string'
+      const description
+        = typeof detail.description === 'string'
           ? detail.description.trim() || null
           : null
 

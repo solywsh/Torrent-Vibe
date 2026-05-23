@@ -15,8 +15,8 @@ export class AppError extends Error {
 
 export const isAppError = (error: unknown): error is AppError => {
   return (
-    error instanceof Error &&
-    'code' in (error as any) &&
-    typeof (error as any).code === 'string'
+    error instanceof Error
+    && 'code' in (error as any)
+    && typeof (error as any).code === 'string'
   )
 }

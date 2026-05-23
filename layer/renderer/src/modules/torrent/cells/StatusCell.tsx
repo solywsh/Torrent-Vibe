@@ -16,7 +16,7 @@ export const StatusCell = ({ rowIndex }: StatusCellProps) => {
   // Use granular selector for just the status data we need
   const state = useTorrentDataStore(
     useCallback(
-      (state) => selectTorrentStatus(state, deferredRowIndex).state,
+      state => selectTorrentStatus(state, deferredRowIndex).state,
       [deferredRowIndex],
     ),
   )
@@ -25,9 +25,7 @@ export const StatusCell = ({ rowIndex }: StatusCellProps) => {
 
   return (
     <div
-      className={
-        'flex items-center px-2 absolute inset-x-2 top-3 justify-center'
-      }
+      className="flex items-center px-2 absolute inset-x-2 top-3 justify-start"
     >
       <span
         className={`inline-flex whitespace-pre truncate items-center px-2 py-1 rounded-full text-xs font-medium border ${className}`}

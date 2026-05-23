@@ -40,29 +40,31 @@ export const InputSourceSection = ({
   // Auto switch from initial "both" to single section when user starts using one
   useEffect(() => {
     if (mode === 'both') {
-      if (hasFiles) setMode('file')
-      else if (hasMagnet) setMode('magnet')
+      if (hasFiles) { setMode('file') }
+      else if (hasMagnet) { setMode('magnet') }
     }
   }, [mode, hasFiles, hasMagnet])
 
   // Keep mode in sync if current source becomes empty
   useEffect(() => {
     if (mode === 'file') {
-      if (!hasFiles && hasMagnet) setMode('magnet')
-      else if (!hasFiles && !hasMagnet) setMode('both')
-    } else if (mode === 'magnet') {
-      if (!hasMagnet && hasFiles) setMode('file')
-      else if (!hasMagnet && !hasFiles) setMode('both')
+      if (!hasFiles && hasMagnet) { setMode('magnet') }
+      else if (!hasFiles && !hasMagnet) { setMode('both') }
+    }
+    else if (mode === 'magnet') {
+      if (!hasMagnet && hasFiles) { setMode('file') }
+      else if (!hasMagnet && !hasFiles) { setMode('both') }
     }
   }, [mode, hasFiles, hasMagnet])
 
   const revertToInitial = (type: 'file' | 'magnet') => {
     if (type === 'file') {
       void clearPreview()
-      handlers.setFormData((prev) => ({ ...prev, files: [], method: 'magnet' }))
-    } else {
+      handlers.setFormData(prev => ({ ...prev, files: [], method: 'magnet' }))
+    }
+    else {
       void clearPreview()
-      handlers.setFormData((prev) => ({
+      handlers.setFormData(prev => ({
         ...prev,
         magnetLinks: '',
         method: 'magnet',
@@ -105,7 +107,6 @@ export const InputSourceSection = ({
         void refreshFilePreview()
       }
     }
-    return
   }, [loadMagnetPreview, previewSource, refreshFilePreview])
 
   const previewModalIdRef = useRef<string | null>(null)
@@ -115,7 +116,7 @@ export const InputSourceSection = ({
   }, [])
 
   const dismissPreviewModal = useCallback(() => {
-    if (!previewModalIdRef.current) return
+    if (!previewModalIdRef.current) { return }
     Modal.dismiss(previewModalIdRef.current)
     previewModalIdRef.current = null
   }, [])
@@ -149,13 +150,13 @@ export const InputSourceSection = ({
   )
 
   const handleOpenPreview = useCallback(() => {
-    if (previewState.status === 'idle') return
+    if (previewState.status === 'idle') { return }
     const id = Modal.present(TorrentPreviewDialog, previewModalProps)
     previewModalIdRef.current = id
   }, [previewState.status, previewModalProps])
 
   useEffect(() => {
-    if (!previewModalIdRef.current) return
+    if (!previewModalIdRef.current) { return }
     if (previewState.status === 'idle') {
       dismissPreviewModal()
       return

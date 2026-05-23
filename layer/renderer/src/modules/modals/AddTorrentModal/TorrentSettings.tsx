@@ -10,7 +10,7 @@ import type { TorrentFormData, TorrentFormHandlers } from './types'
 interface TorrentSettingsProps {
   formData: TorrentFormData
   handlers: TorrentFormHandlers
-  categories?: Record<string, { name: string; savePath: string }> | null
+  categories?: Record<string, { name: string, savePath: string }> | null
 }
 
 export const TorrentSettings = ({
@@ -51,72 +51,66 @@ export const TorrentSettings = ({
           <TorrentOptionToggle
             id="auto-tmm"
             checked={!!formData.autoTMM}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 autoTMM: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.autoTMM')}
           />
 
           <TorrentOptionToggle
             id="start-torrent"
             checked={formData.startTorrent}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 startTorrent: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.startTorrent')}
           />
 
           <TorrentOptionToggle
             id="skip-hash-check"
             checked={!!formData.skip_checking}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 skip_checking: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.skipHashCheck')}
           />
 
           <TorrentOptionToggle
             id="sequential-download"
             checked={!!formData.sequentialDownload}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 sequentialDownload: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.sequentialDownload')}
           />
 
           <TorrentOptionToggle
             id="first-last-piece"
             checked={!!formData.firstLastPiecePrio}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 firstLastPiecePrio: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.firstLastPiecePrio')}
           />
 
           <TorrentOptionToggle
             id="root-folder"
             checked={!!formData.root_folder}
-            onChange={(checked) =>
-              handlers.setFormData((prev) => ({
+            onChange={checked =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 root_folder: checked,
-              }))
-            }
+              }))}
             label={t('addTorrent.settingsPanel.createRootFolder')}
           />
         </div>
@@ -142,12 +136,11 @@ export const TorrentSettings = ({
               min="0"
               placeholder={t('addTorrent.settingsPanel.unlimited')}
               value={formData.limitDownloadKiBs}
-              onChange={(e) =>
-                handlers.setFormData((prev) => ({
+              onChange={e =>
+                handlers.setFormData(prev => ({
                   ...prev,
                   limitDownloadKiBs: e.target.value,
-                }))
-              }
+                }))}
             />
           </div>
           <div className="space-y-2">
@@ -162,12 +155,11 @@ export const TorrentSettings = ({
               min="0"
               placeholder={t('addTorrent.settingsPanel.unlimited')}
               value={formData.limitUploadKiBs}
-              onChange={(e) =>
-                handlers.setFormData((prev) => ({
+              onChange={e =>
+                handlers.setFormData(prev => ({
                   ...prev,
                   limitUploadKiBs: e.target.value,
-                }))
-              }
+                }))}
             />
           </div>
         </div>

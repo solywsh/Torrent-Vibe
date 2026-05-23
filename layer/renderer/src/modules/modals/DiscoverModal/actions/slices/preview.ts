@@ -6,7 +6,7 @@ import { findItemById } from '../utils'
 export const createPreviewSlice = (context: DiscoverActionContext) => {
   const loadPreview = async (id: string) => {
     const state = context.getState()
-    if (!state.providerReady) return
+    if (!state.providerReady) { return }
 
     const requestId = context.preview.nextToken()
 
@@ -34,7 +34,8 @@ export const createPreviewSlice = (context: DiscoverActionContext) => {
           draft.previewError = null
         }
       })
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
       if (requestId !== context.preview.currentToken()) {
         return

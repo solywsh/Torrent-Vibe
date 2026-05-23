@@ -21,9 +21,9 @@ export const SettingsModal: ModalComponent<{ tab: SettingsSection }> = ({
 }) => {
   const { t } = useTranslation()
   const { t: tSetting } = useTranslation('setting')
-  const sidebarOrder = SIDEBAR_GROUPS.flatMap((group) => group.keys)
-  const initialTab =
-    (tab && (sidebarOrder as SettingsSection[]).includes(tab)
+  const sidebarOrder = SIDEBAR_GROUPS.flatMap(group => group.keys)
+  const initialTab
+    = (tab && (sidebarOrder as SettingsSection[]).includes(tab)
       ? tab
       : sidebarOrder[0]) || 'appearance'
   const [active, setActive] = useState<SettingsSection>(initialTab)

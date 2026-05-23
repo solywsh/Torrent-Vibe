@@ -7,12 +7,12 @@ const LONG_PRESS_DURATION = 500 // Duration in ms for long press
 const TAP_MAX_DURATION = 200 // Maximum duration for tap vs long press
 
 interface MobileGestureOptions {
-  onTap?: (data: { target: HTMLElement; timestamp: number }) => void
-  onLongPress?: (data: { target: HTMLElement; timestamp: number }) => void
-  onSwipeLeft?: (data: { target: HTMLElement; distance: number }) => void
-  onSwipeRight?: (data: { target: HTMLElement; distance: number }) => void
-  onSwipeUp?: (data: { target: HTMLElement; distance: number }) => void
-  onSwipeDown?: (data: { target: HTMLElement; distance: number }) => void
+  onTap?: (data: { target: HTMLElement, timestamp: number }) => void
+  onLongPress?: (data: { target: HTMLElement, timestamp: number }) => void
+  onSwipeLeft?: (data: { target: HTMLElement, distance: number }) => void
+  onSwipeRight?: (data: { target: HTMLElement, distance: number }) => void
+  onSwipeUp?: (data: { target: HTMLElement, distance: number }) => void
+  onSwipeDown?: (data: { target: HTMLElement, distance: number }) => void
 
   // Gesture thresholds (optional overrides)
   swipeThreshold?: number
@@ -85,10 +85,10 @@ export const useMobileGestures = (options: MobileGestureOptions = {}) => {
 
       // Only trigger tap if it wasn't a long press and within tap duration
       if (
-        !disableTap &&
-        !isLongPressed &&
-        gestureDuration <= tapMaxDuration &&
-        onTap
+        !disableTap
+        && !isLongPressed
+        && gestureDuration <= tapMaxDuration
+        && onTap
       ) {
         onTap({
           target: event.currentTarget as HTMLElement,
@@ -106,7 +106,7 @@ export const useMobileGestures = (options: MobileGestureOptions = {}) => {
   // Handle pan/swipe gestures
   const handlePan = useCallback(
     (event: Event, info: PanInfo) => {
-      if (disableSwipe) return
+      if (disableSwipe) { return }
 
       const { offset } = info
       const absX = Math.abs(offset.x)
@@ -115,7 +115,7 @@ export const useMobileGestures = (options: MobileGestureOptions = {}) => {
       // Determine if this is a significant swipe
       const isSignificantSwipe = Math.max(absX, absY) > swipeThreshold
 
-      if (!isSignificantSwipe) return
+      if (!isSignificantSwipe) { return }
 
       // Determine swipe direction
       if (absX > absY) {
@@ -125,20 +125,23 @@ export const useMobileGestures = (options: MobileGestureOptions = {}) => {
             target: event.target as HTMLElement,
             distance: offset.x,
           })
-        } else if (offset.x < 0 && onSwipeLeft) {
+        }
+        else if (offset.x < 0 && onSwipeLeft) {
           onSwipeLeft({
             target: event.target as HTMLElement,
             distance: Math.abs(offset.x),
           })
         }
-      } else {
+      }
+      else {
         // Vertical swipe
         if (offset.y > 0 && onSwipeDown) {
           onSwipeDown({
             target: event.target as HTMLElement,
             distance: offset.y,
           })
-        } else if (offset.y < 0 && onSwipeUp) {
+        }
+        else if (offset.y < 0 && onSwipeUp) {
           onSwipeUp({
             target: event.target as HTMLElement,
             distance: Math.abs(offset.y),
@@ -204,8 +207,8 @@ export const useTorrentCardGestures = (
     onCardSwipeRight?: (hash: string) => void // For quick action (resume/pause)
   },
 ) => {
-  const { onCardTap, onCardLongPress, onCardSwipeLeft, onCardSwipeRight } =
-    options
+  const { onCardTap, onCardLongPress, onCardSwipeLeft, onCardSwipeRight }
+    = options
 
   const gestureHandlers = useMobileGestures({
     onTap: () => onCardTap?.(torrentHash),
@@ -231,10 +234,10 @@ export const useMobileListGestures = (options: {
       // Check if we're at the top of the list
       const scrollElement = document.querySelector('[data-mobile-torrent-list]')
       if (
-        scrollElement &&
-        scrollElement.scrollTop <= 10 &&
-        data.distance > pullThreshold &&
-        onPullToRefresh
+        scrollElement
+        && scrollElement.scrollTop <= 10
+        && data.distance > pullThreshold
+        && onPullToRefresh
       ) {
         onPullToRefresh()
       }
@@ -251,17 +254,18 @@ export const useMobileListGestures = (options: {
 export const gestureUtils = {
   isTouchDevice: () => {
     return (
-      'ontouchstart' in window ||
-      navigator.maxTouchPoints > 0 ||
+      'ontouchstart' in window
+      || navigator.maxTouchPoints > 0
       // @ts-ignore
-      navigator.msMaxTouchPoints > 0
+      || navigator.msMaxTouchPoints > 0
     )
   },
 
   getGestureEventPosition: (event: TouchEvent | MouseEvent | PointerEvent) => {
     if ('touches' in event && event.touches.length > 0) {
       return { x: event.touches[0].clientX, y: event.touches[0].clientY }
-    } else {
+    }
+    else {
       return {
         x: (event as MouseEvent).clientX,
         y: (event as MouseEvent).clientY,

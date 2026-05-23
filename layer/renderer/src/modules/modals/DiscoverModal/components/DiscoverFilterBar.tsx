@@ -25,18 +25,18 @@ export const DiscoverFilterBar = () => {
   const actions = DiscoverModalActions.shared
   const { form, search: searchSlice } = actions.slices
 
-  const filters = useDiscoverModalStore((state) => state.filters)
+  const filters = useDiscoverModalStore(state => state.filters)
   const filterDefinitions = useDiscoverModalStore(
-    (state) => state.filterDefinitions,
+    state => state.filterDefinitions,
   )
-  const providerReady = useDiscoverModalStore((state) => state.providerReady)
-  const isSearching = useDiscoverModalStore((state) => state.isSearching)
+  const providerReady = useDiscoverModalStore(state => state.providerReady)
+  const isSearching = useDiscoverModalStore(state => state.isSearching)
 
   const disabled = !providerReady
   const compactSelectIds = new Set(['mode', 'discount'])
 
   const handleFilterChange = (id: string, value: unknown) => {
-    form.updateFilters((prev) => ({
+    form.updateFilters(prev => ({
       ...prev,
       [id]: value,
     }))
@@ -64,7 +64,7 @@ export const DiscoverFilterBar = () => {
             </Label>
             <Select
               value={String(value ?? '')}
-              onValueChange={(next) => handleFilterChange(definition.id, next)}
+              onValueChange={next => handleFilterChange(definition.id, next)}
               disabled={disabled}
             >
               <SelectTrigger className="h-9 w-full">
@@ -77,7 +77,7 @@ export const DiscoverFilterBar = () => {
                 />
               </SelectTrigger>
               <SelectContent>
-                {definition.options?.map((option) => (
+                {definition.options?.map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {tSetting(option.label)}
                   </SelectItem>
@@ -110,7 +110,7 @@ export const DiscoverFilterBar = () => {
                 const raw = event.target.value
                 const parsed = raw
                   .split(',')
-                  .map((token) => token.trim())
+                  .map(token => token.trim())
                   .filter(Boolean)
                 handleFilterChange(definition.id, parsed)
               }}
@@ -134,7 +134,8 @@ export const DiscoverFilterBar = () => {
       }
       if (result.error === 'providerNotReady') {
         toast.error(t('discover.messages.providerNotReady'))
-      } else if (result.error === 'requestFailed') {
+      }
+      else if (result.error === 'requestFailed') {
         toast.error(t('discover.messages.searchFailed'))
       }
     })
@@ -162,7 +163,7 @@ export const DiscoverFilterBar = () => {
               <DiscoverSearchInput />
             </div>
           </div>
-          {filterDefinitions.map((definition) => renderFilterField(definition))}
+          {filterDefinitions.map(definition => renderFilterField(definition))}
           <div className="flex shrink-0 items-center gap-1.5 lg:order-3 lg:self-end">
             <Button size="sm" type="submit" disabled={disabled || isSearching}>
               <i className="i-mingcute-search-2-line mr-2" />

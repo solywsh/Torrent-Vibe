@@ -21,8 +21,8 @@ interface ShareRatioLimitModalOwnProps {
   }) => void
 }
 
-type ShareRatioLimitModalProps = ShareRatioLimitModalOwnProps &
-  ModalComponentProps
+type ShareRatioLimitModalProps = ShareRatioLimitModalOwnProps
+  & ModalComponentProps
 
 type LimitMode = 'global' | 'unlimited' | 'custom'
 
@@ -37,8 +37,8 @@ export const ShareRatioLimitModal: ModalComponent<
 }: ShareRatioLimitModalProps) => {
   // Determine initial mode based on current values
   const getInitialMode = (): LimitMode => {
-    if (currentRatio === -2) return 'global'
-    if (currentRatio === -1) return 'unlimited'
+    if (currentRatio === -2) { return 'global' }
+    if (currentRatio === -1) { return 'unlimited' }
     return 'custom'
   }
 
@@ -126,7 +126,7 @@ export const ShareRatioLimitModal: ModalComponent<
       <div className="mb-6 mt-4">
         <RadioGroup
           value={limitMode}
-          onValueChange={(value) => setLimitMode(value as LimitMode)}
+          onValueChange={value => setLimitMode(value as LimitMode)}
           className="flex flex-col gap-2"
         >
           {/* Global share limit */}
@@ -157,7 +157,7 @@ export const ShareRatioLimitModal: ModalComponent<
                 id="ratio"
                 size="sm"
                 checked={useRatio}
-                onCheckedChange={(checked) => setUseRatio(Boolean(checked))}
+                onCheckedChange={checked => setUseRatio(Boolean(checked))}
                 className="shrink-0"
               />
               <label
@@ -170,7 +170,7 @@ export const ShareRatioLimitModal: ModalComponent<
                 size="sm"
                 type="number"
                 value={ratio}
-                onChange={(e) => setRatio(e.target.value)}
+                onChange={e => setRatio(e.target.value)}
                 disabled={!useRatio}
                 className="w-24"
                 step="0.01"
@@ -185,9 +185,8 @@ export const ShareRatioLimitModal: ModalComponent<
                 id="seedingTime"
                 size="sm"
                 checked={useSeedingTime}
-                onCheckedChange={(checked) =>
-                  setUseSeedingTime(Boolean(checked))
-                }
+                onCheckedChange={checked =>
+                  setUseSeedingTime(Boolean(checked))}
                 className="shrink-0"
               />
               <label
@@ -200,7 +199,7 @@ export const ShareRatioLimitModal: ModalComponent<
                 size="sm"
                 type="number"
                 value={seedingTime}
-                onChange={(e) => setSeedingTime(e.target.value)}
+                onChange={e => setSeedingTime(e.target.value)}
                 disabled={!useSeedingTime}
                 className="w-24"
                 min="0"
@@ -213,9 +212,8 @@ export const ShareRatioLimitModal: ModalComponent<
               <Checkbox
                 id="inactiveSeedingTime"
                 checked={useInactiveSeedingTime}
-                onCheckedChange={(checked) =>
-                  setUseInactiveSeedingTime(Boolean(checked))
-                }
+                onCheckedChange={checked =>
+                  setUseInactiveSeedingTime(Boolean(checked))}
                 size="sm"
                 className="shrink-0"
               />
@@ -229,7 +227,7 @@ export const ShareRatioLimitModal: ModalComponent<
                 size="sm"
                 type="number"
                 value={inactiveSeedingTime}
-                onChange={(e) => setInactiveSeedingTime(e.target.value)}
+                onChange={e => setInactiveSeedingTime(e.target.value)}
                 disabled={!useInactiveSeedingTime}
                 className="w-24"
                 min="0"

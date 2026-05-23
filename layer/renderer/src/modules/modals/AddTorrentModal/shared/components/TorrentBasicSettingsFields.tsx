@@ -9,7 +9,7 @@ import type { TorrentFormData, TorrentFormHandlers } from '../../types'
 interface TorrentBasicSettingsFieldsProps {
   formData: TorrentFormData
   handlers: TorrentFormHandlers
-  categories?: Record<string, { name: string; savePath: string }> | null
+  categories?: Record<string, { name: string, savePath: string }> | null
   showRename?: boolean
   className?: string
 }
@@ -37,12 +37,11 @@ export const TorrentBasicSettingsFields = ({
             placeholder={t('addTorrent.settingsPanel.savePathPlaceholder')}
             inputClassName="disabled:text-placeholder-text"
             value={formData.savepath || ''}
-            onChange={(e) =>
-              handlers.setFormData((prev) => ({
+            onChange={e =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 savepath: e.target.value,
-              }))
-            }
+              }))}
           />
         </div>
 
@@ -50,16 +49,15 @@ export const TorrentBasicSettingsFields = ({
           <Label variant="form">{t('addTorrent.settingsPanel.category')}</Label>
           <ComboboxSelect
             value={formData.category || ''}
-            onValueChange={(value) =>
-              handlers.setFormData((prev) => ({
+            onValueChange={value =>
+              handlers.setFormData(prev => ({
                 ...prev,
                 category: value,
-              }))
-            }
+              }))}
             placeholder={t('addTorrent.settingsPanel.categoryPlaceholder')}
             options={
               categories
-                ? ['', ...Object.values(categories).map((c) => c.name)]
+                ? ['', ...Object.values(categories).map(c => c.name)]
                 : ['']
             }
             allowCustom={true}
@@ -81,12 +79,11 @@ export const TorrentBasicSettingsFields = ({
               type="text"
               placeholder={t('addTorrent.settingsPanel.renamePlaceholder')}
               value={formData.rename}
-              onChange={(e) =>
-                handlers.setFormData((prev) => ({
+              onChange={e =>
+                handlers.setFormData(prev => ({
                   ...prev,
                   rename: e.target.value,
-                }))
-              }
+                }))}
             />
           </div>
         )}

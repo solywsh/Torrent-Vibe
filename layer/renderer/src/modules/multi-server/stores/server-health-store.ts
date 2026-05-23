@@ -18,13 +18,13 @@ export type ServerHealthStore = ServerHealthState & ServerHealthActions
 
 export const useServerHealthStore = createWithEqualityFn<ServerHealthStore>()(
   subscribeWithSelector(
-    immer((set) => ({
+    immer(set => ({
       results: {},
       setHealth: (serverId, result) =>
         set((draft) => {
           draft.results[serverId] = result
         }),
-      remove: (serverId) =>
+      remove: serverId =>
         set((draft) => {
           delete draft.results[serverId]
         }),

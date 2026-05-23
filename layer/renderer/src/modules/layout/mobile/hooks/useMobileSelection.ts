@@ -65,7 +65,8 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
   const toggleMultiSelectMode = useCallback(() => {
     if (multiSelectMode) {
       exitMultiSelectMode()
-    } else {
+    }
+    else {
       enterMultiSelectMode()
     }
   }, [multiSelectMode, enterMultiSelectMode, exitMultiSelectMode])
@@ -73,13 +74,13 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
   // Select a torrent (in multi-select mode)
   const selectTorrent = useCallback(
     (torrentHash: string) => {
-      if (!multiSelectMode) return false
+      if (!multiSelectMode) { return false }
 
       // Check max selection limit
       if (
-        maxSelection &&
-        selectedCount >= maxSelection &&
-        !selectedTorrents.includes(torrentHash)
+        maxSelection
+        && selectedCount >= maxSelection
+        && !selectedTorrents.includes(torrentHash)
       ) {
         return false
       }
@@ -93,12 +94,12 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
   // Select multiple torrents
   const selectTorrents = useCallback(
     (torrentHashes: string[]) => {
-      if (!multiSelectMode) return false
+      if (!multiSelectMode) { return false }
 
       // Check max selection limit
       if (maxSelection) {
         const newSelections = torrentHashes.filter(
-          (hash) => !selectedTorrents.includes(hash),
+          hash => !selectedTorrents.includes(hash),
         )
         if (selectedCount + newSelections.length > maxSelection) {
           return false
@@ -118,7 +119,7 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
   // Deselect a torrent
   const deselectTorrent = useCallback(
     (torrentHash: string) => {
-      if (!multiSelectMode) return false
+      if (!multiSelectMode) { return false }
 
       if (selectedTorrents.includes(torrentHash)) {
         torrentDataStoreSetters.toggleTorrentSelection(torrentHash)
@@ -135,10 +136,10 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
 
   // Select all torrents (within limits)
   const selectAll = useCallback(() => {
-    if (!multiSelectMode) return false
+    if (!multiSelectMode) { return false }
 
     const { sortedTorrents } = useTorrentDataStore.getState()
-    const allHashes = sortedTorrents.map((t) => t.hash)
+    const allHashes = sortedTorrents.map(t => t.hash)
 
     // Apply max selection limit
     const hashesToSelect = maxSelection
@@ -190,7 +191,8 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
         if (autoExitAfterAction && multiSelectMode) {
           exitMultiSelectMode()
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Action failed:', error)
       }
     },
@@ -207,8 +209,8 @@ export const useMobileSelection = (options: MobileSelectionOptions = {}) => {
 
   // Get selection summary text
   const getSelectionSummary = useCallback(() => {
-    if (selectedCount === 0) return 'No items selected'
-    if (selectedCount === 1) return '1 item selected'
+    if (selectedCount === 0) { return 'No items selected' }
+    if (selectedCount === 1) { return '1 item selected' }
     return `${selectedCount} items selected`
   }, [selectedCount])
 
@@ -274,7 +276,7 @@ export const useMobileTorrentActions = () => {
   } = useMobileSelection()
 
   const resumeSelectedTorrents = useCallback(async () => {
-    if (selectedTorrents.length === 0) return
+    if (selectedTorrents.length === 0) { return }
 
     await performActionAndExit(async () => {
       // TODO: Implement resume action - will need to integrate with existing torrent actions
@@ -282,7 +284,7 @@ export const useMobileTorrentActions = () => {
   }, [selectedTorrents, performActionAndExit])
 
   const pauseSelectedTorrents = useCallback(async () => {
-    if (selectedTorrents.length === 0) return
+    if (selectedTorrents.length === 0) { return }
 
     await performActionAndExit(async () => {
       // TODO: Implement pause action - will need to integrate with existing torrent actions
@@ -290,7 +292,7 @@ export const useMobileTorrentActions = () => {
   }, [selectedTorrents, performActionAndExit])
 
   const deleteSelectedTorrents = useCallback(async () => {
-    if (selectedTorrents.length === 0) return
+    if (selectedTorrents.length === 0) { return }
 
     await performActionAndExit(async () => {
       // TODO: Implement delete action - will need to integrate with existing torrent actions

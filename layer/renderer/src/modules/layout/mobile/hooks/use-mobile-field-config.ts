@@ -6,7 +6,7 @@ import {
   ALL_MOBILE_FIELDS,
   DEFAULT_MOBILE_FIELDS,
 } from '../constants/mobile-fields'
-import type { MobileCellConfig,MobileCellField } from '../types'
+import type { MobileCellConfig, MobileCellField } from '../types'
 
 export interface MobileFieldConfigHook {
   // Current configuration
@@ -37,7 +37,7 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
   // Get current fields with visibility from config
   const fields = useMemo(() => {
     return ALL_MOBILE_FIELDS.map((field) => {
-      const configField = config.fields.find((f) => f.id === field.id)
+      const configField = config.fields.find(f => f.id === field.id)
       return {
         ...field,
         visible: configField?.visible ?? field.visible,
@@ -47,17 +47,16 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
 
   // Get only visible fields
   const visibleFields = useMemo(() => {
-    return fields.filter((field) => field.visible)
+    return fields.filter(field => field.visible)
   }, [fields])
 
   // Update individual field visibility
   const updateFieldVisibility = useCallback(
     (fieldId: string, visible: boolean) => {
-      setConfig((prev) => ({
+      setConfig(prev => ({
         ...prev,
-        fields: prev.fields.map((field) =>
-          field.id === fieldId ? { ...field, visible } : field,
-        ),
+        fields: prev.fields.map(field =>
+          field.id === fieldId ? { ...field, visible } : field),
       }))
     },
     [setConfig],
@@ -72,7 +71,7 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
         return
       }
 
-      setConfig((prev) => ({
+      setConfig(prev => ({
         ...prev,
         fields: newFields,
       }))
@@ -82,7 +81,7 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
 
   // Reset to default configuration
   const resetFields = useCallback(() => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       fields: DEFAULT_MOBILE_FIELDS,
     }))
@@ -91,7 +90,7 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
   // Update layout mode
   const setLayout = useCallback(
     (layout: 'compact' | 'detailed') => {
-      setConfig((prev) => ({
+      setConfig(prev => ({
         ...prev,
         layout,
       }))
@@ -101,7 +100,7 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
 
   // Toggle progress bar display
   const toggleProgressDisplay = useCallback(() => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       showProgress: !prev.showProgress,
     }))
@@ -112,19 +111,19 @@ export const useMobileFieldConfig = (): MobileFieldConfigHook => {
     const errors: string[] = []
 
     // Must have at least one primary field visible
-    const hasPrimaryField = fieldsToValidate.some((f) => f.primary && f.visible)
+    const hasPrimaryField = fieldsToValidate.some(f => f.primary && f.visible)
     if (!hasPrimaryField) {
       errors.push('At least one primary field (like Name) must be visible')
     }
 
     // Name field should always be visible (enforced in UI)
-    const nameField = fieldsToValidate.find((f) => f.id === 'name')
+    const nameField = fieldsToValidate.find(f => f.id === 'name')
     if (nameField && !nameField.visible) {
       errors.push('Name field should remain visible for usability')
     }
 
     // Reasonable number of visible fields (mobile space constraint)
-    const visibleCount = fieldsToValidate.filter((f) => f.visible).length
+    const visibleCount = fieldsToValidate.filter(f => f.visible).length
     if (visibleCount > 10) {
       errors.push(
         'Too many fields selected. Consider reducing for better mobile experience',

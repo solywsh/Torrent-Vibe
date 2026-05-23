@@ -47,7 +47,7 @@ export const AiProviderPreferenceSelector = ({
       <div className="flex w-full flex-col gap-2">
         <Select
           value={selectValue}
-          onValueChange={(next) => onChange(next as AiProviderId)}
+          onValueChange={next => onChange(next as AiProviderId)}
           disabled={disabled || loading}
         >
           <SelectTrigger loading={loading}>
@@ -56,7 +56,7 @@ export const AiProviderPreferenceSelector = ({
             />
           </SelectTrigger>
           <SelectContent>
-            {providers.map((provider) => (
+            {providers.map(provider => (
               <SelectItem key={provider.id} value={provider.id}>
                 {provider.label}
               </SelectItem>

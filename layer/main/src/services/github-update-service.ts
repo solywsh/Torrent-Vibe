@@ -64,7 +64,8 @@ export class GithubUpdateService {
       this.logger.debug(
         'GitHub API requests will be authenticated with higher rate limits',
       )
-    } else {
+    }
+    else {
       this.logger.warn(
         'No GitHub token (GH_TOKEN) found in environment variables',
       )
@@ -99,7 +100,8 @@ export class GithubUpdateService {
 
     if (headers.Authorization) {
       this.logger.debug('Using authenticated GitHub API request')
-    } else {
+    }
+    else {
       this.logger.debug('Using unauthenticated GitHub API request')
     }
 
@@ -137,7 +139,8 @@ export class GithubUpdateService {
 
       this.logger.debug('Successfully fetched JSON response')
       return result
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Failed to fetch JSON:', error)
       throw error
     }
@@ -166,7 +169,8 @@ export class GithubUpdateService {
 
       this.logger.debug(`Text response length: ${text.length} characters`)
       return text
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Failed to fetch text:', error)
       throw error
     }
@@ -200,22 +204,24 @@ export class GithubUpdateService {
 
     // Prefer configured asset name; fallback to any suitable asset
     let binary: GitHubAsset | undefined = rel.assets.find(
-      (a) => a.name === UPDATE_ASSET_FILENAME,
+      a => a.name === UPDATE_ASSET_FILENAME,
     )
 
     if (binary) {
       this.logger.info(`Found preferred asset: ${binary.name}`)
-    } else {
+    }
+    else {
       this.logger.debug(
         `Preferred asset ${UPDATE_ASSET_FILENAME} not found, searching for suitable alternatives`,
       )
       binary = rel.assets.find(
-        (a) =>
+        a =>
           /\.(?:qupd|bin|pkg|dat)$/i.test(a.name) || /encrypted/i.test(a.name),
       )
       if (binary) {
         this.logger.info(`Found suitable asset: ${binary.name}`)
-      } else {
+      }
+      else {
         this.logger.debug(
           'No suitable asset found by pattern, using first available asset',
         )
@@ -235,9 +241,9 @@ export class GithubUpdateService {
     // Optional SHA256 asset
     let expectedSha256: string | undefined
     const shaAsset = rel.assets.find(
-      (a) =>
-        a.name === UPDATE_SHA256_FILENAME ||
-        /\.(?:sha256|sha256sum|sha)$/i.test(a.name),
+      a =>
+        a.name === UPDATE_SHA256_FILENAME
+        || /\.(?:sha256|sha256sum|sha)$/i.test(a.name),
     )
 
     if (shaAsset) {
@@ -248,24 +254,26 @@ export class GithubUpdateService {
         if (match) {
           expectedSha256 = match[0].toLowerCase()
           this.logger.info(`Retrieved SHA256 hash: ${expectedSha256}`)
-        } else {
+        }
+        else {
           this.logger.warn(
             `SHA256 asset contains invalid format: ${text.slice(0, 100)}`,
           )
         }
-      } catch (error) {
+      }
+      catch (error) {
         // Only SHA download failed -> continue without hash
         this.logger.warn('Failed to download SHA256 asset:', error)
       }
-    } else {
+    }
+    else {
       this.logger.debug('No SHA256 asset found')
     }
 
     // Optional manifest asset (YAML only)
     let manifestUrl: string | undefined
-    const manifestAsset = rel.assets.find((a) =>
-      /manifest\.ya?ml$/i.test(a.name),
-    )
+    const manifestAsset = rel.assets.find(a =>
+      /manifest\.ya?ml$/i.test(a.name))
     if (manifestAsset) {
       this.logger.info(`Found manifest asset: ${manifestAsset.name}`)
       manifestUrl = manifestAsset.browser_download_url
@@ -302,13 +310,15 @@ export class GithubUpdateService {
     if (start > 0) {
       headers.Range = `bytes=${start}-`
       this.logger.info(`Resuming download from ${start} bytes`)
-    } else {
+    }
+    else {
       this.logger.info('Starting fresh download')
     }
 
     try {
       await this.downloadFileStream(url, dest, headers, start)
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Download failed:', error)
       throw error
     }
@@ -328,9 +338,11 @@ export class GithubUpdateService {
       )
       unlinkSync(dest)
       throw new Error('Checksum mismatch, restarting download')
-    } else if (hash === expectedHash) {
+    }
+    else if (hash === expectedHash) {
       this.logger.info('Checksum verification successful')
-    } else {
+    }
+    else {
       this.logger.warn(
         'Checksum verification skipped (REQUIRE_SHA256_FOR_DOWNLOAD is false)',
       )
@@ -449,17 +461,21 @@ export class GithubUpdateService {
           reject(error)
         })
       })
-    } catch (error: any) {
+    }
+    catch (error: any) {
       this.logger.error('Failed to download file:', error)
 
       // Handle specific axios errors
       if (error.code === 'ECONNABORTED') {
         throw new Error('Download timeout')
-      } else if (error.response) {
+      }
+      else if (error.response) {
         throw new Error(`Download failed with status: ${error.response.status}`)
-      } else if (error.request) {
+      }
+      else if (error.request) {
         throw new Error('Network error during download')
-      } else {
+      }
+      else {
         throw error
       }
     }
@@ -488,7 +504,8 @@ export class GithubUpdateService {
       let parsed: unknown
       try {
         parsed = yaml.load(text)
-      } catch (e) {
+      }
+      catch (e) {
         this.logger.error('Failed to parse manifest.yaml:', e)
         return null
       }
@@ -497,7 +514,8 @@ export class GithubUpdateService {
       this.logger.info(`Manifest saved successfully to: ${dest}`)
 
       return parsed
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Failed to download manifest:', error)
       return null
     }
@@ -517,13 +535,13 @@ export class GithubUpdateService {
     try {
       const rel = await this.fetchJson<GitHubRelease>(api)
       const version = rel.tag_name?.replace(/^v/, '') ?? ''
-      if (!version) return null
+      if (!version) { return null }
 
       // Choose asset by platform/arch and file extension
       const { platform, arch } = process
 
       const byExt = (name: string, exts: string[]) =>
-        exts.some((ext) => name.toLowerCase().endsWith(ext))
+        exts.some(ext => name.toLowerCase().endsWith(ext))
 
       const containsArch = (name: string) =>
         arch === 'arm64' ? /arm64|aarch64/i.test(name) : /x64|amd64/i.test(name)
@@ -534,39 +552,38 @@ export class GithubUpdateService {
         case 'darwin': {
           // Prefer renamed pattern from forge postMake: macos-<arch>.dmg|zip
           candidate = rel.assets.find(
-            (a) =>
-              /macos-/i.test(a.name) &&
-              containsArch(a.name) &&
-              byExt(a.name, ['.dmg', '.zip']),
+            a =>
+              /macos-/i.test(a.name)
+              && containsArch(a.name)
+              && byExt(a.name, ['.dmg', '.zip']),
           )
           // Fallback: any dmg/zip
-          candidate ||= rel.assets.find((a) => byExt(a.name, ['.dmg', '.zip']))
+          candidate ||= rel.assets.find(a => byExt(a.name, ['.dmg', '.zip']))
 
           break
         }
         case 'win32': {
           // Prefer windows-<arch>.exe
           candidate = rel.assets.find(
-            (a) =>
-              /windows-/i.test(a.name) &&
-              containsArch(a.name) &&
-              byExt(a.name, ['.exe']),
+            a =>
+              /windows-/i.test(a.name)
+              && containsArch(a.name)
+              && byExt(a.name, ['.exe']),
           )
-          candidate ||= rel.assets.find((a) => byExt(a.name, ['.exe']))
+          candidate ||= rel.assets.find(a => byExt(a.name, ['.exe']))
 
           break
         }
         case 'linux': {
           // Prefer linux-<arch>.AppImage
           candidate = rel.assets.find(
-            (a) =>
-              /linux-/i.test(a.name) &&
-              containsArch(a.name) &&
-              byExt(a.name, ['.appimage']),
+            a =>
+              /linux-/i.test(a.name)
+              && containsArch(a.name)
+              && byExt(a.name, ['.appimage']),
           )
-          candidate ||= rel.assets.find((a) =>
-            byExt(a.name, ['.AppImage', '.appimage']),
-          )
+          candidate ||= rel.assets.find(a =>
+            byExt(a.name, ['.AppImage', '.appimage']))
 
           break
         }
@@ -587,7 +604,8 @@ export class GithubUpdateService {
         assetName: candidate.name,
         prerelease: rel.prerelease,
       }
-    } catch (error) {
+    }
+    catch (error) {
       this.logger.error('Failed to get latest app release:', error)
       return null
     }

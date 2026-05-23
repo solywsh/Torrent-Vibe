@@ -38,7 +38,7 @@ export const SettingToggleField = ({
         </div>
         <Switch
           checked={enabled}
-          onCheckedChange={(v) => onEnabledChange(Boolean(v))}
+          onCheckedChange={v => onEnabledChange(Boolean(v))}
         />
       </div>
     </SettingField>

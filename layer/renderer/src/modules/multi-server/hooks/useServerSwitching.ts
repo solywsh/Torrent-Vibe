@@ -21,14 +21,14 @@ import {
 import { loadServerPassword, saveServerPassword } from '../utils/server-config'
 
 export function useServerSwitching() {
-  const activeId = useMultiServerStore((s) => s.activeServerId)
-  const servers = useMultiServerStore((s) => s.servers)
+  const activeId = useMultiServerStore(s => s.activeServerId)
+  const servers = useMultiServerStore(s => s.servers)
 
   const switchTo = useCallback(
     async (serverId: string) => {
-      if (serverId === activeId) return
+      if (serverId === activeId) { return }
       const server = servers[serverId]
-      if (!server) return
+      if (!server) { return }
 
       try {
         multiServerStoreSetters.setSwitching(serverId)
@@ -68,7 +68,8 @@ export function useServerSwitching() {
         let loginOk = true
         try {
           loginOk = await QBittorrentClient.shared.login()
-        } catch {
+        }
+        catch {
           loginOk = false
         }
 
@@ -80,7 +81,8 @@ export function useServerSwitching() {
           )
           jotaiStore.set(connectionStatusAtom, 'error')
           toast.error(getI18n().t('messages.authFailed'))
-        } else {
+        }
+        else {
           jotaiStore.set(authStatusAtom, 'authenticated')
           jotaiStore.set(connectionStatusAtom, 'connected')
           multiServerStoreSetters.setActiveServer(serverId)
@@ -88,7 +90,8 @@ export function useServerSwitching() {
             getI18n().t('messages.serverSwitched', { serverName: server.name }),
           )
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error(getI18n().t('messages.serverSwitchFailed'), error)
         jotaiStore.set(connectionStatusAtom, 'error')
         jotaiStore.set(
@@ -96,7 +99,8 @@ export function useServerSwitching() {
           error instanceof Error ? error.message : 'Unknown error',
         )
         toast.error(getI18n().t('messages.serverSwitchFailed'))
-      } finally {
+      }
+      finally {
         multiServerStoreSetters.setSwitching(null)
       }
     },

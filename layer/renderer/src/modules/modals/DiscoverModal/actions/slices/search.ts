@@ -28,7 +28,7 @@ export const createSearchSlice = (
     let persistedHistory: string[] = []
     context.setState((draft) => {
       const nextHistory = draft.searchHistory.filter(
-        (item) => item !== normalized,
+        item => item !== normalized,
       )
       nextHistory.unshift(normalized)
       persistedHistory = nextHistory.slice(0, SEARCH_HISTORY_LIMIT)
@@ -83,9 +83,9 @@ export const createSearchSlice = (
           page: response.page ?? committed.page,
         }
 
-        const validIds = new Set(response.items.map((item) => item.id))
+        const validIds = new Set(response.items.map(item => item.id))
         const nextSelected = new Set(
-          Array.from(draft.selectedIds).filter((id) => validIds.has(id)),
+          Array.from(draft.selectedIds).filter(id => validIds.has(id)),
         )
         draft.selectedIds = nextSelected
 
@@ -102,7 +102,8 @@ export const createSearchSlice = (
       }
 
       return { ok: true }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
       if (requestId !== context.search.currentToken()) {
         return { ok: false, error: 'staleSearch' }

@@ -43,8 +43,8 @@ export function parseAndValidateUpdateManifest(input: unknown): UpdateManifest {
   }
 
   const requiredMainHashRaw = obj.required_main_hash
-  const required_main_hash =
-    requiredMainHashRaw == null ? undefined : String(requiredMainHashRaw)
+  const required_main_hash
+    = requiredMainHashRaw == null ? undefined : String(requiredMainHashRaw)
   if (required_main_hash != null && !HEX64.test(required_main_hash)) {
     throw new Error(
       'Invalid manifest.required_main_hash (must be 64-hex when present)',

@@ -3,9 +3,9 @@ import type { AppErrorCode } from '@torrent-vibe/shared'
 export interface BridgeEventMap {
   // Update events
   'update:checking': { startedAt: string }
-  'update:ready': { version: string; prerelease: boolean }
-  'update:progress': { percent: number; transferred: number; total: number }
-  'update:error': { message: string; code?: AppErrorCode; downloadUrl?: string }
+  'update:ready': { version: string, prerelease: boolean }
+  'update:progress': { percent: number, transferred: number, total: number }
+  'update:error': { message: string, code?: AppErrorCode, downloadUrl?: string }
   'update:downloaded': { version: string }
   'update:uptodate': {
     reason: 'no-release' | 'up-to-date' | 'older-than-app' | 'incompatible'

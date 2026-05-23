@@ -65,10 +65,12 @@ export class ApiTokenStore {
       const parsed = JSON.parse(raw) as ApiTokenStoreData
       if (parsed && typeof parsed === 'object') {
         this.cache = parsed
-      } else {
+      }
+      else {
         this.cache = {}
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.warn('[api-tokens] failed to load token store', error)
       this.cache = {}
     }
@@ -79,7 +81,8 @@ export class ApiTokenStore {
       const directory = dirname(this.filePath)
       this.ensureDirectory(directory)
       writeFileSync(this.filePath, JSON.stringify(this.cache, null, 2), 'utf8')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to persist token store', error)
     }
   }
@@ -109,7 +112,8 @@ export class ApiTokenStore {
 
       const plain = Buffer.from(record.value, 'base64').toString('utf8')
       return plain
-    } catch (error) {
+    }
+    catch (error) {
       console.error('[api-tokens] failed to decrypt token', {
         id,
         error,
@@ -132,17 +136,19 @@ export class ApiTokenStore {
 
     try {
       if (
-        preferredEncryption === 'safeStorage' &&
-        safeStorage.isEncryptionAvailable()
+        preferredEncryption === 'safeStorage'
+        && safeStorage.isEncryptionAvailable()
       ) {
         const encrypted = safeStorage.encryptString(trimmed)
         storedValue = encrypted.toString('base64')
         encryption = 'safeStorage'
-      } else {
+      }
+      else {
         storedValue = Buffer.from(trimmed, 'utf8').toString('base64')
         encryption = 'plain'
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.warn(
         '[api-tokens] safeStorage encrypt failed, falling back',
         error,
@@ -202,7 +208,7 @@ export class ApiTokenStore {
   }
 
   private buildHint(value: string): string | null {
-    if (!value) return null
+    if (!value) { return null }
     const sanitized = value.replaceAll(/\s+/g, '')
     if (sanitized.length <= 4) {
       return sanitized

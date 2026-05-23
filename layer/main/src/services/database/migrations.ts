@@ -40,7 +40,7 @@ const MIGRATIONS: MigrationStep[] = [
         db,
         `PRAGMA table_info(${TORRENT_AI_METADATA_TABLE_NAME})`,
       )
-      const columnNames = new Set(columns.map((column) => column.name))
+      const columnNames = new Set(columns.map(column => column.name))
 
       if (!columnNames.has('provider')) {
         await exec(
@@ -117,7 +117,8 @@ export const runAppDatabaseMigrations = async (
         version: migration.version,
         name: migration.name,
       })
-    } catch (error) {
+    }
+    catch (error) {
       await exec(db, 'ROLLBACK')
       logger.error('Failed to apply application database migration', {
         version: migration.version,

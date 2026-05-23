@@ -20,8 +20,8 @@ export const PrefsTabLayout = ({
   saveErrorI18nKey,
   saveLabel,
 }: PrefsTabLayoutProps) => {
-  const { dirty, save, isLoading, isSaving, reset } =
-    useQBittorrentPrefsManager()
+  const { dirty, save, isLoading, isSaving, reset }
+    = useQBittorrentPrefsManager()
   const hasDirty = useMemo(() => Object.keys(dirty || {}).length > 0, [dirty])
 
   return (
@@ -62,7 +62,8 @@ export const PrefsTabLayout = ({
                       if (saveSuccessI18nKey) {
                         toast.success(getI18n().t(saveSuccessI18nKey as any))
                       }
-                    } catch (err) {
+                    }
+                    catch (err) {
                       console.error(err)
                       if (saveErrorI18nKey) {
                         toast.error(getI18n().t(saveErrorI18nKey as any))

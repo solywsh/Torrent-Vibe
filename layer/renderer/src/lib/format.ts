@@ -3,18 +3,18 @@ export function formatBytes(
   fractionDigits = 1,
 ): string {
   const value = typeof bytes === 'number' ? bytes : 0
-  if (value === 0) return '0 B'
+  if (value === 0) { return '0 B' }
   const k = 1024
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(value) / Math.log(k))
-  const size = (value / Math.pow(k, i)).toFixed(fractionDigits)
+  const size = (value / k ** i).toFixed(fractionDigits)
   return `${size} ${units[i]}`
 }
 
 export function formatEta(etaSeconds: number | undefined): string {
   const eta = typeof etaSeconds === 'number' ? etaSeconds : -1
-  if (eta < 0 || eta === 8640000) return 'Unknown'
-  if (eta === 0) return 'Done'
+  if (eta < 0 || eta === 8640000) { return 'Unknown' }
+  if (eta === 0) { return 'Done' }
   const years = Math.floor(eta / 31536000)
   const months = Math.floor((eta % 31536000) / 2592000)
   const days = Math.floor(eta / 86400)
@@ -36,14 +36,14 @@ export function formatEta(etaSeconds: number | undefined): string {
 }
 
 export function formatDateTime(timestampSeconds: number | undefined): string {
-  if (!timestampSeconds || timestampSeconds <= 0) return '—'
+  if (!timestampSeconds || timestampSeconds <= 0) { return '—' }
   const date = new Date(timestampSeconds * 1000)
   return date.toLocaleString()
 }
 
 // Matches table cells style: 0 decimals when number is large (>=100), else 1
 export function formatBytesSmart(bytes: number): string {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) { return '0 B' }
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let size = bytes
   let unitIndex = 0
@@ -59,7 +59,7 @@ export function formatBytesSmart(bytes: number): string {
  * Formats bytes per second to human-readable speed string
  */
 export function formatSpeed(bytesPerSecond: number): string {
-  if (bytesPerSecond === 0) return '0 B/s'
+  if (bytesPerSecond === 0) { return '0 B/s' }
 
   const units = ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s']
   let size = bytesPerSecond
@@ -97,10 +97,12 @@ export function formatSpeedWithStatus(
     if (bytesPerSecond > 10 * 1024 * 1024) {
       // > 10 MB/s
       colorClass = 'text-green font-medium'
-    } else if (bytesPerSecond > 1024 * 1024) {
+    }
+    else if (bytesPerSecond > 1024 * 1024) {
       // > 1 MB/s
       colorClass = 'text-blue font-medium'
-    } else if (bytesPerSecond > 0) {
+    }
+    else if (bytesPerSecond > 0) {
       // > 0 B/s
       colorClass = 'text-accent font-medium'
     }

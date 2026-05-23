@@ -22,7 +22,7 @@ export const createHistorySlice = (context: DiscoverActionContext) => {
 
     let persistedHistory: string[] = []
     context.setState((draft) => {
-      persistedHistory = draft.searchHistory.filter((item) => item !== value)
+      persistedHistory = draft.searchHistory.filter(item => item !== value)
       draft.searchHistory = persistedHistory
     })
 
