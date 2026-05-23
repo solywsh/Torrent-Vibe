@@ -66,8 +66,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/v2': {
-        target: 'http://10.0.0.32:18888',
+        target: 'http://10.4.0.10:8085',
         changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
+            proxyReq.setHeader('Referer', 'http://10.4.0.10:8085')
+            proxyReq.setHeader('Origin', 'http://10.4.0.10:8085')
+            console.log('[proxy →]', req.method, req.url)
+          })
+          proxy.on('proxyRes', (proxyRes, req) => {
+            console.log('[proxy ←]', proxyRes.statusCode, req.url)
+          })
+        },
       },
     },
     allowedHosts: ['local.innei.in'],

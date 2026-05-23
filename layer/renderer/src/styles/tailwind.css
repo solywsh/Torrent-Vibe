@@ -252,7 +252,7 @@ body {
 @custom-variant macos (&:where([data-macos='true'], [data-macos='true'] *));
 @custom-variant windows (&:where([data-windows='true'], [data-windows='true'] *));
 
-*:not(input):not(textarea):not([contenteditable='true']) {
+[data-electron='true'] *:not(input):not(textarea):not([contenteditable='true']) {
   @apply select-none;
 }
 
