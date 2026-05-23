@@ -71,14 +71,19 @@ export const HeaderCell = ({
             <button
               type="button"
               onClick={handleSort}
-              className={`flex items-center w-full ${alignmentClass} gap-2 text-sm font-semibold text-text-secondary hover:text-accent transition-colors`}
+              className={`flex items-center w-full min-w-0 ${alignmentClass} gap-2 text-sm font-semibold text-text-secondary hover:text-accent transition-colors`}
             >
-              <span>{t(label)}</span>
+              <span className="truncate" title={t(label)}>
+                {t(label)}
+              </span>
               {getSortIcon()}
             </button>
           )
         : (
-            <span className="text-sm font-semibold text-text-secondary">
+            <span
+              className="truncate text-sm font-semibold text-text-secondary"
+              title={t(label)}
+            >
               {t(label)}
             </span>
           )}

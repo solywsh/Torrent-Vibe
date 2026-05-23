@@ -692,20 +692,20 @@ function buildExtraColumns(): ColumnDef<TorrentInfo>[] {
   const specs: ExtraColumnSpec[] = [
     // qBittorrent standard fields
     { id: 'availability', labelKey: 'torrent.columns.availability', align: 'right', size: 100 },
-    { id: 'auto_tmm', labelKey: 'torrent.columns.autoTmm', align: 'center', size: 80 },
+    { id: 'auto_tmm', labelKey: 'torrent.columns.autoTmm', align: 'center', size: 100 },
     { id: 'content_path', labelKey: 'torrent.columns.contentPath', align: 'left', size: 200, maxSize: 400 },
     { id: 'dl_limit', labelKey: 'torrent.columns.dlLimit', align: 'right', size: 100 },
     { id: 'up_limit', labelKey: 'torrent.columns.upLimit', align: 'right', size: 100 },
     { id: 'downloaded_session', labelKey: 'torrent.columns.downloadedSession', align: 'right', size: 110 },
     { id: 'uploaded_session', labelKey: 'torrent.columns.uploadedSession', align: 'right', size: 110 },
     { id: 'magnet_uri', labelKey: 'torrent.columns.magnetUri', align: 'left', size: 240, maxSize: 600 },
-    { id: 'f_l_piece_prio', labelKey: 'torrent.columns.firstLastPiecePrio', align: 'center', size: 80 },
-    { id: 'force_start', labelKey: 'torrent.columns.forceStart', align: 'center', size: 80 },
+    { id: 'f_l_piece_prio', labelKey: 'torrent.columns.firstLastPiecePrio', align: 'center', size: 110 },
+    { id: 'force_start', labelKey: 'torrent.columns.forceStart', align: 'center', size: 100 },
     { id: 'ratio_limit', labelKey: 'torrent.columns.ratioLimit', align: 'right', size: 90 },
     { id: 'seeding_time_limit', labelKey: 'torrent.columns.seedingTimeLimit', align: 'right', size: 110 },
     { id: 'seen_complete', labelKey: 'torrent.columns.seenComplete', align: 'right', size: 130 },
-    { id: 'seq_dl', labelKey: 'torrent.columns.sequentialDownload', align: 'center', size: 80 },
-    { id: 'super_seeding', labelKey: 'torrent.columns.superSeeding', align: 'center', size: 80 },
+    { id: 'seq_dl', labelKey: 'torrent.columns.sequentialDownload', align: 'center', size: 100 },
+    { id: 'super_seeding', labelKey: 'torrent.columns.superSeeding', align: 'center', size: 100 },
     { id: 'total_size', labelKey: 'torrent.columns.totalSize', align: 'right', size: 100 },
     // qBittorrent 5.0+ fields
     { id: 'infohash_v1', labelKey: 'torrent.columns.infohashV1', align: 'left', size: 140, maxSize: 360 },
@@ -713,12 +713,12 @@ function buildExtraColumns(): ColumnDef<TorrentInfo>[] {
     { id: 'popularity', labelKey: 'torrent.columns.popularity', align: 'right', size: 100 },
     { id: 'comment', labelKey: 'torrent.columns.comment', align: 'left', size: 200, maxSize: 500 },
     { id: 'private', labelKey: 'torrent.columns.isPrivate', align: 'center', size: 80 },
-    { id: 'has_metadata', labelKey: 'torrent.columns.hasMetadata', align: 'center', size: 80 },
+    { id: 'has_metadata', labelKey: 'torrent.columns.hasMetadata', align: 'center', size: 110 },
     { id: 'reannounce', labelKey: 'torrent.columns.reannounce', align: 'right', size: 100 },
     { id: 'root_path', labelKey: 'torrent.columns.rootPath', align: 'left', size: 200, maxSize: 400 },
     { id: 'download_path', labelKey: 'torrent.columns.downloadPath', align: 'left', size: 200, maxSize: 400 },
-    { id: 'trackers_count', labelKey: 'torrent.columns.trackersCount', align: 'right', size: 90 },
-    { id: 'inactive_seeding_time_limit', labelKey: 'torrent.columns.inactiveSeedingTimeLimit', align: 'right', size: 130 },
+    { id: 'trackers_count', labelKey: 'torrent.columns.trackersCount', align: 'right', size: 120 },
+    { id: 'inactive_seeding_time_limit', labelKey: 'torrent.columns.inactiveSeedingTimeLimit', align: 'right', size: 160 },
   ]
   return specs.map(makeExtraColumn)
 }

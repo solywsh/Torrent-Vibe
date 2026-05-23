@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label/Label'
 import { ComboboxSelect } from '~/components/ui/select/ComboboxSelect'
+import { MultiSelect } from '~/components/ui/select/MultiSelect'
+import { useTorrentDataStore } from '~/modules/torrent/stores/torrent-data-store'
 
 import type { TorrentFormData, TorrentFormHandlers } from '../../types'
 
@@ -22,11 +24,20 @@ export const TorrentBasicSettingsFields = ({
   className,
 }: TorrentBasicSettingsFieldsProps) => {
   const { t } = useTranslation()
+  const allTags = useTorrentDataStore(state => state.tags)
+
+  const selectedTags = formData.tags
+    ? formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(Boolean)
+    : []
 
   return (
     <div className={className}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
+        {/* Save path occupies its own full-width row. */}
+        <div className="space-y-2 md:col-span-2">
           <Label variant="form" disabled={formData.autoTMM}>
             {t('addTorrent.settingsPanel.savePath')}
           </Label>
@@ -45,6 +56,7 @@ export const TorrentBasicSettingsFields = ({
           />
         </div>
 
+        {/* Category and tags share the next row. */}
         <div className="space-y-2">
           <Label variant="form">{t('addTorrent.settingsPanel.category')}</Label>
           <ComboboxSelect
@@ -68,6 +80,21 @@ export const TorrentBasicSettingsFields = ({
               'addTorrent.settingsPanel.customCategory.description',
             )}
             customInputPlaceholder="Enter category name..."
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label variant="form">{t('addTorrent.settingsPanel.tags')}</Label>
+          <MultiSelect
+            value={selectedTags}
+            onChange={next =>
+              handlers.setFormData(prev => ({
+                ...prev,
+                tags: next.join(','),
+              }))}
+            options={allTags || []}
+            placeholder={t('addTorrent.settingsPanel.tagsPlaceholder')}
+            allowCustom={true}
           />
         </div>
 

@@ -7,25 +7,7 @@ import { createAtomHooks } from '~/lib/jotai'
 export const detailPanelVisibleAtom = atom<boolean>(false)
 export const detailPanelWidthAtom = atomWithStorage<number>(
   'detailPanelWidth',
-  440,
-  undefined,
-  { getOnInit: true },
-)
-export const detailPanelFloatingAtom = atomWithStorage<boolean>(
-  'detailPanelFloating',
-  false,
-  undefined,
-  { getOnInit: true },
-)
-export const detailPanelFloatingWidthAtom = atomWithStorage<number>(
-  'detailPanelFloatingWidth',
-  380,
-  undefined,
-  { getOnInit: true },
-)
-export const detailPanelFloatingHeightAtom = atomWithStorage<number>(
-  'detailPanelFloatingHeight',
-  450,
+  520,
   undefined,
   { getOnInit: true },
 )
@@ -44,24 +26,3 @@ export const [
   useDetailPanelWidthValue,
   useSetDetailPanelWidth,
 ] = createAtomHooks(detailPanelWidthAtom)
-
-export const [
-  detailPanelFloatingAtomInternal,
-  useDetailPanelFloating,
-  useDetailPanelFloatingValue,
-  useSetDetailPanelFloating,
-] = createAtomHooks(detailPanelFloatingAtom)
-
-export const [
-  detailPanelFloatingWidthAtomInternal,
-  useDetailPanelFloatingWidth,
-  useDetailPanelFloatingWidthValue,
-  useSetDetailPanelFloatingWidth,
-] = createAtomHooks(detailPanelFloatingWidthAtom)
-
-export const [
-  detailPanelFloatingHeightAtomInternal,
-  useDetailPanelFloatingHeight,
-  useDetailPanelFloatingHeightValue,
-  useSetDetailPanelFloatingHeight,
-] = createAtomHooks(detailPanelFloatingHeightAtom)

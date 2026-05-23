@@ -1,5 +1,5 @@
 // Components
-export { DetailPanelFixed, DetailPanelFloat } from '../detail/DetailPanel'
+export { DetailPanelFixed } from '../detail/DetailPanel'
 export { DetailPanelContent } from '../detail/DetailPanelContent'
 export { Header } from './desktop/components/Header'
 export { Layout } from './desktop/components/Layout'

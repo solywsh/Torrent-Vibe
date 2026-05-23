@@ -11,13 +11,14 @@ import type { TorrentInfo } from '~/types'
 import { DragPreview } from './components/DragComponents'
 import { TableBody } from './components/TableBody'
 import { TableHeader } from './components/TableHeader'
+import { TablePagination } from './components/TablePagination'
 import { BASE_ROW_HEIGHT, getAllColumns } from './constants'
 import { useTorrentTableColumnMenu } from './hooks/use-torrent-table-column-menu'
 import { useTorrentTableDragDrop } from './hooks/use-torrent-table-drag-drop'
 import { useTorrentTableHotkeys } from './hooks/use-torrent-table-hotkeys'
-import { useTorrentTableVirtualization } from './hooks/use-torrent-table-virtualization'
 import { torrentDataStoreSetters, useTorrentDataStore } from './stores'
 import {
+  selectFilterState,
   selectSortedTorrents,
   selectSortState,
   selectTorrentsLength,
@@ -105,6 +106,10 @@ function TorrentTableListImpl() {
     return BASE_ROW_HEIGHT
   }, [])
 
+  // TanStack Table returns un-memoizable functions, so the React Compiler skips
+  // this component; that's expected here and safe — cells subscribe to the store
+  // for their own updates rather than relying on compiler memoization.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: sortTorrents,
     columns: getAllColumns(),
@@ -129,7 +134,7 @@ function TorrentTableListImpl() {
         const visible = getAllColumns()
           .filter(c => c.id !== 'select')
           .map(c => c.id as string)
-          .filter(k => next[k] !== false)
+          .filter(k => next[k])
         // Ensure at least one column visible (besides select)
         if (visible.length === 0) {
           return prev
@@ -201,7 +206,7 @@ function TorrentTableListImpl() {
       onDragStart={dragDrop.handleDragStart}
       onDragEnd={dragDrop.handleDragEnd}
     >
-      <TorrentTableVirtualViewport
+      <TorrentTablePaginatedViewport
         columnMenu={columnMenu}
         dragState={dragState}
         setTableScopeRef={setTableScopeRef}
@@ -212,7 +217,9 @@ function TorrentTableListImpl() {
   )
 }
 
-interface TorrentTableVirtualViewportProps {
+const HEADER_HEIGHT = 48
+
+interface TorrentTablePaginatedViewportProps {
   columnMenu: ReturnType<typeof useTorrentTableColumnMenu>
   dragState: ReturnType<typeof useTorrentTableSelectors.useDragState>
   setTableScopeRef: React.Dispatch<React.SetStateAction<HTMLDivElement>>
@@ -220,46 +227,93 @@ interface TorrentTableVirtualViewportProps {
   torrentsLength: number
 }
 
-function TorrentTableVirtualViewport({
+function TorrentTablePaginatedViewport({
   columnMenu,
   dragState,
   setTableScopeRef,
   tableConfig,
   torrentsLength,
-}: TorrentTableVirtualViewportProps) {
-  const {
-    bodyHeight,
-    handleKeyDown,
-    handleWheel,
-    headerHeight,
-    isScrolling,
-    getScrollOffset,
-    rowVirtualizer,
-    setBodyElement,
-    setContainerElement,
-    setScrollOffset,
-    setScrollSamplingMode,
-    totalSize,
-  } = useTorrentTableVirtualization(torrentsLength)
+}: TorrentTablePaginatedViewportProps) {
+  const bodyRef = React.useRef<HTMLDivElement | null>(null)
+  const [bodyHeight, setBodyHeight] = React.useState(0)
+  const [currentPage, setCurrentPage] = React.useState(1)
+
+  // Reset to the first page whenever the "view" changes (filter / search /
+  // sort). Background count drift (a torrent finishing, polling) is handled by
+  // the clamp effect below instead, so the user is not yanked back to page 1.
+  const filterState = useTorrentDataStore(selectFilterState)
+  const searchQuery = useTorrentDataStore(state => state.searchQuery)
+  const sortState = useTorrentDataStore(useShallow(selectSortState))
+  React.useEffect(() => {
+    setCurrentPage(1)
+  }, [filterState, searchQuery, sortState.sortKey, sortState.sortDirection])
+
+  // Measure the body region so page size auto-fits the visible area (no scroll).
+  React.useEffect(() => {
+    const el = bodyRef.current
+    if (!el) {
+      return
+    }
+    const measure = () =>
+      setBodyHeight(Math.floor(el.getBoundingClientRect().height))
+    const resizeObserver = new ResizeObserver(measure)
+    resizeObserver.observe(el)
+    measure()
+    return () => resizeObserver.disconnect()
+  }, [])
+
+  const pageSize = Math.max(
+    1,
+    Math.floor((bodyHeight || HEADER_HEIGHT * 8) / BASE_ROW_HEIGHT),
+  )
+  const totalPages = Math.max(1, Math.ceil(torrentsLength / pageSize))
+  const clampedPage = Math.min(currentPage, totalPages)
+
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
+
+  const pageStartIndex = (clampedPage - 1) * pageSize
 
   return (
     <div
       id="fixed-data-table"
       ref={(el) => {
-        setContainerElement(el)
         // attach TABLE focus scope to the viewport element
         if (el) {
           setTableScopeRef(el)
         }
       }}
-      className="relative flex flex-1 h-0 min-h-[400px] w-full flex-col overflow-hidden bg-background outline-none"
+      className="relative flex flex-1 h-0 min-h-100 w-full flex-col overflow-hidden bg-background outline-none"
       tabIndex={-1}
-      onKeyDown={handleKeyDown}
       onMouseDown={(event) => {
         event.currentTarget.focus({ preventScroll: true })
       }}
     >
-      <MemoTableHeader {...tableConfig} columnMenu={columnMenu} />
+      {/* Horizontal scroll container: header + body scroll together so all
+          columns are reachable when they exceed the viewport width. */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-x-auto overflow-y-hidden">
+        <div
+          className="flex min-h-0 flex-1 flex-col"
+          style={{ minWidth: tableConfig.minTableWidth }}
+        >
+          <MemoTableHeader {...tableConfig} columnMenu={columnMenu} />
+
+          <div ref={bodyRef} className="relative min-h-0 flex-1">
+            <TableBody
+              {...tableConfig}
+              paginated
+              pageStartIndex={pageStartIndex}
+              pageSize={pageSize}
+              viewportHeight={bodyHeight}
+              headerHeight={0}
+              isScrolling={false}
+            />
+          </div>
+        </div>
+      </div>
 
       <DragOverlay>
         {dragState.isDragging && dragState.draggedColumnId
@@ -271,136 +325,12 @@ function TorrentTableVirtualViewport({
           : null}
       </DragOverlay>
 
-      <div
-        ref={setBodyElement}
-        className="relative min-h-0 flex-1 overflow-hidden"
-        onWheel={handleWheel}
-      >
-        <TableBody
-          {...tableConfig}
-          rowVirtualizer={rowVirtualizer}
-          viewportHeight={bodyHeight}
-          headerHeight={headerHeight}
-          isScrolling={isScrolling}
-          logicalScrollMode
-        />
-      </div>
-
-      <LogicalVerticalScrollbar
-        viewportHeight={bodyHeight}
-        totalSize={totalSize}
-        getScrollOffset={getScrollOffset}
-        setScrollOffset={setScrollOffset}
-        setScrollSamplingMode={setScrollSamplingMode}
-      />
-    </div>
-  )
-}
-
-interface LogicalVerticalScrollbarProps {
-  viewportHeight: number
-  totalSize: number
-  getScrollOffset: () => number
-  setScrollOffset: (
-    nextOffset: number | ((current: number) => number),
-    isScrolling?: boolean,
-  ) => void
-  setScrollSamplingMode: (mode: 'default' | 'drag') => void
-}
-
-function LogicalVerticalScrollbar({
-  viewportHeight,
-  totalSize,
-  getScrollOffset,
-  setScrollOffset,
-  setScrollSamplingMode,
-}: LogicalVerticalScrollbarProps) {
-  const [dragState, setDragState] = React.useState<{
-    startY: number
-    startOffset: number
-  } | null>(null)
-
-  const maxScrollOffset = Math.max(0, totalSize - viewportHeight)
-
-  const thumbHeight
-    = maxScrollOffset > 0
-      ? Math.max(28, Math.floor((viewportHeight / totalSize) * viewportHeight))
-      : viewportHeight
-  const maxThumbTop = Math.max(0, viewportHeight - thumbHeight)
-
-  React.useEffect(() => {
-    if (!dragState) {
-      return
-    }
-
-    const handlePointerMove = (event: PointerEvent) => {
-      event.preventDefault()
-
-      const deltaY = event.clientY - dragState.startY
-      const scrollDelta
-        = maxThumbTop > 0 ? (deltaY / maxThumbTop) * maxScrollOffset : 0
-
-      setScrollOffset(dragState.startOffset + scrollDelta)
-    }
-
-    const finishDrag = () => {
-      setScrollOffset(current => current)
-      setScrollSamplingMode('default')
-      setDragState(null)
-    }
-
-    window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', finishDrag)
-    window.addEventListener('pointercancel', finishDrag)
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', finishDrag)
-      window.removeEventListener('pointercancel', finishDrag)
-    }
-  }, [
-    dragState,
-    maxScrollOffset,
-    maxThumbTop,
-    setScrollOffset,
-    setScrollSamplingMode,
-  ])
-
-  if (maxScrollOffset <= 0 || viewportHeight <= 0) {
-    return null
-  }
-
-  return (
-    <div
-      className="absolute right-0 top-12 bottom-0 z-20 w-2.5 select-none p-0.5"
-      onPointerDown={(event) => {
-        if (event.target !== event.currentTarget) {
-          return
-        }
-
-        const rect = event.currentTarget.getBoundingClientRect()
-        const thumbCenter = event.clientY - rect.top - thumbHeight / 2
-        const ratio = maxThumbTop > 0 ? thumbCenter / maxThumbTop : 0
-
-        setScrollOffset(ratio * maxScrollOffset)
-      }}
-    >
-      <div
-        className="absolute left-0.5 right-0.5 rounded-xl bg-zinc-500/50 hover:bg-zinc-500/70 active:bg-zinc-500/70"
-        style={{
-          height: thumbHeight,
-          transform: `translate3d(0, calc(var(--torrent-table-scroll-progress, 0) * ${maxThumbTop}px), 0)`,
-          willChange: 'transform',
-        }}
-        onPointerDown={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          setScrollSamplingMode('drag')
-          setDragState({
-            startY: event.clientY,
-            startOffset: getScrollOffset(),
-          })
-        }}
+      <TablePagination
+        totalItems={torrentsLength}
+        pageSize={pageSize}
+        currentPage={clampedPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
       />
     </div>
   )

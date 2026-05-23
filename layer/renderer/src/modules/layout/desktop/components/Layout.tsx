@@ -1,5 +1,4 @@
 import { useAtomValue } from 'jotai'
-import { AnimatePresence } from 'motion/react'
 import * as React from 'react'
 
 import { dragDropStateAtom } from '~/atoms/drag-drop'
@@ -7,7 +6,6 @@ import { DragOverlay } from '~/components/ui/drag-overlay'
 import { isMacOS } from '~/constants/os'
 import { useMagnetClipboardOnFocus } from '~/hooks/use-magnet-clipboard-on-focus'
 import {
-  useDetailPanelFloatingValue,
   useDetailPanelVisibleValue,
   useDetailPanelWidthValue,
   useSetDetailPanelWidth,
@@ -17,6 +15,7 @@ import {
   ScopeActivationStrategy,
   useFocusScope,
 } from '~/modules/hotkey'
+import { ResizableLayout } from '~/modules/layout'
 import {
   usePrefetchTorrents,
   usePrefetchTransferInfo,
@@ -24,18 +23,29 @@ import {
 import { TorrentTableList } from '~/modules/torrent/TorrentTableList'
 import { TorrentTableToolbar } from '~/modules/torrent/TorrentTableToolbar'
 
-import { DetailPanelFixed, DetailPanelFloat } from '../../../detail/DetailPanel'
+import { DetailPanelFixed } from '../../../detail/DetailPanel'
 import { DetailPanelContent } from '../../../detail/DetailPanelContent'
 import { useRegisterAppBridgeEvents } from '../hooks/use-register-app-bridge-events'
 import { useRegisterAppHotkeys } from '../hooks/use-register-app-hotkeys'
 import { Header } from './Header'
 import type { ResizablePanelConfig } from './ResizableLayout'
-import { ResizableLayout } from './ResizableLayout'
 
 const PrefetchTorrents = () => {
   usePrefetchTorrents()
   usePrefetchTransferInfo()
   return null
+}
+
+const MainContent = () => {
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Toolbar */}
+      <TorrentTableToolbar />
+
+      {/* Table */}
+      <TorrentTableList />
+    </div>
+  )
 }
 
 export const Layout = () => {
@@ -61,9 +71,8 @@ export const Layout = () => {
   const detailPanelVisible = useDetailPanelVisibleValue()
   const detailPanelWidth = useDetailPanelWidthValue()
   const setDetailPanelWidth = useSetDetailPanelWidth()
-  const isDetailPanelFloating = useDetailPanelFloatingValue()
 
-  const showDetailInLayout = detailPanelVisible && !isDetailPanelFloating
+  const showDetailInLayout = detailPanelVisible
 
   const resizablePanel = React.useMemo<ResizablePanelConfig | undefined>(() => {
     if (!showDetailInLayout) { return }
@@ -115,32 +124,6 @@ export const Layout = () => {
         isVisible={dragDropState.isDragging && dragDropState.hasValidFiles}
         isDragOver={dragDropState.isDragOver}
       />
-      <DetailPanelConditionRender />
-    </div>
-  )
-}
-
-const DetailPanelConditionRender = () => {
-  const detailPanelVisible = useDetailPanelVisibleValue()
-  const isFloating = useDetailPanelFloatingValue()
-  return (
-    <AnimatePresence mode="popLayout">
-      {detailPanelVisible && isFloating && (
-        <DetailPanelFloat key="detail-panel-float">
-          <DetailPanelContent />
-        </DetailPanelFloat>
-      )}
-    </AnimatePresence>
-  )
-}
-const MainContent = () => {
-  return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Toolbar */}
-      <TorrentTableToolbar />
-
-      {/* Table */}
-      <TorrentTableList />
     </div>
   )
 }

@@ -27,7 +27,6 @@ import {
   openTorrentSaveLocation,
   revealTorrentContent,
 } from '~/modules/torrent/utils/path-actions'
-import type { TorrentInfo } from '~/types'
 
 import { NameCell } from '../cells/NameCell'
 // Move MemoCell component here from the main file
@@ -69,11 +68,15 @@ const MemoCell: React.FC<{ columnId: string, rowIndex: number }> = React.memo(
 )
 
 interface TableBodyProps extends TorrentTableConfig {
-  rowVirtualizer: TorrentTableVirtualizer['rowVirtualizer']
+  rowVirtualizer?: TorrentTableVirtualizer['rowVirtualizer']
   viewportHeight: number
   headerHeight: number
   isScrolling?: boolean
   logicalScrollMode?: boolean
+  // Pagination mode: render a fixed slice of rows instead of a scroll window.
+  paginated?: boolean
+  pageStartIndex?: number
+  pageSize?: number
 }
 
 export const TableBody: React.FC<TableBodyProps> = (props) => {
@@ -88,6 +91,9 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
     headerHeight,
     isScrolling = false,
     logicalScrollMode = false,
+    paginated = false,
+    pageStartIndex = 0,
+    pageSize = 0,
   } = props
 
   const { selectAndShowDetail } = useTorrentSelection()
@@ -130,7 +136,7 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
     return statusMap
   }, [stickyFilterEntries, stickySnapshotTime])
 
-  const rawScrollTop = Math.max(0, Number(rowVirtualizer.scrollOffset || 0))
+  const rawScrollTop = Math.max(0, Number(rowVirtualizer?.scrollOffset || 0))
   const viewportTop = !logicalScrollMode
     ? Math.max(0, rawScrollTop - headerHeight)
     : rawScrollTop
@@ -147,30 +153,76 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
     [selectAndShowDetail],
   )
 
+  // Build the rows to render. In pagination mode this is a fixed slice; in
+  // scroll mode it comes from the virtualizer's current window.
+  const slots: {
+    rowIndex: number
+    rowTop: number
+    rowKey: React.Key
+    isInViewport: boolean
+    shouldRecycleRow: boolean
+  }[] = []
+
+  let containerHeight: number
+  if (paginated) {
+    const start = Math.max(0, Math.min(pageStartIndex, data.length))
+    const end = Math.min(data.length, start + pageSize)
+    for (let rowIndex = start; rowIndex < end; rowIndex++) {
+      slots.push({
+        rowIndex,
+        rowTop: (rowIndex - start) * getRowHeight(rowIndex),
+        // Key by slot position (not torrent hash) so row instances are reused
+        // across page changes — props update instead of a full remount, which
+        // keeps navigation snappy. shouldRecycleRow keeps the inner cell keys
+        // stable (by column id) so cells are reused too.
+        rowKey: `page-slot-${rowIndex - start}`,
+        isInViewport: true,
+        shouldRecycleRow: true,
+      })
+    }
+    containerHeight = slots.length * getRowHeight(start)
+  }
+  else {
+    for (const [virtualSlotIndex, virtualRow] of (
+      rowVirtualizer?.getVirtualItems() ?? []
+    ).entries()) {
+      const rowIndex = virtualRow.index
+      const rowHeight = getRowHeight(rowIndex)
+      const rowTop = virtualRow.start
+      const rowBottom = rowTop + rowHeight
+      const shouldRecycleRow = logicalScrollMode && isScrolling
+      slots.push({
+        rowIndex,
+        rowTop,
+        rowKey: shouldRecycleRow
+          ? `scroll-slot-${virtualSlotIndex}`
+          : virtualRow.key,
+        isInViewport:
+          isScrolling || (rowBottom > viewportTop && rowTop < viewportBottom),
+        shouldRecycleRow,
+      })
+    }
+    containerHeight = rowVirtualizer?.getTotalSize() ?? 0
+  }
+
   return (
     <div
       className="relative w-full"
       style={{
         contain: 'layout paint style',
-        height: rowVirtualizer.getTotalSize(),
-        transform: !logicalScrollMode
-          ? undefined
-          : 'translate3d(0, calc(var(--torrent-table-scroll-offset, 0px) * -1), 0)',
+        height: containerHeight,
+        transform:
+          paginated || !logicalScrollMode
+            ? undefined
+            : 'translate3d(0, calc(var(--torrent-table-scroll-offset, 0px) * -1), 0)',
         pointerEvents: isScrolling ? 'none' : undefined,
-        willChange: !logicalScrollMode ? undefined : 'transform',
+        willChange: paginated || !logicalScrollMode ? undefined : 'transform',
       }}
     >
-      {rowVirtualizer.getVirtualItems().map((virtualRow, virtualSlotIndex) => {
-        const rowIndex = virtualRow.index
+      {slots.map((slot) => {
+        const { rowIndex, rowTop, rowKey, isInViewport, shouldRecycleRow }
+          = slot
         const rowHeight = getRowHeight(rowIndex)
-        const rowTop = virtualRow.start
-        const rowBottom = rowTop + rowHeight
-        const isStrictInViewport
-          = isScrolling || (rowBottom > viewportTop && rowTop < viewportBottom)
-        const shouldRecycleRow = logicalScrollMode && isScrolling
-        const rowKey = shouldRecycleRow
-          ? `scroll-slot-${virtualSlotIndex}`
-          : virtualRow.key
         const torrent = data[rowIndex]
         const checkboxSelected = torrent
           ? selectedTorrentSet.has(torrent.hash)
@@ -184,16 +236,17 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
 
         return (
           <TorrentTableRow
-            checkboxSelected={checkboxSelected}
             columnOffsets={columnOffsets}
-            data-index={virtualRow.index}
+            data-index={rowIndex}
             gridTemplateColumns={gridTemplateColumns}
             handleRowClick={handleRowClick}
-            isInViewport={isStrictInViewport}
+            isInViewport={isInViewport}
             isScrolling={isScrolling}
             key={rowKey}
             measureElement={
-              !logicalScrollMode ? rowVirtualizer.measureElement : undefined
+              !paginated && !logicalScrollMode
+                ? rowVirtualizer?.measureElement
+                : undefined
             }
             rowHeight={rowHeight}
             rowIndex={rowIndex}
@@ -201,8 +254,7 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
             rowTop={rowTop}
             shouldRecycleRow={shouldRecycleRow}
             stickyStatus={stickyStatus}
-            torrent={torrent}
-            virtualRowIndex={virtualRow.index}
+            virtualRowIndex={rowIndex}
             visibleColumnIds={visibleColumnIds}
           />
         )
@@ -213,7 +265,6 @@ export const TableBody: React.FC<TableBodyProps> = (props) => {
 
 const TorrentTableRow = React.memo(
   ({
-    checkboxSelected,
     columnOffsets,
     gridTemplateColumns,
     handleRowClick,
@@ -226,11 +277,9 @@ const TorrentTableRow = React.memo(
     rowTop,
     shouldRecycleRow,
     stickyStatus,
-    torrent,
     virtualRowIndex,
     visibleColumnIds,
   }: {
-    checkboxSelected: boolean
     columnOffsets: Record<string, number>
     gridTemplateColumns: string
     handleRowClick: (rowIndex: number) => void
@@ -243,7 +292,6 @@ const TorrentTableRow = React.memo(
     rowTop: number
     shouldRecycleRow: boolean
     stickyStatus: RowStickyStatus
-    torrent: TorrentInfo | undefined
     virtualRowIndex: number
     visibleColumnIds: string[]
   }) => {
@@ -262,8 +310,8 @@ const TorrentTableRow = React.memo(
         data-index={virtualRowIndex}
         role="row"
         className={cn(
-          'grid border-b group border-border hover:!bg-accent-10 top-0 left-0 min-w-full absolute data-[odd=true]:bg-background-secondary',
-          isScrolling && rowIsActive && '!bg-accent/10',
+          'grid border-b group border-border hover:bg-accent-10! top-0 left-0 min-w-full absolute data-[odd=true]:bg-background-secondary',
+          isScrolling && rowIsActive && 'bg-accent/10!',
           isScrolling
           && stickyStatus.isSticky
           && 'bg-orange/5 border-l-2 border-l-orange/50',
@@ -288,7 +336,7 @@ const TorrentTableRow = React.memo(
                 <div
                   key={cellKey}
                   className={cn(
-                    'group-data-[odd=true]:bg-background-secondary bg-background group-hover:!bg-accent-10 group-data-[selected=true]:bg-transparent',
+                    'group-data-[odd=true]:bg-background-secondary bg-background group-hover:bg-accent-10! group-data-[selected=true]:bg-transparent',
                     !isScrolling && 'backdrop-blur-xl',
 
                     'before:content-[\'\'] before:absolute before:bottom-0 before:left-0 before:w-full before:h-px before:bg-border',
@@ -700,7 +748,7 @@ const ActiveCellWrapper: FC<
       data-selected={isSelected}
       className={cn(
         'relative group/actice-cell',
-        isSelected && '!bg-accent/10',
+        isSelected && 'bg-accent/10!',
         stickyStatus.isSticky && 'bg-orange/5 border-l-2 border-l-orange/50',
         className,
       )}

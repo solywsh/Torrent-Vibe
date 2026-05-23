@@ -2,6 +2,7 @@ import { AnimatePresence, m } from 'motion/react'
 import type { FC } from 'react'
 import * as React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
@@ -27,7 +28,7 @@ const DEFAULT_OPTIONS: string[] = []
 export const MultiSelect: FC<MultiSelectProps> = ({
   value = DEFAULT_VALUE,
   onChange,
-  placeholder = 'Select tags...',
+  placeholder,
   options = DEFAULT_OPTIONS,
   allowCustom = true,
   disabled = false,
@@ -36,6 +37,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
   label,
   maxHeight = 'max-h-48',
 }) => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [customValue, setCustomValue] = useState('')
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -109,7 +111,9 @@ export const MultiSelect: FC<MultiSelectProps> = ({
         <span
           className={cn('text-text-secondary', value.length > 0 && 'text-text')}
         >
-          {value.length > 0 ? `${value.length} selected` : placeholder}
+          {value.length > 0
+            ? t('multiSelect.selectedCount', { count: value.length })
+            : (placeholder ?? t('multiSelect.placeholder'))}
         </span>
         <i
           className={cn(
@@ -142,7 +146,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                       value={customValue}
                       onChange={e => setCustomValue(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="Add custom tag..."
+                      placeholder={t('multiSelect.addCustomPlaceholder')}
                       inputClassName="bg-transparent border-transparent appearance-none shadow-none h-7 px-0 !ring-0 !border-0"
                       className="border-transparent bg-transparent focus:border-border rounded-md shadow-none h-7 px-2 py-1 text-sm"
                     />
@@ -156,7 +160,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                         || value.includes(customValue.trim())
                       }
                     >
-                      Add
+                      {t('common.add')}
                     </Button>
                   </div>
                 </div>
@@ -167,7 +171,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                 {options.length === 0
                   ? (
                       <div className="px-2 py-1.5 text-sm text-text-secondary">
-                        No tags available
+                        {t('multiSelect.noTags')}
                       </div>
                     )
                   : (
@@ -179,12 +183,13 @@ export const MultiSelect: FC<MultiSelectProps> = ({
                             type="button"
                             onClick={() => handleToggleOption(option)}
                             className={cn(
-                              'cursor-menu focus:bg-accent focus:text-white relative flex w-full select-none items-center rounded-[5px] px-2.5 py-1 text-left text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+                              'cursor-menu relative flex w-full select-none items-center rounded-[5px] px-2.5 py-1 text-left text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
                               'focus-within:outline-transparent',
                               'h-[28px]',
-                              selected
-                                ? 'bg-accent text-white'
-                                : 'hover:bg-accent hover:text-white',
+                              // Selection is conveyed by the trailing check, not a
+                              // solid fill, so selecting many tags stays readable.
+                              'hover:bg-accent hover:text-white focus:bg-accent focus:text-white',
+                              selected && 'text-accent',
                             )}
                           >
                             <span className="pr-5">{option}</span>
