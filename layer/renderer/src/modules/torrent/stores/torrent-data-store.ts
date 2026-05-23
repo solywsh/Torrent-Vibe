@@ -345,8 +345,9 @@ const initialState: TorrentStore = {
 
   lastUpdated: 0,
   selectedTorrents: [],
-  sortKey: 'name',
-  sortDirection: 'asc',
+  // Default sort: newest added first (added_on is a Unix timestamp).
+  sortKey: 'added_on',
+  sortDirection: 'desc',
   filterState: 'all',
   searchQuery: '',
   stickyFilterEntries: [],

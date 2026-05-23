@@ -185,7 +185,7 @@ const defaultPersistentState: TorrentTablePersistentState = {
   visibleColumns: DEFAULT_VISIBLE_COLUMNS.slice(),
   orderedColumns: DEFAULT_VISIBLE_COLUMNS.slice(),
   resizeColumns: {},
-  sortState: { sortKey: null, sortDirection: 'asc' },
+  sortState: { sortKey: 'added_on', sortDirection: 'desc' },
 }
 
 // Compute initial TanStack state from default persistent state
