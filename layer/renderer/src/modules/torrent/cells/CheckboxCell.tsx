@@ -31,16 +31,17 @@ export const CheckboxCell = ({ rowIndex }: CheckboxCellProps) => {
 
   return (
     <div
-      className="flex items-center absolute inset-x-0 top-4 justify-center"
+      className="flex items-start justify-center absolute inset-0 cursor-pointer pt-4"
+      onClick={(e) => {
+        // Toggle selection from anywhere in the cell, and don't let the
+        // click bubble to the row handler (which opens the detail view).
+        e.stopPropagation()
+        handleSelectionChange(selectionData.hash, !selectionData.isSelected)
+      }}
     >
       <Checkbox
-        className="border border-border"
+        className="pointer-events-none border border-border"
         checked={selectionData.isSelected}
-        onCheckedChange={(checked) => {
-          if (typeof checked === 'boolean') {
-            handleSelectionChange(selectionData.hash, checked)
-          }
-        }}
       />
     </div>
   )

@@ -60,7 +60,7 @@ const MemoCell: React.FC<{ columnId: string, rowIndex: number }> = React.memo(
       return null
     }
     return (
-      <div className="relative">
+      <div className="relative h-full">
         <Renderer rowIndex={rowIndex} />
       </div>
     )
