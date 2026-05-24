@@ -4,6 +4,8 @@ import { MenuItemText, useShowContextMenu } from '~/atoms/context-menu'
 import { getI18n } from '~/i18n'
 import { clsxm } from '~/lib/cn'
 
+import { getTagColorClassName } from '../utils/tag-color'
+
 interface TagProps {
   tag: string
   variant?: 'primary' | 'accent' | 'tertiary'
@@ -64,11 +66,12 @@ const TagComponent = ({
   const baseClassName
     = 'px-2 py-1 rounded-md text-xs font-medium whitespace-pre min-w-0 truncate'
 
-  const variantClassName = {
-    primary: 'bg-accent/20 text-accent',
-    accent: 'bg-accent/20 text-accent',
-    tertiary: 'bg-text-tertiary/20 text-text-tertiary',
-  }[variant]
+  // Tags / categories get a stable per-name color derived from the palette;
+  // `tertiary` stays a neutral gray for non-semantic chips.
+  const variantClassName
+    = variant === 'tertiary'
+      ? 'bg-text-tertiary/20 text-text-tertiary'
+      : getTagColorClassName(tag)
 
   const interactiveClassName
     = showContextMenu && (onModify || onDelete)

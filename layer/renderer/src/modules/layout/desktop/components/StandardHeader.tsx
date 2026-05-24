@@ -96,7 +96,7 @@ export const StandardHeader = ({
         className,
       )}
     >
-      {/* Left section: Logo and Action Buttons */}
+      {/* Left section: Logo, Stats, and Search */}
       <div className="flex items-center gap-6 shrink min-w-0 grow">
         <div className="flex items-center gap-3 shrink-0">
           <Logo className="w-8 h-8" />
@@ -108,76 +108,79 @@ export const StandardHeader = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 shrink min-w-0 grow">
-          <Button
-            variant="primary"
-            className="shadow-md shrink-0"
-            onClick={() => {
-              Modal.present(AddTorrentModal)
-            }}
-          >
-            <i className="i-mingcute-add-line mr-2" />
-            {t('modals.addTorrent.title')}
-          </Button>
-
-          <div className="h-6 w-px bg-border mx-1 shrink-0" />
-
-          <div className="flex items-center gap-1 shrink min-w-0 grow relative">
-            <div className="@container flex grow">
-              <Button
-                variant="ghost"
-                disabled={!canInteract}
-                onClick={() => handleTorrentAction('resume')}
-                className="hover:bg-green/10 hover:text-green text-green/80"
-              >
-                <i className="i-mingcute-play-fill mr-1.5" />
-                <span className="@md:inline hidden">{t('buttons.resume')}</span>
-              </Button>
-              <Button
-                variant="ghost"
-                disabled={!canInteract}
-                onClick={() => handleTorrentAction('pause')}
-                className="hover:bg-orange/10 hover:text-orange text-orange/80"
-              >
-                <i className="i-mingcute-pause-fill mr-1.5" />
-                <span className="@md:inline hidden">{t('buttons.pause')}</span>
-              </Button>
-              <Button
-                variant="ghost"
-                disabled={!canInteract}
-                onClick={() => handleTorrentAction('delete')}
-                className="hover:bg-red/10 hover:text-red text-red/80"
-              >
-                <i className="i-mingcute-delete-2-line mr-1.5" />
-                <span className="@md:inline hidden">{t('buttons.delete')}</span>
-              </Button>
-            </div>
-          </div>
+        {/* Disk usage, speed indicators and search */}
+        <div className="flex items-center gap-3 shrink min-w-0">
+          <SpeedIndicators variant="standard" showTotalData />
+          {showSearch && (
+            <>
+              <div className="h-6 w-px bg-border shrink-0" />
+              <TorrentSearchInput />
+            </>
+          )}
         </div>
       </div>
 
-      {/* Right section: Stats, Search, and Controls */}
-      <div className="flex items-center gap-3 -mr-3">
-        {/* Disk usage and speed indicators */}
-        <SpeedIndicators variant="standard" showTotalData />
+      {/* Right section: Action Buttons and Controls */}
+      <div className="flex items-center gap-2 shrink-0 -mr-3">
+        {/* Action Buttons */}
+        <Button
+          variant="primary"
+          className="shadow-md shrink-0"
+          onClick={() => {
+            Modal.present(AddTorrentModal)
+          }}
+        >
+          <i className="i-mingcute-add-line mr-2" />
+          {t('modals.addTorrent.title')}
+        </Button>
 
-        <div className="h-6 w-px bg-border" />
+        <div className="h-6 w-px bg-border mx-1 shrink-0" />
 
-        <div className="flex items-center gap-2">
-          {showSearch && <TorrentSearchInput />}
+        <div className="flex items-center">
           <Button
             variant="ghost"
-            className="p-2"
-            onClick={() => {
-              Modal.present(DiscoverModal)
-            }}
-            title={t('buttons.discover')}
+            disabled={!canInteract}
+            onClick={() => handleTorrentAction('resume')}
+            className="hover:bg-green/10 hover:text-green text-green/80"
           >
-            <i className="i-mingcute-safari-line text-lg" />
+            <i className="i-mingcute-play-fill mr-1.5" />
+            <span className="@md:inline hidden">{t('buttons.resume')}</span>
+          </Button>
+          <Button
+            variant="ghost"
+            disabled={!canInteract}
+            onClick={() => handleTorrentAction('pause')}
+            className="hover:bg-orange/10 hover:text-orange text-orange/80"
+          >
+            <i className="i-mingcute-pause-fill mr-1.5" />
+            <span className="@md:inline hidden">{t('buttons.pause')}</span>
+          </Button>
+          <Button
+            variant="ghost"
+            disabled={!canInteract}
+            onClick={() => handleTorrentAction('delete')}
+            className="hover:bg-red/10 hover:text-red text-red/80"
+          >
+            <i className="i-mingcute-delete-2-line mr-1.5" />
+            <span className="@md:inline hidden">{t('buttons.delete')}</span>
           </Button>
         </div>
+
         <div className="h-6 w-px bg-border" />
+
+        <Button
+          variant="ghost"
+          className="p-2"
+          onClick={() => {
+            Modal.present(DiscoverModal)
+          }}
+          title={t('buttons.discover')}
+        >
+          <i className="i-mingcute-safari-line text-lg" />
+        </Button>
+
+        <div className="h-6 w-px bg-border" />
+
         <div className="flex items-center">
           <Button
             variant="ghost"

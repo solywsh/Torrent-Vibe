@@ -374,7 +374,7 @@ const config: ForgeConfig = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'Torrent-Vibe',
+          owner: 'solywsh',
           name: 'Torrent-Vibe',
         },
         draft: true,
@@ -393,7 +393,7 @@ const config: ForgeConfig = {
 
           const arch = result.arch || 'unknown'
 
-          let platformArch = ''
+          let platformArch: string
 
           switch (result.platform) {
             case 'darwin': {

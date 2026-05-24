@@ -1,4 +1,4 @@
-export const UPDATE_REPO_OWNER = 'Torrent-Vibe'
+export const UPDATE_REPO_OWNER = 'solywsh'
 export const UPDATE_REPO_NAME = 'Renderer-Update-Center'
 
 // Release asset names

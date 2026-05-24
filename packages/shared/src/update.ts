@@ -1,4 +1,4 @@
 export const APP_LATEST_RELEASE_URL
-  = 'https://github.com/Torrent-Vibe/Torrent-Vibe/releases/latest'
+  = 'https://github.com/solywsh/Torrent-Vibe/releases/latest'
 
-export const APP_RELEASE_REPO = 'Torrent-Vibe/Torrent-Vibe'
+export const APP_RELEASE_REPO = 'solywsh/Torrent-Vibe'

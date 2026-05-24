@@ -22,6 +22,5 @@ resources/security/update_privkey.pem
 .vscode
 docs
 .serena
-AGENTS.md
 CLAUDE.md
 .github/git-commit-instructions.md
